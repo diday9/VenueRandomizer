@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             else
             {
                 Log.v(TAG, "Location permission already granted.");
-
+                getCurrentlocation();
             }
         }
     }
