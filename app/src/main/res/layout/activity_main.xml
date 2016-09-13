@@ -9,10 +9,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.dids.venuerandomizer.MainActivity">
 
+    <Spinner
+        android:id="@+id/selection_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:scrollbarSize="12pt"/>
     <Button
         android:id="@+id/button_find"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/selection_spinner"
         android:text="Find!"/>
 
     <TextView
@@ -21,4 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/button_find"
         android:textSize="12pt"/>
+
+
 </RelativeLayout>
