@@ -1,12 +1,8 @@
 package com.dids.venuerandomizer;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,22 +31,23 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "VenueRandomizer";
+
     private static final int PERMISSION_REQUEST_ACCESS_LOCATION = 1;
 
+    /* Section */
     private String[] mSectionSpinnerArray;
 
-    /* Android Location */
+    /* Android Location and Runtime Permission */
     private GoogleApiClient mGoogleApiClient;
-    private LocationManager mLocationManager;
-    private String mProvider;
     private double mLat;
     private double mLng;
+
+    private int mHasCoarseLocPermission;
+    private int mHasFineLocPermission;
 
     /*Foursquare API Search Result */
     private String mSearchResult = null;
@@ -62,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private static final String SEARCH_CLIENT_SECRET = "&client_secret=";
     private static final String SEARCH_LL = "&ll="; // latitute and longitude
     private static final String SEARCH_VERSION = "&v="; // set to current date to get the current version of api
-    private static final String SEARCH_SORT_BY_DISTANCE = "&sortByDistance="; // 1 sort by distance instead of relevance
+    private static final String SEARCH_SORT_BY_DISTANCE = "&sortByDistance=1"; // 1 sort by distance instead of relevance
     private static final String SEARCH_OPEN_NOW = "&openNow="; // 1 only to include open venues
     private static final String SEARCH_SECTION = "&section=";
     private static final String SEARCH_LIMIT = "&limit=50";
@@ -83,12 +80,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         setContentView(R.layout.activity_main);
 
       /**
-       * Code block removed.
        * As per https://developer.foursquare.com/overview/versioning,
        * Recommended to set a single date across API calls. Options for updates:
        * (1) Increase date every few months
        * (2) Check if Foursquare made an update, and update to this one
-       * (3) Always get current date (implemented below)
+       * (3) Always get current date to get latest version from API (implemented below)
         // Get Current date for API version
         // Format : YYYYMMDD
         Calendar today = Calendar.getInstance();
@@ -117,9 +113,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     searchUrl = new URL(FOURSQUARE_API + SEARCH_CLIENT_ID + getString(R.string.client_id)
                             + SEARCH_CLIENT_SECRET + getString(R.string.client_secret)
                             + SEARCH_LL + mLat + "," + mLng
-                            + SEARCH_VERSION + getString(R.string.api_version) /*currentDate*/
+                            + SEARCH_VERSION + getString(R.string.api_version) //currentDate
                             + SEARCH_SECTION + selectionSection
-                            + SEARCH_LIMIT);
+                            + SEARCH_LIMIT
+                            + SEARCH_SORT_BY_DISTANCE);
                     Log.d(TAG, "URL: " + searchUrl);
                     Log.d(TAG, "Searching nearby " + selectionSection + " venue");
 
@@ -135,17 +132,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected void onResume() {
         super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.d(TAG, "Requesting for location runtime permission");
             // Get runtime permission
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ACCESS_LOCATION);
             } else {
-                Log.v(TAG, "Location permission already granted.");
-                // Check if location is enabled
-                //checkLocationOn();
-                //mLocationManager.requestLocationUpdates(mProvider, 400, 1, this);
+                Log.v(TAG, "Location permission already granted");
             }
         }
     }
@@ -165,31 +159,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     protected void onPause() {
         super.onPause();
-//        locationManager.removeUpdates(this);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mLat = location.getLatitude();
-        mLng = location.getLongitude();
-        Log.d(TAG, "onLocationChanged Latitude: " + mLat);
-        Log.d(TAG, "onLocationChanged Longitude: " + mLng);
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String curProvider) {
-        Log.d(TAG, "New Location Provider: " + curProvider);
-    }
-
-    @Override
-    public void onProviderDisabled(String curProvider) {
-        Log.d(TAG, "Disabled Provider: " + curProvider);
     }
 
     @Override
@@ -198,9 +167,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             case PERMISSION_REQUEST_ACCESS_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Access granted
-                    Log.d(TAG, "Location permission granted.");
+                    Log.d(TAG, "Location permission has been granted");
                 } else {
-                    Log.d(TAG, "Location permission denied.");
+                    Log.d(TAG, "Location permission has been denied");
                 }
                 return;
             }
@@ -215,36 +184,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
-        }
-    }
-
-  /**
-    * Checks if GPS or Network Location is enabled
-    */
-    private void checkLocationOn() {
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        // Get if gps or network location is enabled
-        boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetworkLocationEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        Log.d(TAG, "GPS enabled " + isGPSEnabled);
-        Log.d(TAG, "Network Location enabled " + isNetworkLocationEnabled);
-        // Check
-        if (!isGPSEnabled && !isNetworkLocationEnabled) {
-            // Show dialog to enable location
-            Log.d(TAG, "GPS and Network Location disabled");
-        } else {
-            Criteria criteria = new Criteria();
-            mProvider = mLocationManager.getBestProvider(criteria, false);
-            Log.d(TAG, "Location Provider: " + mProvider);
-            Location location = mLocationManager.getLastKnownLocation(mProvider);
-            if (location != null) {
-                // Get current location
-                onLocationChanged(location);
-            } else {
-                Log.e(TAG, "Location is null");
-            }
         }
     }
 
