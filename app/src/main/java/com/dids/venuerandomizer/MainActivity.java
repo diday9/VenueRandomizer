@@ -18,6 +18,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -36,14 +40,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private double mLat;
     private double mLng;
 
+    /*Foursquare API Search Result */
+    private String mSearchResult = null;
+
     /* Foursquare API Constants */
-    private final String FOURSQUARE_API = "https://api.foursquare.com/v2/venues/explore?";
-    private final String SEARCH_CLIENT_ID = "client_id=";
-    private final String SEARCH_CLIENT_SECRET = "&client_secret=";
-    private final String SEARCH_LL = "&ll="; // latitute and longitude
-    private final String SEARCH_VERSION = "&v="; // set to current date to get the current version of api
-    private final String SEARCH_SORT_BY_DISTANCE = "&sortByDistance="; // 1 sort by distance instead of relevance
-    private final String SEARCH_OPEN_NOW = "&openNow"; // 1 only to include open venues
+    private static final String FOURSQUARE_API = "https://api.foursquare.com/v2/venues/explore?";
+    private static final String SEARCH_CLIENT_ID = "client_id=";
+    private static final String SEARCH_CLIENT_SECRET = "&client_secret=";
+    private static final String SEARCH_LL = "&ll="; // latitute and longitude
+    private static final String SEARCH_VERSION = "&v="; // set to current date to get the current version of api
+    private static final String SEARCH_SORT_BY_DISTANCE = "&sortByDistance="; // 1 sort by distance instead of relevance
+    private static final String SEARCH_OPEN_NOW = "&openNow"; // 1 only to include open venues
+    private static final String RESULT_RESPONSE = "response";
+    private static final String RESULT_GROUPS = "groups";
+    private static final String RESULT_ITEMS = "items";
+    private static final String RESULT_VENUE = "venue";
+    private static final String RESULT_NAME = "name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                         Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ACCESS_LOCATION);
             } else {
                 Log.v(TAG, "Location permission already granted.");
-                getCurrentlocation();
+                checkLocationOn();
                 mLocationManager.requestLocationUpdates(mProvider, 400, 1, this);
             }
         }
@@ -98,29 +110,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onPause() {
         super.onPause();
 //        locationManager.removeUpdates(this);
-    }
-
-    private void getCurrentlocation() {
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        // Get if gps or network location is enabled
-        boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetworkLocationEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        // Check
-        if (!isGPSEnabled && !isNetworkLocationEnabled) {
-            // Show dialog to enable location
-        } else {
-            Criteria criteria = new Criteria();
-            mProvider = mLocationManager.getBestProvider(criteria, false);
-            Location location = mLocationManager.getLastKnownLocation(mProvider);
-
-            if (location != null) {
-                Log.d(TAG, "Location Provider: " + mProvider);
-
-                onLocationChanged(location);
-            }
-        }
     }
 
     @Override
@@ -153,10 +142,63 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             case PERMISSION_REQUEST_ACCESS_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Access granted
+                    Log.d(TAG, "Location permission granted.");
                 } else {
                     Log.d(TAG, "Location permission denied.");
                 }
                 return;
+            }
+        }
+    }
+
+  /**
+    * Checks if GPS or Network Location is enabled
+    */
+    private void checkLocationOn() {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // Get if gps or network location is enabled
+        boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkLocationEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        // Check
+        if (!isGPSEnabled && !isNetworkLocationEnabled) {
+            // Show dialog to enable location
+        } else {
+            Criteria criteria = new Criteria();
+            mProvider = mLocationManager.getBestProvider(criteria, false);
+            Location location = mLocationManager.getLastKnownLocation(mProvider);
+
+            if (location != null) {
+                Log.d(TAG, "Location Provider: " + mProvider);
+                // Get current location
+                onLocationChanged(location);
+            }
+        }
+    }
+
+    /**
+     * Read JSON result from API call
+     */
+    private void readJSON(){
+        if(mSearchResult == null){
+            Log.d(TAG, "No result to read.");
+            return;
+        } else {
+            JSONObject jsonResult;
+            try{
+                jsonResult = new JSONObject(mSearchResult);
+                JSONObject jsonResponse = jsonResult.optJSONObject(RESULT_RESPONSE);
+                // get first group
+                JSONObject jsonGroups = jsonResponse.optJSONArray(RESULT_GROUPS).getJSONObject(0);
+                // get first item
+                JSONObject jsonItems = jsonGroups.optJSONArray(RESULT_ITEMS).getJSONObject(0);
+                JSONObject jsonVenue = jsonItems.optJSONObject(RESULT_VENUE);
+                String venueName = jsonVenue.optString(RESULT_NAME);
+
+                Log.d(TAG, "Venue: " + venueName);
+            } catch (JSONException e){
+                Log.e(TAG, e.getMessage());
             }
         }
     }
@@ -166,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         @Override
         protected Void doInBackground(URL... urls) {
             try{
-
                 HttpURLConnection urlConnection = (HttpURLConnection) urls[0].openConnection();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder sb = new StringBuilder();
@@ -175,13 +216,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     sb.append(line + "\n");
                 }
                 urlConnection.disconnect();
-                String result = sb.toString();
-                Log.d(TAG, "API search result = " + result);
+                mSearchResult = sb.toString();
+                Log.d(TAG, "API search result = " + mSearchResult);
+
+//                readJSON();
             } catch (Exception e){
                 Log.e(TAG, e.getMessage());
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            readJSON();
         }
     }
 }
