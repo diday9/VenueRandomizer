@@ -2,6 +2,7 @@ package com.dids.venuerandomizer;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -64,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final String SEARCH_SECTION = "&section=";
     private static final String SEARCH_LIMIT = "&limit=50";
 
+    private static final String SEARCH_ALL_VENUE_TYPE = "All";
+    private static final String SEARCH_NO_SELETION_VENUE_TYPE = "Select location preference...";
+
     private static final String RESULT_RESPONSE = "response";
     private static final String RESULT_GROUPS = "groups";
     private static final String RESULT_ITEMS = "items";
@@ -73,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final String RESULT_CODE = "code";
 
     private static final String DISPLAY_ERROR_MESSAGE = "Sorry, cannot generate random venue. Please try again.";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +102,31 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         createGoogleApiClient();
 
         // Setup section spinner
-        mSectionSpinnerArray = new String[] {"food", "drinks", "coffee"};
+        mSectionSpinnerArray = new String[] {SEARCH_NO_SELETION_VENUE_TYPE, SEARCH_ALL_VENUE_TYPE, "Food", "Drinks", "Coffee"};
         final Spinner sectionSpinner = (Spinner) findViewById(R.id.selection_spinner);
-        ArrayAdapter<String> sectionAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, mSectionSpinnerArray);
+        final ArrayAdapter<String> sectionAdapter = new ArrayAdapter<String>(this,R.layout.spinner_item_list, mSectionSpinnerArray){
+            @Override
+            public boolean isEnabled(int position) {
+                if(position == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                if (position == 0){
+                    textView.setTextColor(Color.GRAY);
+                } else {
+                    textView.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+        sectionAdapter.setDropDownViewResource(R.layout.spinner_item_list);
         sectionSpinner.setAdapter(sectionAdapter);
 
         // Setup button
@@ -109,14 +137,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 // AsyncTask fetch result from API
                 URL searchUrl = null;
                 try {
-                    String selectionSection = sectionSpinner.getSelectedItem().toString();
-                    searchUrl = new URL(FOURSQUARE_API + SEARCH_CLIENT_ID + getString(R.string.client_id)
+                    String url = FOURSQUARE_API + SEARCH_CLIENT_ID + getString(R.string.client_id)
                             + SEARCH_CLIENT_SECRET + getString(R.string.client_secret)
                             + SEARCH_LL + mLat + "," + mLng
                             + SEARCH_VERSION + getString(R.string.api_version) //currentDate
-                            + SEARCH_SECTION + selectionSection
                             + SEARCH_LIMIT
-                            + SEARCH_SORT_BY_DISTANCE);
+                            + SEARCH_SORT_BY_DISTANCE;
+                    int selectionSection = sectionSpinner.getSelectedItemPosition();
+                    if(selectionSection > 1){
+                        // if spinner selection is not hint or All
+                        url.concat(SEARCH_SECTION + selectionSection);
+                    }
+                    searchUrl = new URL(url);
+
                     Log.d(TAG, "URL: " + searchUrl);
                     Log.d(TAG, "Searching nearby " + selectionSection + " venue");
 

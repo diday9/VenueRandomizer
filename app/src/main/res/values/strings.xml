@@ -2,5 +2,5 @@
     <string name="app_name">VenueRandomizer</string>
     <string name="client_id">UF4GJRFLPUIANVKRCSZBZFGXEYS20ZK0FFPSMH2WI2WPCIIB</string>
     <string name="client_secret">JHF3FXD0P0TWST2BQHZ0PQ5XQNQLXCYD2QSW03E2DDB1P0HX</string>
-    <string name="api_version">20160913</string>
+    <string name="api_version">20160929</string>
 </resources>
