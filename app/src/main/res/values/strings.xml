@@ -1,6 +1,22 @@
 <resources>
     <string name="app_name">VenueRandomizer</string>
+    <string name="default_content_description">Content Description</string>
+
+    <!-- Main activity Strings -->
+    <string name="tab_name_randomizer">Random</string>
+
+    <!-- Random Fragment Strings -->
+    <string name="random_search_card_title">Venue Type</string>
+    <string name="random_select_venue_type">[Select Venue Type&#8230;]</string>
+    <string name="random_venue_food">Food</string>
+    <string name="random_venue_drinks">Drinks</string>
+    <string name="random_venue_coffee">Coffee</string>
+    <string name="random_venue_all">All types</string>
+    <string name="random_search_button_text">Search now!</string>
+
+    <!-- Foursquare strings-->
     <string name="client_id">UF4GJRFLPUIANVKRCSZBZFGXEYS20ZK0FFPSMH2WI2WPCIIB</string>
     <string name="client_secret">JHF3FXD0P0TWST2BQHZ0PQ5XQNQLXCYD2QSW03E2DDB1P0HX</string>
     <string name="api_version">20160929</string>
+
 </resources>

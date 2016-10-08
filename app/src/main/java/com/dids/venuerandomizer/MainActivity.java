@@ -1,25 +1,20 @@
 package com.dids.venuerandomizer;
 
-import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.dids.venuerandomizer.view.adapter.MainViewPagerAdapter;
+import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -31,30 +26,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "VenueRandomizer";
-
     private static final int PERMISSION_REQUEST_ACCESS_LOCATION = 1;
-
-    /* Section */
-    private String[] mSectionSpinnerArray;
-
-    /* Android Location and Runtime Permission */
-    private GoogleApiClient mGoogleApiClient;
-    private double mLat;
-    private double mLng;
-
-    private int mHasCoarseLocPermission;
-    private int mHasFineLocPermission;
-
-    /*Foursquare API Search Result */
-    private String mSearchResult = null;
-    private String mVenue = null;
-
     /* Foursquare API Constants */
     private static final String FOURSQUARE_API = "https://api.foursquare.com/v2/venues/explore?";
     private static final String SEARCH_CLIENT_ID = "client_id=";
@@ -65,10 +43,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final String SEARCH_OPEN_NOW = "&openNow="; // 1 only to include open venues
     private static final String SEARCH_SECTION = "&section=";
     private static final String SEARCH_LIMIT = "&limit=50";
-
     private static final String SEARCH_ALL_VENUE_TYPE = "All";
     private static final String SEARCH_NO_SELETION_VENUE_TYPE = "Select location preference...";
-
     private static final String RESULT_RESPONSE = "response";
     private static final String RESULT_GROUPS = "groups";
     private static final String RESULT_ITEMS = "items";
@@ -76,110 +52,131 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final String RESULT_NAME = "name";
     private static final String RESULT_META = "meta";
     private static final String RESULT_CODE = "code";
-
     private static final String DISPLAY_ERROR_MESSAGE = "Sorry, cannot generate random venue. Please try again.";
-
+    private ViewPager mViewPager;
+    /* Section */
+    private String[] mSectionSpinnerArray;
+    /* Android Location and Runtime Permission */
+    private GoogleApiClient mGoogleApiClient;
+    private double mLat;
+    private double mLng;
+    private int mHasCoarseLocPermission;
+    private int mHasFineLocPermission;
+    /*Foursquare API Search Result */
+    private String mSearchResult = null;
+    private String mVenue = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setToolbar(R.id.toolbar, false);
+        TextView toolbar = (TextView) findViewById(R.id.toolbar_text);
+        toolbar.setText(R.string.app_name);
 
-      /**
-       * As per https://developer.foursquare.com/overview/versioning,
-       * Recommended to set a single date across API calls. Options for updates:
-       * (1) Increase date every few months
-       * (2) Check if Foursquare made an update, and update to this one
-       * (3) Always get current date to get latest version from API (implemented below)
-        // Get Current date for API version
-        // Format : YYYYMMDD
-        Calendar today = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        final String currentDate = dateFormat.format(today.getTime());
-        Log.d(TAG,currentDate);
-        */
+        mViewPager = (ViewPager) findViewById(R.id.pager_main);
+        mViewPager.setAdapter(new MainViewPagerAdapter(this, getSupportFragmentManager()));
+        mViewPager.addOnPageChangeListener(this);
+        mViewPager.setOffscreenPageLimit(mViewPager.getAdapter().getCount());
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout_main);
+        tabLayout.setupWithViewPager(mViewPager);
 
-        createGoogleApiClient();
-
-        // Setup section spinner
-        mSectionSpinnerArray = new String[] {SEARCH_NO_SELETION_VENUE_TYPE, SEARCH_ALL_VENUE_TYPE, "Food", "Drinks", "Coffee"};
-        final Spinner sectionSpinner = (Spinner) findViewById(R.id.selection_spinner);
-        final ArrayAdapter<String> sectionAdapter = new ArrayAdapter<String>(this,R.layout.spinner_item_list, mSectionSpinnerArray){
-            @Override
-            public boolean isEnabled(int position) {
-                if(position == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) view;
-                if (position == 0){
-                    textView.setTextColor(Color.GRAY);
-                } else {
-                    textView.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-        sectionAdapter.setDropDownViewResource(R.layout.spinner_item_list);
-        sectionSpinner.setAdapter(sectionAdapter);
-
-        // Setup button
-        final Button find = (Button) findViewById(R.id.button_find);
-        find.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // AsyncTask fetch result from API
-                URL searchUrl = null;
-                try {
-                    String url = FOURSQUARE_API + SEARCH_CLIENT_ID + getString(R.string.client_id)
-                            + SEARCH_CLIENT_SECRET + getString(R.string.client_secret)
-                            + SEARCH_LL + mLat + "," + mLng
-                            + SEARCH_VERSION + getString(R.string.api_version) //currentDate
-                            + SEARCH_LIMIT
-                            + SEARCH_SORT_BY_DISTANCE;
-                    int selectionSection = sectionSpinner.getSelectedItemPosition();
-                    if(selectionSection > 1){
-                        // if spinner selection is not hint or All
-                        url.concat(SEARCH_SECTION + selectionSection);
-                    }
-                    searchUrl = new URL(url);
-
-                    Log.d(TAG, "URL: " + searchUrl);
-                    Log.d(TAG, "Searching nearby " + selectionSection + " venue");
-
-                } catch (MalformedURLException e) {
-                    Log.d(TAG, "Malformed Foursquare search URL");
-                }
-                new FetchFromAPITask().execute(searchUrl);
-            }
-        });
+//        /**
+//         * As per https://developer.foursquare.com/overview/versioning,
+//         * Recommended to set a single date across API calls. Options for updates:
+//         * (1) Increase date every few months
+//         * (2) Check if Foursquare made an update, and update to this one
+//         * (3) Always get current date to get latest version from API (implemented below)
+//         // Get Current date for API version
+//         // Format : YYYYMMDD
+//         Calendar today = Calendar.getInstance();
+//         SimpleDateFormat dateFormat = bg_street SimpleDateFormat("yyyyMMdd");
+//         final String currentDate = dateFormat.format(today.getTime());
+//         Log.d(TAG,currentDate);
+//         */
+//
+//        createGoogleApiClient();
+//
+//        // Setup section spinner
+//        mSectionSpinnerArray = bg_street String[]{SEARCH_NO_SELETION_VENUE_TYPE, SEARCH_ALL_VENUE_TYPE, "Food", "Drinks", "Coffee"};
+//        final Spinner sectionSpinner = (Spinner) findViewById(R.id.selection_spinner);
+//        final ArrayAdapter<String> sectionAdapter = bg_street ArrayAdapter<String>(this, R.layout.spinner_item_list, mSectionSpinnerArray) {
+//            @Override
+//            public boolean isEnabled(int position) {
+//                if (position == 0) {
+//                    return false;
+//                } else {
+//                    return true;
+//                }
+//            }
+//
+//            @Override
+//            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+//                View view = super.getDropDownView(position, convertView, parent);
+//                TextView textView = (TextView) view;
+//                if (position == 0) {
+//                    textView.setTextColor(Color.GRAY);
+//                } else {
+//                    textView.setTextColor(Color.BLACK);
+//                }
+//                return view;
+//            }
+//        };
+//        sectionAdapter.setDropDownViewResource(R.layout.spinner_item_list);
+//        sectionSpinner.setAdapter(sectionAdapter);
+//
+//        // Setup button
+//        final Button find = (Button) findViewById(R.id.button_find);
+//        find.setOnClickListener(bg_street View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // AsyncTask fetch result from API
+//                URL searchUrl = null;
+//                try {
+//                    String url = FOURSQUARE_API + SEARCH_CLIENT_ID + getString(R.string.client_id)
+//                            + SEARCH_CLIENT_SECRET + getString(R.string.client_secret)
+//                            + SEARCH_LL + mLat + "," + mLng
+//                            + SEARCH_VERSION + getString(R.string.api_version) //currentDate
+//                            + SEARCH_LIMIT
+//                            + SEARCH_SORT_BY_DISTANCE;
+//                    int selectionSection = sectionSpinner.getSelectedItemPosition();
+//                    if (selectionSection > 1) {
+//                        // if spinner selection is not hint or All
+//                        url.concat(SEARCH_SECTION + selectionSection);
+//                    }
+//                    searchUrl = bg_street URL(url);
+//
+//                    Log.d(TAG, "URL: " + searchUrl);
+//                    Log.d(TAG, "Searching nearby " + selectionSection + " venue");
+//
+//                } catch (MalformedURLException e) {
+//                    Log.d(TAG, "Malformed Foursquare search URL");
+//                }
+//                bg_street FetchFromAPITask().execute(searchUrl);
+//            }
+//        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d(TAG, "Requesting for location runtime permission");
-            // Get runtime permission
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ACCESS_LOCATION);
-            } else {
-                Log.v(TAG, "Location permission already granted");
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            Log.d(TAG, "Requesting for location runtime permission");
+//            // Get runtime permission
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+//                    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(this, bg_street String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+//                        Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ACCESS_LOCATION);
+//            } else {
+//                Log.v(TAG, "Location permission already granted");
+//            }
+//        }
     }
 
     @Override
     protected void onStart() {
-        mGoogleApiClient.connect();
+//        mGoogleApiClient.connect();
         super.onStart();
     }
 
@@ -209,9 +206,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    private synchronized void createGoogleApiClient(){
+    private synchronized void createGoogleApiClient() {
         // Create instance of GoogleAPIClient
-        if(mGoogleApiClient == null){
+        if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -220,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    private int generateRandomItemsIndex(int itemsLength){
+    private int generateRandomItemsIndex(int itemsLength) {
         Random randomNum = new Random();
         return randomNum.nextInt(itemsLength);
     }
@@ -228,14 +225,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     /**
      * Read JSON result from API call
      */
-    private void readJSON(){
-        if(mSearchResult == null){
+    private void readJSON() {
+        if (mSearchResult == null) {
             Log.e(TAG, "Error in reading result");
             mVenue = DISPLAY_ERROR_MESSAGE;
             return;
         } else {
             JSONObject jsonResult;
-            try{
+            try {
                 jsonResult = new JSONObject(mSearchResult);
                 JSONObject jsonResponse = jsonResult.optJSONObject(RESULT_RESPONSE);
                 // get first group
@@ -253,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 mVenue = jsonVenue.optString(RESULT_NAME);
 
                 Log.d(TAG, "Venue: " + mVenue);
-            } catch (JSONException e){
+            } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }
         }
@@ -278,11 +275,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-    private class FetchFromAPITask extends AsyncTask<URL, Void, Void>{
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(mViewPager.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    private class FetchFromAPITask extends AsyncTask<URL, Void, Void> {
         private static final String TAG = "FetchFromAPITask";
+
         @Override
         protected Void doInBackground(URL... urls) {
-            try{
+            try {
                 HttpURLConnection urlConnection = (HttpURLConnection) urls[0].openConnection();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder sb = new StringBuilder();
@@ -294,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 mSearchResult = sb.toString();
                 Log.d(TAG, "API search result = " + mSearchResult);
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
 
@@ -305,10 +319,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         protected void onPostExecute(Void aVoid) {
             readJSON();
 
-            if(mVenue != null){
+            if (mVenue != null) {
                 // Display Venue to Text View
-                TextView venueTextView = (TextView) findViewById(R.id.txtview_result);
-                venueTextView.setText(mVenue);
+//                TextView venueTextView = (TextView) findViewById(R.id.txtview_result);
+//                venueTextView.setText(mVenue);
             }
 
         }
