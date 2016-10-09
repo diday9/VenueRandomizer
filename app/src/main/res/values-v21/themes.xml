@@ -10,12 +10,9 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/slide</item>
+        <item name="android:windowExitTransition">@transition/slide</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerItemDropDownStyle</item>
-    </style>
-
-    <!-- Branded Launch Theme -->
-    <style name="AppTheme.BrandedLaunch">
-        <item name="android:windowBackground">@drawable/launcher_bg</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 </resources>

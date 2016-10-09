@@ -187,6 +187,8 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             ((VenueRandomizer) getActivity().getApplication()).setVenue(venue);
             setVenue(venue);
             animateButtonGroup();
+        } else {
+            ((BaseActivity) getActivity()).interceptTouchEvents(false);
         }
     }
 
@@ -226,6 +228,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         });
         builder.setNegativeButton(R.string.control_cancel, null);
         builder.create().show();
+        ((BaseActivity) getActivity()).interceptTouchEvents(false);
     }
 
     @Override
@@ -239,6 +242,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         builder.setMessage(R.string.random_no_internet_msg);
         builder.setPositiveButton(R.string.control_ok, null);
         builder.create().show();
+        ((BaseActivity) getActivity()).interceptTouchEvents(false);
     }
 
     @Override

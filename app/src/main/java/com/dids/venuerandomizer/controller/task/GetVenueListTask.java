@@ -35,6 +35,7 @@ public class GetVenueListTask extends AsyncTask<String, Void, Venue> {
         }
         Location location = manager.getLocation();
         if (location == null) {
+            Log.d("tompee", "location is null");
             /** TODO handle null location */
             return null;
         }
