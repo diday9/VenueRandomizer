@@ -42,7 +42,7 @@ public class GetVenueListTask extends AsyncTask<String, Void, Venue> {
         Venue venue;
         try {
             List<Venue> list = wrapper.getVenueList(location, args[0]);
-            if (list.isEmpty()) {
+            if (list == null || list.isEmpty()) {
                 return null;
             }
             Random random = new Random();

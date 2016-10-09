@@ -20,6 +20,7 @@
 
     <!-- Venue detail strings -->
     <string name="venue_detail_facebook">facebook.com/%1$s</string>
+    <string name="venue_detail_twitter">twitter.com/%1$s</string>
 
     <!-- Control strings -->
     <string name="control_ok">OK</string>

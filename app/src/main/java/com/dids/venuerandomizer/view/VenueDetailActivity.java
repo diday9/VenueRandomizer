@@ -1,9 +1,12 @@
 package com.dids.venuerandomizer.view;
 
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +19,8 @@ import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class VenueDetailActivity extends BaseActivity {
+public class VenueDetailActivity extends BaseActivity implements View.OnClickListener {
+    private Venue mVenue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,15 +30,15 @@ public class VenueDetailActivity extends BaseActivity {
         setToolbar(R.id.toolbar, true);
         ImageView toolbar = (ImageView) findViewById(R.id.toolbar_bg);
         toolbar.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-        Venue venue = ((VenueRandomizer) getApplication()).getVenue();
+        mVenue = ((VenueRandomizer) getApplication()).getVenue();
 
         TextView venueName = (TextView) findViewById(R.id.venue_name);
-        venueName.setText(venue.getName());
+        venueName.setText(mVenue.getName());
 
         ImageLoader loader = ImageLoader.getInstance();
         /** Set category */
-        if (venue.getCategories() != null && !venue.getCategories().isEmpty()) {
-            for (Category category : venue.getCategories()) {
+        if (mVenue.getCategories() != null && !mVenue.getCategories().isEmpty()) {
+            for (Category category : mVenue.getCategories()) {
                 if (category.isPrimary()) {
                     TextView categoryName = (TextView) findViewById(R.id.category_name);
                     ImageView imageView = (ImageView) findViewById(R.id.category_icon);
@@ -48,59 +52,64 @@ public class VenueDetailActivity extends BaseActivity {
 
         /** Set Address */
         TextView address = (TextView) findViewById(R.id.address_name);
-        address.setText(venue.getCity() + ", " + venue.getState());
+        address.setText(mVenue.getCity() + ", " + mVenue.getState());
 
         /** Set telephone */
         View telephoneGroup = findViewById(R.id.telephone_group);
-        if (venue.getFormattedPhone() != null && !venue.getFormattedPhone().isEmpty()) {
+        if (mVenue.getFormattedPhone() != null && !mVenue.getFormattedPhone().isEmpty()) {
             TextView telephone = (TextView) findViewById(R.id.telephone);
-            telephone.setText(venue.getFormattedPhone());
+            telephone.setText(mVenue.getFormattedPhone());
+            telephoneGroup.setOnClickListener(this);
         } else {
             telephoneGroup.setVisibility(View.GONE);
         }
 
         /** Set URL */
         View urlGroup = findViewById(R.id.url_group);
-        if (venue.getUrl() != null && !venue.getUrl().isEmpty()) {
+        if (mVenue.getUrl() != null && !mVenue.getUrl().isEmpty()) {
             TextView url = (TextView) findViewById(R.id.url);
-            url.setText(venue.getUrl());
+            url.setText(mVenue.getUrl());
+            urlGroup.setOnClickListener(this);
         } else {
             urlGroup.setVisibility(View.GONE);
         }
 
         /** Set status */
         View statusGroup = findViewById(R.id.status_group);
-        if (venue.getStatus() != null && !venue.getStatus().isEmpty()) {
+        if (mVenue.getStatus() != null && !mVenue.getStatus().isEmpty()) {
             TextView status = (TextView) findViewById(R.id.status);
-            status.setText(venue.getStatus());
+            status.setText(mVenue.getStatus());
         } else {
             statusGroup.setVisibility(View.GONE);
         }
 
         /** Set rating */
         View ratingGroup = findViewById(R.id.rating_group);
-        if (venue.getRating() != 0) {
+        if (mVenue.getRating() != 0) {
             TextView rating = (TextView) findViewById(R.id.rating);
-            rating.setText(String.valueOf(venue.getRating()));
+            rating.setText(String.valueOf(mVenue.getRating()));
         } else {
             ratingGroup.setVisibility(View.GONE);
         }
 
         /** Set Facebook */
         View fbGroup = findViewById(R.id.fb_group);
-        if (venue.getFacebookUsername() != null && !venue.getFacebookUsername().isEmpty()) {
+        if (mVenue.getFacebookUsername() != null && !mVenue.getFacebookUsername().isEmpty()) {
             TextView fb = (TextView) findViewById(R.id.fb);
             fb.setText(String.format(getString(R.string.venue_detail_facebook),
-                    venue.getFacebookUsername()));
+                    mVenue.getFacebookUsername()));
+            fbGroup.setOnClickListener(this);
         } else {
             fbGroup.setVisibility(View.GONE);
         }
 
         /** Set Twitter */
         View twitterGroup = findViewById(R.id.twitter_group);
-        if (venue.getTwitter() != null && !venue.getTwitter().isEmpty()) {
+        if (mVenue.getTwitter() != null && !mVenue.getTwitter().isEmpty()) {
             TextView twitter = (TextView) findViewById(R.id.twitter);
-            twitter.setText(venue.getTwitter());
+            twitter.setText(String.format(getString(R.string.venue_detail_twitter),
+                    mVenue.getTwitter()));
+            twitterGroup.setOnClickListener(this);
         } else {
             twitterGroup.setVisibility(View.GONE);
         }
@@ -118,5 +127,51 @@ public class VenueDetailActivity extends BaseActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.telephone_group:
+                Intent callIntent = new Intent(Intent.ACTION_DIAL,
+                        Uri.parse("tel:" + mVenue.getPhone()));
+                startActivity(callIntent);
+                break;
+            case R.id.url_group:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mVenue.getUrl()));
+                startActivity(browserIntent);
+                break;
+            case R.id.twitter_group:
+                Intent twitterIntent;
+                try {
+                    getPackageManager().getPackageInfo("com.twitter.android", 0);
+                    twitterIntent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("twitter://user?screen_name=" + mVenue.getTwitter()));
+                    twitterIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                } catch (Exception e) {
+                    twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/"
+                            + mVenue.getTwitter()));
+                }
+                startActivity(twitterIntent);
+                break;
+            case R.id.fb_group:
+                Intent fbIntent;
+                try {
+                    PackageManager packageManager = getPackageManager();
+                    ApplicationInfo applicationInfo = packageManager.
+                            getApplicationInfo("com.facebook.katana", 0);
+                    if (applicationInfo.enabled) {
+                        fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://facewebmodal/f?href=" +
+                                "http://www.facebook.com/" + mVenue.getFacebookUsername()));
+                    } else {
+                        fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/"
+                                + mVenue.getFacebookUsername()));
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/"
+                            + mVenue.getFacebookUsername()));
+                }
+                startActivity(fbIntent);
+        }
     }
 }
