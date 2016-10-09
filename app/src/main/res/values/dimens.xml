@@ -20,4 +20,8 @@
     <dimen name="list_icon_dimension">28dp</dimen>
     <dimen name="list_border_width">1dp</dimen>
     <dimen name="list_no_border_width">-2dp</dimen>
+
+    <!-- About dimension -->
+    <dimen name="about_image_dimension">60dp</dimen>
+    <dimen name="about_view_separator">8dp</dimen>
 </resources>

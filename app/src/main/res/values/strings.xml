@@ -31,4 +31,9 @@
     <string name="client_secret">JHF3FXD0P0TWST2BQHZ0PQ5XQNQLXCYD2QSW03E2DDB1P0HX</string>
     <string name="api_version">20160929</string>
 
+    <!-- About -->
+    <string name="copyright">Copyright 2016, Tompee. All rights reserved.</string>
+    <string name="title_about">About</string>
+    <string name="version">Version %1$s</string>
+
 </resources>
