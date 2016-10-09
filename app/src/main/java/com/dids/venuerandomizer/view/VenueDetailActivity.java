@@ -19,6 +19,8 @@ import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.List;
+
 public class VenueDetailActivity extends BaseActivity implements View.OnClickListener {
     private Venue mVenue;
 
@@ -36,6 +38,10 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         venueName.setText(mVenue.getName());
 
         ImageLoader loader = ImageLoader.getInstance();
+
+        /** Set images */
+        setImages(loader);
+
         /** Set category */
         if (mVenue.getCategories() != null && !mVenue.getCategories().isEmpty()) {
             for (Category category : mVenue.getCategories()) {
@@ -172,6 +178,32 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                             + mVenue.getFacebookUsername()));
                 }
                 startActivity(fbIntent);
+        }
+    }
+
+    private void setImages(ImageLoader loader) {
+        List<String> photoUrls = mVenue.getPhotoUrls();
+        if (photoUrls != null && !photoUrls.isEmpty()) {
+            ImageView image1 = (ImageView) findViewById(R.id.image1);
+            ImageView image2 = (ImageView) findViewById(R.id.image2);
+            ImageView image3 = (ImageView) findViewById(R.id.image3);
+            switch (photoUrls.size()) {
+                case 1:
+                    loader.displayImage(photoUrls.get(0), image1);
+                    image2.setVisibility(View.GONE);
+                    image3.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    loader.displayImage(photoUrls.get(0), image1);
+                    loader.displayImage(photoUrls.get(1), image2);
+                    image3.setVisibility(View.GONE);
+                    break;
+                default:
+                    loader.displayImage(photoUrls.get(0), image1);
+                    loader.displayImage(photoUrls.get(1), image2);
+                    loader.displayImage(photoUrls.get(2), image3);
+                    break;
+            }
         }
     }
 }

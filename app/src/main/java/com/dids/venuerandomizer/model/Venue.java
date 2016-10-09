@@ -33,6 +33,7 @@ public class Venue {
     private String mStatus;
     private boolean mIsOpen;
     private double mRating;
+    private List<String> mPhotoUrls;
 
     public String getId() {
         return mId;
@@ -211,5 +212,16 @@ public class Venue {
 
     public void setRating(double rating) {
         mRating = rating;
+    }
+
+    public List<String> getPhotoUrls() {
+        return mPhotoUrls;
+    }
+
+    public void addPhotoUrl(String url) {
+        if (mPhotoUrls == null) {
+            mPhotoUrls = new ArrayList<>();
+        }
+        mPhotoUrls.add(url);
     }
 }

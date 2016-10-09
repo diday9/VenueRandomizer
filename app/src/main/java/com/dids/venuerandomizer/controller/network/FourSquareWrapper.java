@@ -27,9 +27,11 @@ public class FourSquareWrapper {
     public static final String SECTION_COFFEE = "coffee";
 
     private static final String TAG = "FourSquareWrapper";
+    private static final int MAX_PHOTO_COUNT = 3;
 
     /* Foursquare API Constants */
-    private static final String FOURSQUARE_BASE_URL = "https://api.foursquare.com/v2/venues/explore?";
+    private static final String FOURSQUARE_SEARCH_URL = "https://api.foursquare.com/v2/venues/explore?";
+    private static final String FOURSQUARE_PHOTO_URL = "https://api.foursquare.com/v2/venues/%s/photos?";
     private static final String SEARCH_CLIENT_INFO = "client_id=%s&client_secret=%s";
     private static final String SEARCH_LOCATION = "&ll=%s,%s";
     private static final String SEARCH_VERSION = "&v=%s";
@@ -74,6 +76,7 @@ public class FourSquareWrapper {
     private static final String TAG_HOURS = "hours";
     private static final String TAG_STATUS = "status";
     private static final String TAG_IS_OPEN = "isOpen";
+    private static final String TAG_PHOTOS = "photos";
 
     private Context mContext;
 
@@ -83,7 +86,7 @@ public class FourSquareWrapper {
 
     public List<Venue> getVenueList(Location location, String section) throws NoConnectionError {
         StringBuilder builder = new StringBuilder();
-        builder.append(FOURSQUARE_BASE_URL);
+        builder.append(FOURSQUARE_SEARCH_URL);
         builder.append(String.format(SEARCH_CLIENT_INFO, mContext.getString(R.string.client_id),
                 mContext.getString(R.string.client_secret)));
         builder.append(String.format(SEARCH_LOCATION, String.valueOf(location.getLatitude()),
@@ -141,6 +144,8 @@ public class FourSquareWrapper {
                         JSONObject hoursObject = venueObject.getJSONObject(TAG_HOURS);
                         setHours(hoursObject, venue);
                     }
+
+                    fetchImages(venue);
                     venueList.add(venue);
                 }
             }
@@ -259,6 +264,35 @@ public class FourSquareWrapper {
             }
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
+        }
+    }
+
+    private void fetchImages(Venue venue) throws NoConnectionError {
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format(FOURSQUARE_PHOTO_URL, venue.getId()));
+        builder.append(String.format(SEARCH_CLIENT_INFO, mContext.getString(R.string.client_id),
+                mContext.getString(R.string.client_secret)));
+        builder.append(String.format(SEARCH_VERSION, mContext.getString(R.string.api_version)));
+        builder.append(String.format(SEARCH_LOCALE, "en")); // TODO: configurable locale
+        Log.d(TAG, builder.toString());
+
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, builder.toString(),
+                null, future, future);
+        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsonRequest);
+        try {
+            JSONObject response = future.get();
+            JSONArray itemArray = response.getJSONObject(TAG_RESPONSE).
+                    getJSONObject(TAG_PHOTOS).getJSONArray(TAG_ITEMS);
+            for (int index = 0; index < itemArray.length() && index < MAX_PHOTO_COUNT; index++) {
+                venue.addPhotoUrl(itemArray.getJSONObject(index).getString(TAG_PREFIX) +
+                        "original" + itemArray.getJSONObject(index).getString(TAG_SUFFIX));
+            }
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            Log.e(TAG, "Error in fetch photo request: " + e.getMessage());
+            if (e.getCause() instanceof NoConnectionError) {
+                throw (NoConnectionError) e.getCause();
+            }
         }
     }
 }
