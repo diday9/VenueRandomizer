@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="bg_food1">
+        <item>&#169; by Jeng Garcia</item>
+        <item>erikadiaz000 on Facebook</item>
+    </array>
+    <array name="bg_food2">
+        <item>&#169; by Rogene Lacanienta</item>
+        <item>rogene on Facebook</item>
+    </array>
+</resources>

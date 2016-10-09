@@ -31,7 +31,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mViewPager = (ViewPager) findViewById(R.id.pager_main);
         mViewPager.setAdapter(new MainViewPagerAdapter(this, getSupportFragmentManager()));
         mViewPager.addOnPageChangeListener(this);
-        mViewPager.setOffscreenPageLimit(mViewPager.getAdapter().getCount());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout_main);
         tabLayout.setupWithViewPager(mViewPager);
     }

@@ -3,7 +3,7 @@ package com.dids.venuerandomizer.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VenueModel {
+public class Venue {
     private String mId;
     private String mName;
 

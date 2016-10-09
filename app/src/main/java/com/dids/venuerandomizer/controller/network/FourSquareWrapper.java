@@ -11,7 +11,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.model.Category;
-import com.dids.venuerandomizer.model.VenueModel;
+import com.dids.venuerandomizer.model.Venue;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +36,7 @@ public class FourSquareWrapper {
     private static final String SEARCH_SORT_BY_DISTANCE = "&sortByDistance=1";
     private static final String SEARCH_OPEN_NOW = "&openNow=1";
     private static final String SEARCH_SECTION = "&section=%s";
+    private static final String SEARCH_LOCALE = "&locale=%s";
 
     /* JSON tags */
     private static final String TAG_RESPONSE = "response";
@@ -80,7 +81,7 @@ public class FourSquareWrapper {
         mContext = context;
     }
 
-    public List<VenueModel> getVenueList(Location location, String section) throws NoConnectionError {
+    public List<Venue> getVenueList(Location location, String section) throws NoConnectionError {
         StringBuilder builder = new StringBuilder();
         builder.append(FOURSQUARE_BASE_URL);
         builder.append(String.format(SEARCH_CLIENT_INFO, mContext.getString(R.string.client_id),
@@ -91,6 +92,7 @@ public class FourSquareWrapper {
         builder.append(SEARCH_SORT_BY_DISTANCE);
         builder.append(SEARCH_OPEN_NOW);
         builder.append(String.format(SEARCH_SECTION, section));
+        builder.append(String.format(SEARCH_LOCALE, "en")); // TODO: configurable locale
         Log.d(TAG, builder.toString());
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -98,14 +100,14 @@ public class FourSquareWrapper {
                 null, future, future);
         VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsonRequest);
         try {
-            List<VenueModel> venueList = new ArrayList<>();
+            List<Venue> venueList = new ArrayList<>();
             JSONObject response = future.get();
             JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
             for (int i = 0; i < groupArray.length(); i++) {
                 JSONArray itemArray = groupArray.getJSONObject(i).getJSONArray(TAG_ITEMS);
                 for (int j = 0; j < itemArray.length(); j++) {
                     JSONObject venueObject = itemArray.getJSONObject(j).getJSONObject(TAG_VENUE);
-                    VenueModel venue = new VenueModel();
+                    Venue venue = new Venue();
                     if (venueObject.has(TAG_ID)) {
                         venue.setId(venueObject.getString(TAG_ID));
                     }
@@ -139,6 +141,7 @@ public class FourSquareWrapper {
                         JSONObject hoursObject = venueObject.getJSONObject(TAG_HOURS);
                         setHours(hoursObject, venue);
                     }
+                    venueList.add(venue);
                 }
             }
             return venueList;
@@ -151,7 +154,7 @@ public class FourSquareWrapper {
         return null;
     }
 
-    private void setContact(JSONObject object, VenueModel venue) {
+    private void setContact(JSONObject object, Venue venue) {
         try {
             if (object.has(TAG_PHONE)) {
                 venue.setPhone(object.getString(TAG_PHONE));
@@ -176,7 +179,7 @@ public class FourSquareWrapper {
         }
     }
 
-    private void setLocation(JSONObject object, VenueModel venue) {
+    private void setLocation(JSONObject object, Venue venue) {
         try {
             if (object.has(TAG_ADDRESS)) {
                 venue.setAddress(object.getString(TAG_ADDRESS));
@@ -210,7 +213,7 @@ public class FourSquareWrapper {
         }
     }
 
-    private void setCategories(JSONArray array, VenueModel venue) {
+    private void setCategories(JSONArray array, Venue venue) {
         try {
             for (int index = 0; index < array.length(); index++) {
                 JSONObject categoryObject = array.getJSONObject(index);
@@ -246,7 +249,7 @@ public class FourSquareWrapper {
         }
     }
 
-    private void setHours(JSONObject hoursObject, VenueModel venue) {
+    private void setHours(JSONObject hoursObject, Venue venue) {
         try {
             if (hoursObject.has(TAG_STATUS)) {
                 venue.setStatus(hoursObject.getString(TAG_STATUS));

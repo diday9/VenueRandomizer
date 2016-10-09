@@ -3,13 +3,14 @@
     <color name="colorPrimary">#795548</color>
     <color name="colorPrimaryDark">#5D4037</color>
     <color name="colorAccent">#FFC107</color>
+    <color name="colorPrimaryAlpha">#D0795548</color>
+    <color name="colorOverlayAlpha">#40000000</color>
 
     <color name="light_text">#FFFFFF</color>
     <color name="light_text_disable">#B2FFFFFF</color>
-    <color name="dark_text">#000000</color>
-    <color name="dark_text_disable">#32000000</color>
-    <color name="dark_secondary_text">#8D8D8D</color>
-    <color name="dark_secondary_text_disabled">#CCCCCC</color>
+    <color name="dark_text">#212121</color>
+    <color name="dark_text_disable">#32212121</color>
+    <color name="dark_secondary_text">#BDBDBD</color>
     <color name="background">#FFFFFF</color>
 
 </resources>
