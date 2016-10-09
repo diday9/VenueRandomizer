@@ -14,4 +14,8 @@
 
     <!-- Card dimension -->
     <dimen name="card_inner_margin">12dp</dimen>
+
+    <!-- List dimensions -->
+    <dimen name="list_height">40dp</dimen>
+    <dimen name="list_icon_dimension">28dp</dimen>
 </resources>

@@ -19,6 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
+        android:clickable="true"
+        android:transitionName="card"
         android:visibility="gone"
         card_view:cardBackgroundColor="@color/colorPrimaryAlpha"
         card_view:cardCornerRadius="5dp"
@@ -38,9 +40,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/card_inner_margin"
-                android:text="@string/random_search_card_title"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/light_text" />
+                android:textColor="@color/light_text"
+                android:transitionName="venue_name" />
 
             <View
                 android:layout_width="match_parent"
@@ -59,15 +61,14 @@
                     android:id="@+id/category_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/random_search_card_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/light_text" />
+                    android:textColor="@color/light_text"
+                    android:transitionName="category" />
 
                 <TextView
                     android:id="@+id/address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/random_search_card_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/light_text" />
 
@@ -75,11 +76,12 @@
                     android:id="@+id/telephone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/random_search_card_title"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/light_text" />
-
             </LinearLayout>
+
+
+
 
         </LinearLayout>
 

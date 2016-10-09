@@ -11,11 +11,13 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.Surface;
 
 public class BaseActivity extends FragmentActivity {
     private static final int MIN_WIDTH = 600;
     private AppCompatDelegate mDelegate;
+    private boolean mIsTouchIntercepted;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,5 +85,17 @@ public class BaseActivity extends FragmentActivity {
             size.y = temp;
         }
         return size.x >= MIN_WIDTH;
+    }
+
+    public void interceptTouchEvents(boolean intercept) {
+        mIsTouchIntercepted = intercept;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (mIsTouchIntercepted) {
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

@@ -1,12 +1,11 @@
 <resources>
-    <string name="app_name">VenueRandomizer</string>
+    <string name="app_name">Find Me A Place</string>
     <string name="default_content_description">Content Description</string>
 
     <!-- Main activity strings -->
     <string name="tab_name_randomizer">Random</string>
 
     <!-- Random Fragment strings -->
-    <string name="random_search_card_title">Venue Type</string>
     <string name="random_select_venue_type">[Select Venue Type&#8230;]</string>
     <string name="random_venue_food">Food</string>
     <string name="random_venue_drinks">Drinks</string>

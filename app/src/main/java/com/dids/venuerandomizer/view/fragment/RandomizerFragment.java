@@ -1,5 +1,6 @@
 package com.dids.venuerandomizer.view.fragment;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,8 +10,10 @@ import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,18 +23,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dids.venuerandomizer.R;
+import com.dids.venuerandomizer.VenueRandomizer;
 import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.task.GetVenueListTask;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
+import com.dids.venuerandomizer.view.VenueDetailActivity;
+import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 public class RandomizerFragment extends Fragment implements View.OnClickListener,
-        GetVenueListTask.GetVenueListListener {
+        GetVenueListTask.GetVenueListListener, Animator.AnimatorListener {
     public static final int FOOD = 0;
     public static final int DRINKS = 1;
     public static final int COFFEE = 2;
@@ -48,6 +53,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private static final int MAX_COFFEE = 2;
     private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
 
+    private boolean mIsButtonGroupAnimated;
     private ProgressBar mProgress;
     private FloatingActionButton mSearchButton;
     private GetVenueListTask mGetVenueListTask;
@@ -80,7 +86,9 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mSearchButton.setImageDrawable(new TextDrawable(getContext().getResources(),
                 getString(R.string.random_find_now)));
         mButtonGroup = view.findViewById(R.id.button_group);
+        mIsButtonGroupAnimated = false;
         mResultView = view.findViewById(R.id.result);
+        mResultView.setOnClickListener(this);
         mVenueName = (TextView) view.findViewById(R.id.venue_name);
         mCategoryName = (TextView) view.findViewById(R.id.category_name);
         mAddress = (TextView) view.findViewById(R.id.address);
@@ -113,13 +121,25 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         int arrayId = res.getIdentifier(resource, "array", getContext().getPackageName());
         TypedArray attributions = res.obtainTypedArray(arrayId);
         copyright.setText(attributions.getString(0));
+        //noinspection ResourceType
         link.setText(attributions.getString(1));
         attributions.recycle();
     }
 
     @Override
     public void onClick(View v) {
+        if (v.equals(mResultView)) {
+            Intent intent = new Intent(getContext(), VenueDetailActivity.class);
+            Pair<View, String> card = Pair.create(mResultView, "card");
+            Pair<View, String> name = Pair.create((View) mVenueName, "venue_name");
+            Pair<View, String> category = Pair.create((View) mCategoryName, "category");
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(getActivity(), card, name, category);
+            startActivity(intent, options.toBundle());
+            return;
+        }
         if (mGetVenueListTask == null) {
+            ((BaseActivity) getActivity()).interceptTouchEvents(true);
             mProgress.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getContext(),
                     R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
             mProgress.setVisibility(View.VISIBLE);
@@ -142,10 +162,16 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     }
 
     private void animateButtonGroup() {
-        ObjectAnimator anim = ObjectAnimator.ofFloat(mButtonGroup, VERTICAL_TRANSLATION_PROPERTY,
-                VERTICAL_OFFSET);
-        anim.setDuration(ANIMATION_DURATION);
-        anim.start();
+        if (!mIsButtonGroupAnimated) {
+            mIsButtonGroupAnimated = true;
+            ObjectAnimator anim = ObjectAnimator.ofFloat(mButtonGroup, VERTICAL_TRANSLATION_PROPERTY,
+                    VERTICAL_OFFSET);
+            anim.setDuration(ANIMATION_DURATION);
+            anim.addListener(this);
+            anim.start();
+        } else {
+            ((BaseActivity) getActivity()).interceptTouchEvents(false);
+        }
         mResultView.setVisibility(View.VISIBLE);
     }
 
@@ -155,6 +181,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mSearchButton.setEnabled(true);
         mGetVenueListTask = null;
         if (venue != null) {
+            ((VenueRandomizer) getActivity().getApplication()).setVenue(venue);
             setVenue(venue);
             animateButtonGroup();
         }
@@ -194,7 +221,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
                 startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             }
         });
-        builder.setNegativeButton(R.string.cast_tracks_chooser_dialog_cancel, null);
+        builder.setNegativeButton(R.string.control_cancel, null);
         builder.create().show();
     }
 
@@ -209,5 +236,43 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         builder.setMessage(R.string.random_no_internet_msg);
         builder.setPositiveButton(R.string.control_ok, null);
         builder.create().show();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            resetView();
+        }
+    }
+
+    private void resetView() {
+        if (mResultView != null) {
+            mResultView.setVisibility(View.GONE);
+        }
+        if (mButtonGroup != null && mIsButtonGroupAnimated) {
+            mIsButtonGroupAnimated = false;
+            ObjectAnimator anim = ObjectAnimator.ofFloat(mButtonGroup,
+                    VERTICAL_TRANSLATION_PROPERTY, 0);
+            anim.setDuration(0);
+            anim.start();
+        }
+    }
+
+    @Override
+    public void onAnimationStart(Animator animation) {
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animation) {
+        ((BaseActivity) getActivity()).interceptTouchEvents(false);
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {
     }
 }
