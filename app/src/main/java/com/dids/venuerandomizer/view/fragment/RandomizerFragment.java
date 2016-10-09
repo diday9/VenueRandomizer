@@ -24,6 +24,7 @@ import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.task.GetVenueListTask;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
+import com.dids.venuerandomizer.view.custom.TextDrawable;
 
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +43,10 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     /* Food constants */
     private static final int MAX_FOOD = 2;
     private static final String FOOD_RESOURCE_ID = "bg_food%d";
+
+    /* Coffee constants */
+    private static final int MAX_COFFEE = 2;
+    private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
 
     private ProgressBar mProgress;
     private FloatingActionButton mSearchButton;
@@ -72,6 +77,8 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mProgress = (ProgressBar) view.findViewById(R.id.progress_indicator);
         mSearchButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.
                 getColor(getContext(), R.color.colorPrimaryAlpha)));
+        mSearchButton.setImageDrawable(new TextDrawable(getContext().getResources(),
+                getString(R.string.random_find_now)));
         mButtonGroup = view.findViewById(R.id.button_group);
         mResultView = view.findViewById(R.id.result);
         mVenueName = (TextView) view.findViewById(R.id.venue_name);
@@ -86,7 +93,8 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
                 background.setImageResource(R.drawable.bg_drinks);
                 break;
             case COFFEE:
-                background.setImageResource(R.drawable.bg_coffee);
+                setResources(String.format(Locale.getDefault(), COFFEE_RESOURCE_ID,
+                        rng.nextInt(MAX_COFFEE) + 1), copyright, link, background);
                 break;
             default:
                 setResources(String.format(Locale.getDefault(), FOOD_RESOURCE_ID,
