@@ -38,26 +38,183 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_height"
-                android:layout_marginLeft="@dimen/card_inner_margin"
-                android:layout_marginRight="@dimen/card_inner_margin"
+                android:background="@drawable/selector_list_bottom_border_background"
+                android:clickable="true"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin">
 
                 <ImageView
                     android:id="@+id/category_icon"
                     android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension" />
+                    android:layout_height="@dimen/list_icon_dimension"
+                    android:contentDescription="@string/default_content_description" />
 
                 <TextView
                     android:id="@+id/category_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:transitionName="category"
-                    android:layout_marginLeft="@dimen/card_inner_margin"
-                    android:gravity="center_vertical"
-                    android:textAppearance="?android:attr/textAppearanceListItem"
-                    android:textColor="@color/dark_text" />
+                    style="@style/ListTextStyle"
+                    android:transitionName="category" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height"
+                android:background="@drawable/selector_list_bottom_border_background"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/list_icon_dimension"
+                    android:layout_height="@dimen/list_icon_dimension"
+                    android:background="@drawable/ic_home_black"
+                    android:contentDescription="@string/default_content_description" />
+
+                <TextView
+                    android:id="@+id/address_name"
+                    style="@style/ListTextStyle"
+                    android:transitionName="address" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/telephone_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height"
+                android:background="@drawable/selector_list_bottom_border_background"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/list_icon_dimension"
+                    android:layout_height="@dimen/list_icon_dimension"
+                    android:background="@drawable/ic_phone_black"
+                    android:contentDescription="@string/default_content_description" />
+
+                <TextView
+                    android:id="@+id/telephone"
+                    style="@style/ListTextStyle"
+                    android:transitionName="telephone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/url_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height"
+                android:background="@drawable/selector_list_bottom_border_background"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/list_icon_dimension"
+                    android:layout_height="@dimen/list_icon_dimension"
+                    android:background="@drawable/ic_language_black"
+                    android:contentDescription="@string/default_content_description" />
+
+                <TextView
+                    android:id="@+id/url"
+                    style="@style/ListTextStyle"
+                    android:textColor="@color/hyperlink_color" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/status_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height"
+                android:background="@drawable/selector_list_bottom_border_background"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/list_icon_dimension"
+                    android:layout_height="@dimen/list_icon_dimension"
+                    android:background="@drawable/ic_access_time_black"
+                    android:contentDescription="@string/default_content_description" />
+
+                <TextView
+                    android:id="@+id/status"
+                    style="@style/ListTextStyle"
+                    android:textColor="@color/status_color" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rating_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height"
+                android:background="@drawable/selector_list_bottom_border_background"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/list_icon_dimension"
+                    android:layout_height="@dimen/list_icon_dimension"
+                    android:background="@drawable/ic_star_black"
+                    android:contentDescription="@string/default_content_description" />
+
+                <TextView
+                    android:id="@+id/rating"
+                    style="@style/ListTextStyle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fb_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height"
+                android:background="@drawable/selector_list_bottom_border_background"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/list_icon_dimension"
+                    android:layout_height="@dimen/list_icon_dimension"
+                    android:background="@drawable/ic_fb"
+                    android:contentDescription="@string/default_content_description" />
+
+                <TextView
+                    android:id="@+id/fb"
+                    style="@style/ListTextStyle"
+                    android:textColor="@color/fb_color" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/twitter_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_height"
+                android:background="@drawable/selector_list_bottom_border_background"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/list_icon_dimension"
+                    android:layout_height="@dimen/list_icon_dimension"
+                    android:background="@drawable/ic_twitter"
+                    android:contentDescription="@string/default_content_description" />
+
+                <TextView
+                    android:id="@+id/twitter"
+                    style="@style/ListTextStyle" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

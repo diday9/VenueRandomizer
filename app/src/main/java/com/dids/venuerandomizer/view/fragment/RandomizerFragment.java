@@ -133,8 +133,11 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             Pair<View, String> card = Pair.create(mResultView, "card");
             Pair<View, String> name = Pair.create((View) mVenueName, "venue_name");
             Pair<View, String> category = Pair.create((View) mCategoryName, "category");
+            Pair<View, String> address = Pair.create((View) mAddress, "address");
+            Pair<View, String> telephone = Pair.create((View) mTelephone, "telephone");
             ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(getActivity(), card, name, category);
+                    makeSceneTransitionAnimation(getActivity(), card, name, category,
+                            address, telephone);
             startActivity(intent, options.toBundle());
             return;
         }

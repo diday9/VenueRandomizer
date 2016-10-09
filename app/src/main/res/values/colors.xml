@@ -6,11 +6,15 @@
     <color name="colorPrimaryAlpha">#D0795548</color>
     <color name="colorOverlayAlpha">#40000000</color>
 
+    <color name="divider_color">#BDBDBD</color>
     <color name="light_text">#FFFFFF</color>
     <color name="light_text_disable">#B2FFFFFF</color>
     <color name="dark_text">#212121</color>
     <color name="dark_text_disable">#32212121</color>
     <color name="dark_secondary_text">#BDBDBD</color>
     <color name="background">#FFFFFF</color>
+    <color name="hyperlink_color">#0000EE</color>
+    <color name="status_color">#32CD32</color>
+    <color name="fb_color">#3b5998</color>
 
 </resources>
