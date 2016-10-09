@@ -2,10 +2,10 @@
     <string name="app_name">VenueRandomizer</string>
     <string name="default_content_description">Content Description</string>
 
-    <!-- Main activity Strings -->
+    <!-- Main activity strings -->
     <string name="tab_name_randomizer">Random</string>
 
-    <!-- Random Fragment Strings -->
+    <!-- Random Fragment strings -->
     <string name="random_search_card_title">Venue Type</string>
     <string name="random_select_venue_type">[Select Venue Type&#8230;]</string>
     <string name="random_venue_food">Food</string>
@@ -13,6 +13,14 @@
     <string name="random_venue_coffee">Coffee</string>
     <string name="random_venue_all">All types</string>
     <string name="random_search_button_text">Search now!</string>
+    <string name="random_gps_disabled">Location is disabled</string>
+    <string name="random_gps_disabled_msg">Do you want to enable Location in Settings?</string>
+    <string name="random_no_internet">Internet required</string>
+    <string name="random_no_internet_msg">Internet connection is required to use this feature.</string>
+
+    <!-- Control strings -->
+    <string name="control_ok">OK</string>
+    <string name="control_cancel">Cancel</string>
 
     <!-- Foursquare strings-->
     <string name="client_id">UF4GJRFLPUIANVKRCSZBZFGXEYS20ZK0FFPSMH2WI2WPCIIB</string>
