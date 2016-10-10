@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.dids.venuerandomizer">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,7 +13,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.BrandedLaunch">
+        android:theme="@style/AppTheme.BrandedLaunch"
+        tools:replace="android:icon">
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDK6Zk_QFcfuyRnCyb7mrwlXK5ByyTnGzk" />
+
         <activity
             android:name=".view.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -29,5 +36,4 @@
             android:name=".view.HelpActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
-
 </manifest>

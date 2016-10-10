@@ -70,6 +70,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
             <LinearLayout
@@ -95,6 +96,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/address_group"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_height"
                 android:background="@drawable/selector_list_bottom_border_background"
@@ -115,6 +117,13 @@
                     style="@style/ListTextStyle"
                     android:transitionName="address" />
             </LinearLayout>
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapview"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="@dimen/card_inner_margin"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/telephone_group"

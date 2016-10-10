@@ -54,6 +54,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
 
     private boolean mIsButtonGroupAnimated;
+    private String mVenueId;
     private ProgressBar mProgress;
     private FloatingActionButton mSearchButton;
     private GetVenueListTask mGetVenueListTask;
@@ -160,7 +161,11 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
                     break;
             }
             mGetVenueListTask = new GetVenueListTask(getContext(), this);
-            mGetVenueListTask.execute(section);
+            if (mVenueId != null) {
+                mGetVenueListTask.execute(section, mVenueId);
+            } else {
+                mGetVenueListTask.execute(section);
+            }
         }
     }
 
@@ -194,6 +199,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
 
     private void setVenue(Venue venue) {
         mVenueName.setText(venue.getName());
+        mVenueId = venue.getId();
         if (venue.getCategories() != null && !venue.getCategories().isEmpty()) {
             for (Category category : venue.getCategories()) {
                 if (category.isPrimary()) {

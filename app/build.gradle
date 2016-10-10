@@ -10,7 +10,7 @@ android {
         targetSdkVersion 24
         versionCode 1
         multiDexEnabled true
-        versionName "1.0"
+        versionName "1.0.0000"
     }
     signingConfigs {
         if (project.hasProperty("release.properties") &&
@@ -49,4 +49,6 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.google.android.gms:play-services-location:9.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.github.traex.expandablelayout:library:1.2.2'
 }

@@ -17,12 +17,18 @@ import com.dids.venuerandomizer.VenueRandomizer;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.base.BaseActivity;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-public class VenueDetailActivity extends BaseActivity implements View.OnClickListener {
+public class VenueDetailActivity extends BaseActivity implements View.OnClickListener,
+        OnMapReadyCallback {
     private Venue mVenue;
+    private MapView mMapView;
+    private boolean mIsMapDisplayed;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,9 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         /** Set images */
         setImages(loader);
 
+//        /** Initialize map */
+//        initializeMap(savedInstanceState);
+
         /** Set category */
         if (mVenue.getCategories() != null && !mVenue.getCategories().isEmpty()) {
             for (Category category : mVenue.getCategories()) {
@@ -57,6 +66,9 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         }
 
         /** Set Address */
+        mIsMapDisplayed = false;
+        View addressGroup = findViewById(R.id.address_group);
+        addressGroup.setOnClickListener(this);
         TextView address = (TextView) findViewById(R.id.address_name);
         address.setText(mVenue.getCity() + ", " + mVenue.getState());
 
@@ -138,6 +150,14 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.address_group:
+                if (mIsMapDisplayed) {
+                    mMapView.setVisibility(View.GONE);
+                } else {
+                    mMapView.setVisibility(View.VISIBLE);
+                }
+                mIsMapDisplayed = !mIsMapDisplayed;
+                break;
             case R.id.telephone_group:
                 Intent callIntent = new Intent(Intent.ACTION_DIAL,
                         Uri.parse("tel:" + mVenue.getPhone()));
@@ -206,4 +226,41 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
             }
         }
     }
+
+    private void initializeMap(Bundle savedInstanceState) {
+        // Gets the MapView from the XML layout and creates it
+        mMapView = (MapView) findViewById(R.id.mapview);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.getMapAsync(this);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+//        googleMap.setMyLocationEnabled(true);
+    }
+
+//    @Override
+//    protected void onResume() {
+//        mMapView.onResume();
+//        super.onResume();
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        mMapView.onPause();
+//        super.onPause();
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        mMapView.onDestroy();
+//        super.onDestroy();
+//    }
+//
+//    @Override
+//    public void onLowMemory() {
+//        mMapView.onLowMemory();
+//        super.onLowMemory();
+//    }
 }

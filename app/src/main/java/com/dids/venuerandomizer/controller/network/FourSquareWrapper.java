@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class FourSquareWrapper {
@@ -28,6 +29,7 @@ public class FourSquareWrapper {
 
     private static final String TAG = "FourSquareWrapper";
     private static final int MAX_PHOTO_COUNT = 3;
+    private static final int MAX_UNIQUE_RETRY = 5;
 
     /* Foursquare API Constants */
     private static final String FOURSQUARE_SEARCH_URL = "https://api.foursquare.com/v2/venues/explore?";
@@ -84,6 +86,89 @@ public class FourSquareWrapper {
         mContext = context;
     }
 
+    public Venue getRandomVenue(Location location, String section) throws NoConnectionError {
+        StringBuilder builder = new StringBuilder();
+        builder.append(FOURSQUARE_SEARCH_URL);
+        builder.append(String.format(SEARCH_CLIENT_INFO, mContext.getString(R.string.client_id),
+                mContext.getString(R.string.client_secret)));
+        builder.append(String.format(SEARCH_LOCATION, String.valueOf(location.getLatitude()),
+                String.valueOf(location.getLongitude())));
+        builder.append(String.format(SEARCH_VERSION, mContext.getString(R.string.api_version)));
+        builder.append(SEARCH_SORT_BY_DISTANCE);
+        builder.append(SEARCH_OPEN_NOW);
+        builder.append(String.format(SEARCH_SECTION, section));
+        builder.append(String.format(SEARCH_LOCALE, "en")); // TODO: configurable locale
+        Log.d(TAG, builder.toString());
+
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, builder.toString(),
+                null, future, future);
+        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsonRequest);
+        try {
+            JSONObject response = future.get();
+            JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
+            for (int i = 0; i < groupArray.length(); i++) {
+                JSONArray itemArray = groupArray.getJSONObject(i).getJSONArray(TAG_ITEMS);
+                Random random = new Random();
+                JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
+                        length())).getJSONObject(TAG_VENUE);
+                Venue venue = new Venue();
+                getVenueDetails(venueObject, venue);
+                return venue;
+            }
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            Log.e(TAG, "Error in get venue list request: " + e.getMessage());
+            if (e.getCause() instanceof NoConnectionError) {
+                throw (NoConnectionError) e.getCause();
+            }
+        }
+        return null;
+    }
+
+    public Venue getRandomVenue(String id, Location location, String section) throws NoConnectionError {
+        StringBuilder builder = new StringBuilder();
+        builder.append(FOURSQUARE_SEARCH_URL);
+        builder.append(String.format(SEARCH_CLIENT_INFO, mContext.getString(R.string.client_id),
+                mContext.getString(R.string.client_secret)));
+        builder.append(String.format(SEARCH_LOCATION, String.valueOf(location.getLatitude()),
+                String.valueOf(location.getLongitude())));
+        builder.append(String.format(SEARCH_VERSION, mContext.getString(R.string.api_version)));
+        builder.append(SEARCH_SORT_BY_DISTANCE);
+        builder.append(SEARCH_OPEN_NOW);
+        builder.append(String.format(SEARCH_SECTION, section));
+        builder.append(String.format(SEARCH_LOCALE, "en")); // TODO: configurable locale
+        Log.d(TAG, builder.toString());
+
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, builder.toString(),
+                null, future, future);
+        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsonRequest);
+        try {
+            JSONObject response = future.get();
+            JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
+            for (int i = 0; i < groupArray.length(); i++) {
+                JSONArray itemArray = groupArray.getJSONObject(i).getJSONArray(TAG_ITEMS);
+                Venue venue = new Venue();
+                Random random = new Random();
+                for (int retryCount = 0; retryCount < MAX_UNIQUE_RETRY; retryCount++) {
+                    JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
+                            length())).getJSONObject(TAG_VENUE);
+                    getVenueDetails(venueObject, venue);
+                    if (!venue.getId().equals(id)) {
+                        break;
+                    }
+                }
+                return venue;
+            }
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            Log.e(TAG, "Error in get venue list request: " + e.getMessage());
+            if (e.getCause() instanceof NoConnectionError) {
+                throw (NoConnectionError) e.getCause();
+            }
+        }
+        return null;
+    }
+
     public List<Venue> getVenueList(Location location, String section) throws NoConnectionError {
         StringBuilder builder = new StringBuilder();
         builder.append(FOURSQUARE_SEARCH_URL);
@@ -111,41 +196,7 @@ public class FourSquareWrapper {
                 for (int j = 0; j < itemArray.length(); j++) {
                     JSONObject venueObject = itemArray.getJSONObject(j).getJSONObject(TAG_VENUE);
                     Venue venue = new Venue();
-                    if (venueObject.has(TAG_ID)) {
-                        venue.setId(venueObject.getString(TAG_ID));
-                    }
-                    if (venueObject.has(TAG_NAME)) {
-                        venue.setName(venueObject.getString(TAG_NAME));
-                    }
-
-                    if (venueObject.has(TAG_CONTACT)) {
-                        JSONObject contactObject = venueObject.getJSONObject(TAG_CONTACT);
-                        setContact(contactObject, venue);
-                    }
-
-                    if (venueObject.has(TAG_LOCATION)) {
-                        JSONObject locationObject = venueObject.getJSONObject(TAG_LOCATION);
-                        setLocation(locationObject, venue);
-                    }
-
-                    if (venueObject.has(TAG_CATEGORIES)) {
-                        JSONArray categoryArray = venueObject.getJSONArray(TAG_CATEGORIES);
-                        setCategories(categoryArray, venue);
-                    }
-
-                    if (venueObject.has(TAG_URL)) {
-                        venue.setUrl(venueObject.getString(TAG_URL));
-                    }
-                    if (venueObject.has(TAG_RATING)) {
-                        venue.setRating(venueObject.getDouble(TAG_RATING));
-                    }
-
-                    if (venueObject.has(TAG_HOURS)) {
-                        JSONObject hoursObject = venueObject.getJSONObject(TAG_HOURS);
-                        setHours(hoursObject, venue);
-                    }
-
-                    fetchImages(venue);
+                    getVenueDetails(venueObject, venue);
                     venueList.add(venue);
                 }
             }
@@ -157,6 +208,44 @@ public class FourSquareWrapper {
             }
         }
         return null;
+    }
+
+    private void getVenueDetails(JSONObject venueObject, Venue venue) throws JSONException,
+            NoConnectionError {
+        if (venueObject.has(TAG_ID)) {
+            venue.setId(venueObject.getString(TAG_ID));
+        }
+        if (venueObject.has(TAG_NAME)) {
+            venue.setName(venueObject.getString(TAG_NAME));
+        }
+
+        if (venueObject.has(TAG_CONTACT)) {
+            JSONObject contactObject = venueObject.getJSONObject(TAG_CONTACT);
+            setContact(contactObject, venue);
+        }
+
+        if (venueObject.has(TAG_LOCATION)) {
+            JSONObject locationObject = venueObject.getJSONObject(TAG_LOCATION);
+            setLocation(locationObject, venue);
+        }
+
+        if (venueObject.has(TAG_CATEGORIES)) {
+            JSONArray categoryArray = venueObject.getJSONArray(TAG_CATEGORIES);
+            setCategories(categoryArray, venue);
+        }
+
+        if (venueObject.has(TAG_URL)) {
+            venue.setUrl(venueObject.getString(TAG_URL));
+        }
+        if (venueObject.has(TAG_RATING)) {
+            venue.setRating(venueObject.getDouble(TAG_RATING));
+        }
+
+        if (venueObject.has(TAG_HOURS)) {
+            JSONObject hoursObject = venueObject.getJSONObject(TAG_HOURS);
+            setHours(hoursObject, venue);
+        }
+        fetchImages(venue);
     }
 
     private void setContact(JSONObject object, Venue venue) {
