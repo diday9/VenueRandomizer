@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Update count in VenueRandomizerApplication when modifying this file -->
     <array name="bg_coffee1">
-        <item>&#169; by Jerome Conal Sia Sin</item>
-        <item>jerome.conal on Facebook</item>
-    </array>
-    <array name="bg_coffee2">
         <item>&#169; by Rogene Lacanienta</item>
         <item>rogene on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee1.jpg</item>
+    </array>
+    <array name="bg_coffee2">
+        <item>&#169; by Jerome Conal Sia Sin</item>
+        <item>jerome.conal on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee2.jpg</item>
     </array>
 </resources>

@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dids.venuerandomizer.R;
-import com.dids.venuerandomizer.VenueRandomizer;
+import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.base.BaseActivity;
@@ -38,7 +38,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         setToolbar(R.id.toolbar, true);
         ImageView toolbar = (ImageView) findViewById(R.id.toolbar_bg);
         toolbar.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-        mVenue = ((VenueRandomizer) getApplication()).getVenue();
+        mVenue = ((VenueRandomizerApplication) getApplication()).getVenue();
 
         TextView venueName = (TextView) findViewById(R.id.venue_name);
         venueName.setText(mVenue.getName());

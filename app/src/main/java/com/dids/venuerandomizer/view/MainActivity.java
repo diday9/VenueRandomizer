@@ -23,7 +23,7 @@ import com.dids.venuerandomizer.view.adapter.MainViewPagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
-    private static final String TAG = "VenueRandomizer";
+    private static final String TAG = "MainActivity";
     private static final int PERMISSION_REQUEST_ACCESS_LOCATION = 1;
     private ViewPager mViewPager;
 
@@ -39,6 +39,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mViewPager = (ViewPager) findViewById(R.id.pager_main);
         mViewPager.setAdapter(new MainViewPagerAdapter(this, getSupportFragmentManager()));
         mViewPager.addOnPageChangeListener(this);
+        mViewPager.setOffscreenPageLimit(mViewPager.getAdapter().getCount());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout_main);
         tabLayout.setupWithViewPager(mViewPager);
     }

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Update count in VenueRandomizerApplication when modifying this file -->
     <array name="bg_food1">
         <item>&#169; by Jeng Garcia</item>
         <item>erikadiaz000 on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_food11.jpg</item>
     </array>
     <array name="bg_food2">
         <item>&#169; by Rogene Lacanienta</item>
         <item>rogene on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_food22.jpg</item>
+    </array>
+    <array name="bg_food3">
+        <item>&#169; by Blanca Marie</item>
+        <item>eliot.blanca on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_food3.jpg</item>
+    </array>
+    <array name="bg_food4">
+        <item>&#169; by Blanca Marie</item>
+        <item>eliot.blanca on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_food4.jpg</item>
     </array>
 </resources>

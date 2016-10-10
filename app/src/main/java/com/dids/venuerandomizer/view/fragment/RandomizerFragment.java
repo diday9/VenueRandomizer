@@ -23,7 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dids.venuerandomizer.R;
-import com.dids.venuerandomizer.VenueRandomizer;
+import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.task.GetVenueListTask;
 import com.dids.venuerandomizer.model.Category;
@@ -31,9 +31,7 @@ import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.VenueDetailActivity;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
-
-import java.util.Locale;
-import java.util.Random;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RandomizerFragment extends Fragment implements View.OnClickListener,
         GetVenueListTask.GetVenueListListener, Animator.AnimatorListener {
@@ -44,14 +42,6 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private static final int VERTICAL_OFFSET = 200;
     private static final int ANIMATION_DURATION = 1000;
     private static final String TYPE = "type";
-
-    /* Food constants */
-    private static final int MAX_FOOD = 2;
-    private static final String FOOD_RESOURCE_ID = "bg_food%d";
-
-    /* Coffee constants */
-    private static final int MAX_COFFEE = 2;
-    private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
 
     private boolean mIsButtonGroupAnimated;
     private String mVenueId;
@@ -94,36 +84,32 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mCategoryName = (TextView) view.findViewById(R.id.category_name);
         mAddress = (TextView) view.findViewById(R.id.address);
         mTelephone = (TextView) view.findViewById(R.id.telephone);
-        Random rng = new Random();
         TextView copyright = (TextView) view.findViewById(R.id.copyright);
         TextView link = (TextView) view.findViewById(R.id.link);
+        VenueRandomizerApplication app = ((VenueRandomizerApplication)getActivity().getApplication());
         switch (getArguments().getInt(TYPE, FOOD)) {
             case DRINKS:
-                background.setImageResource(R.drawable.bg_drinks);
+                setResources(app.getDrinksArrrayId(), copyright, link, background);
                 break;
             case COFFEE:
-                setResources(String.format(Locale.getDefault(), COFFEE_RESOURCE_ID,
-                        rng.nextInt(MAX_COFFEE) + 1), copyright, link, background);
+                setResources(app.getCoffeeArrrayId(), copyright, link, background);
                 break;
             default:
-                setResources(String.format(Locale.getDefault(), FOOD_RESOURCE_ID,
-                        rng.nextInt(MAX_FOOD) + 1), copyright, link, background);
+                setResources(app.getFoodArrrayId(), copyright, link, background);
                 break;
         }
         return view;
     }
 
-    private void setResources(String resource, TextView copyright, TextView link,
-                              ImageView background) {
+    private void setResources(int resId, TextView copyright, TextView link, ImageView background) {
         Resources res = getContext().getResources();
-        int drawableId = res.getIdentifier(resource, "drawable", getContext().getPackageName());
-        background.setImageResource(drawableId);
-
-        int arrayId = res.getIdentifier(resource, "array", getContext().getPackageName());
-        TypedArray attributions = res.obtainTypedArray(arrayId);
+        TypedArray attributions = res.obtainTypedArray(resId);
         copyright.setText(attributions.getString(0));
         //noinspection ResourceType
         link.setText(attributions.getString(1));
+        ImageLoader loader = ImageLoader.getInstance();
+        //noinspection ResourceType
+        loader.displayImage(attributions.getString(2), background);
         attributions.recycle();
     }
 
@@ -189,7 +175,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mSearchButton.setEnabled(true);
         mGetVenueListTask = null;
         if (venue != null) {
-            ((VenueRandomizer) getActivity().getApplication()).setVenue(venue);
+            ((VenueRandomizerApplication) getActivity().getApplication()).setVenue(venue);
             setVenue(venue);
             animateButtonGroup();
         } else {
