@@ -20,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:clickable="true"
-        android:transitionName="card"
         android:visibility="gone"
         card_view:cardBackgroundColor="@color/colorPrimaryAlpha"
         card_view:cardCornerRadius="5dp"

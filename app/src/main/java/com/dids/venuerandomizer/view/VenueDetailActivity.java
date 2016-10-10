@@ -17,9 +17,14 @@ import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.base.BaseActivity;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -48,8 +53,8 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         /** Set images */
         setImages(loader);
 
-//        /** Initialize map */
-//        initializeMap(savedInstanceState);
+        /** Initialize map */
+        initializeMap(savedInstanceState);
 
         /** Set category */
         if (mVenue.getCategories() != null && !mVenue.getCategories().isEmpty()) {
@@ -203,32 +208,35 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
     private void setImages(ImageLoader loader) {
         List<String> photoUrls = mVenue.getPhotoUrls();
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().
+                cacheInMemory(false).
+                cacheOnDisk(false).build();
         if (photoUrls != null && !photoUrls.isEmpty()) {
             ImageView image1 = (ImageView) findViewById(R.id.image1);
             ImageView image2 = (ImageView) findViewById(R.id.image2);
             ImageView image3 = (ImageView) findViewById(R.id.image3);
             switch (photoUrls.size()) {
                 case 1:
-                    loader.displayImage(photoUrls.get(0), image1);
+                    loader.displayImage(photoUrls.get(0), image1, defaultOptions);
                     image2.setVisibility(View.GONE);
                     image3.setVisibility(View.GONE);
                     break;
                 case 2:
-                    loader.displayImage(photoUrls.get(0), image1);
-                    loader.displayImage(photoUrls.get(1), image2);
+                    loader.displayImage(photoUrls.get(0), image1, defaultOptions);
+                    loader.displayImage(photoUrls.get(1), image2, defaultOptions);
                     image3.setVisibility(View.GONE);
                     break;
                 default:
-                    loader.displayImage(photoUrls.get(0), image1);
-                    loader.displayImage(photoUrls.get(1), image2);
-                    loader.displayImage(photoUrls.get(2), image3);
+                    loader.displayImage(photoUrls.get(0), image1, defaultOptions);
+                    loader.displayImage(photoUrls.get(1), image2, defaultOptions);
+                    loader.displayImage(photoUrls.get(2), image3, defaultOptions);
                     break;
             }
         }
     }
 
     private void initializeMap(Bundle savedInstanceState) {
-        // Gets the MapView from the XML layout and creates it
+        MapsInitializer.initialize(this);
         mMapView = (MapView) findViewById(R.id.mapview);
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(this);
@@ -237,30 +245,34 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-//        googleMap.setMyLocationEnabled(true);
+        LatLng latLng = new LatLng(mVenue.getLongitude(), mVenue.getLatitude());
+        googleMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(mVenue.getName()));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
     }
 
-//    @Override
-//    protected void onResume() {
-//        mMapView.onResume();
-//        super.onResume();
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        mMapView.onPause();
-//        super.onPause();
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        mMapView.onDestroy();
-//        super.onDestroy();
-//    }
-//
-//    @Override
-//    public void onLowMemory() {
-//        mMapView.onLowMemory();
-//        super.onLowMemory();
-//    }
+    @Override
+    protected void onResume() {
+        mMapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mMapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mMapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        mMapView.onLowMemory();
+        super.onLowMemory();
+    }
 }

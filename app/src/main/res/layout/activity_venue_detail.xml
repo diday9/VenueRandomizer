@@ -7,8 +7,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/colorPrimary"
-        android:transitionName="card">
+        android:background="@color/colorPrimary">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -63,6 +62,7 @@
     </FrameLayout>
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -118,7 +118,7 @@
                     android:transitionName="address" />
             </LinearLayout>
 
-            <com.google.android.gms.maps.MapView
+            <com.dids.venuerandomizer.view.custom.CustomMapView
                 android:id="@+id/mapview"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
