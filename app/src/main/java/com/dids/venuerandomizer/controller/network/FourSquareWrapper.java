@@ -28,7 +28,7 @@ public class FourSquareWrapper {
     public static final String SECTION_COFFEE = "coffee";
 
     private static final String TAG = "FourSquareWrapper";
-    private static final int MAX_PHOTO_COUNT = 3;
+    private static final int MAX_PHOTO_COUNT = 10;
     private static final int MAX_UNIQUE_RETRY = 5;
 
     /* Foursquare API Constants */

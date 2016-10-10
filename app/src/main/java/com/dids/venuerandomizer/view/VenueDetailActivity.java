@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +16,7 @@ import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
+import com.dids.venuerandomizer.view.adapter.SlidingImagePagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +25,6 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -41,17 +41,16 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_detail);
         setToolbar(R.id.toolbar, true);
-        ImageView toolbar = (ImageView) findViewById(R.id.toolbar_bg);
-        toolbar.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
         mVenue = ((VenueRandomizerApplication) getApplication()).getVenue();
-
-        TextView venueName = (TextView) findViewById(R.id.venue_name);
-        venueName.setText(mVenue.getName());
-
-        ImageLoader loader = ImageLoader.getInstance();
+        TextView toolbar = (TextView) findViewById(R.id.toolbar_text);
+        toolbar.setText(mVenue.getName());
 
         /** Set images */
-        setImages(loader);
+        List<String> photoUrls = mVenue.getPhotoUrls();
+        if (photoUrls != null && !photoUrls.isEmpty()) {
+            ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+            viewPager.setAdapter(new SlidingImagePagerAdapter(getSupportFragmentManager(), photoUrls));
+        }
 
         /** Initialize map */
         initializeMap(savedInstanceState);
@@ -62,6 +61,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 if (category.isPrimary()) {
                     TextView categoryName = (TextView) findViewById(R.id.category_name);
                     ImageView imageView = (ImageView) findViewById(R.id.category_icon);
+                    ImageLoader loader = ImageLoader.getInstance();
                     loader.displayImage(category.getIconPrefix() + "bg_88" +
                             category.getIconSuffix(), imageView);
                     categoryName.setText(category.getName());
@@ -107,13 +107,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         }
 
         /** Set rating */
-        View ratingGroup = findViewById(R.id.rating_group);
-        if (mVenue.getRating() != 0) {
-            TextView rating = (TextView) findViewById(R.id.rating);
-            rating.setText(String.valueOf(mVenue.getRating()));
-        } else {
-            ratingGroup.setVisibility(View.GONE);
-        }
+        setRating();
 
         /** Set Facebook */
         View fbGroup = findViewById(R.id.fb_group);
@@ -206,40 +200,64 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    private void setImages(ImageLoader loader) {
-        List<String> photoUrls = mVenue.getPhotoUrls();
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().
-                cacheInMemory(false).
-                cacheOnDisk(false).build();
-        if (photoUrls != null && !photoUrls.isEmpty()) {
-            ImageView image1 = (ImageView) findViewById(R.id.image1);
-            ImageView image2 = (ImageView) findViewById(R.id.image2);
-            ImageView image3 = (ImageView) findViewById(R.id.image3);
-            switch (photoUrls.size()) {
-                case 1:
-                    loader.displayImage(photoUrls.get(0), image1, defaultOptions);
-                    image2.setVisibility(View.GONE);
-                    image3.setVisibility(View.GONE);
-                    break;
-                case 2:
-                    loader.displayImage(photoUrls.get(0), image1, defaultOptions);
-                    loader.displayImage(photoUrls.get(1), image2, defaultOptions);
-                    image3.setVisibility(View.GONE);
-                    break;
-                default:
-                    loader.displayImage(photoUrls.get(0), image1, defaultOptions);
-                    loader.displayImage(photoUrls.get(1), image2, defaultOptions);
-                    loader.displayImage(photoUrls.get(2), image3, defaultOptions);
-                    break;
-            }
-        }
-    }
-
     private void initializeMap(Bundle savedInstanceState) {
         MapsInitializer.initialize(this);
         mMapView = (MapView) findViewById(R.id.mapview);
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(this);
+    }
+
+    private void setRating() {
+        ImageView star1 = (ImageView) findViewById(R.id.star1);
+        ImageView star2 = (ImageView) findViewById(R.id.star2);
+        ImageView star3 = (ImageView) findViewById(R.id.star3);
+        ImageView star4 = (ImageView) findViewById(R.id.star4);
+        ImageView star5 = (ImageView) findViewById(R.id.star5);
+        switch ((int) mVenue.getRating()) {
+            case 1:
+                star1.setBackgroundResource(R.drawable.ic_star_half);
+                star2.setVisibility(View.GONE);
+                star3.setVisibility(View.GONE);
+                star4.setVisibility(View.GONE);
+                star5.setVisibility(View.GONE);
+                break;
+            case 2:
+                star2.setVisibility(View.GONE);
+                star3.setVisibility(View.GONE);
+                star4.setVisibility(View.GONE);
+                star5.setVisibility(View.GONE);
+                break;
+            case 3:
+                star2.setBackgroundResource(R.drawable.ic_star_half);
+                star3.setVisibility(View.GONE);
+                star4.setVisibility(View.GONE);
+                star5.setVisibility(View.GONE);
+                break;
+            case 4:
+                star3.setVisibility(View.GONE);
+                star4.setVisibility(View.GONE);
+                star5.setVisibility(View.GONE);
+                break;
+            case 5:
+                star3.setBackgroundResource(R.drawable.ic_star_half);
+                star4.setVisibility(View.GONE);
+                star5.setVisibility(View.GONE);
+                break;
+            case 6:
+                star4.setVisibility(View.GONE);
+                star5.setVisibility(View.GONE);
+                break;
+            case 7:
+                star4.setBackgroundResource(R.drawable.ic_star_half);
+                star5.setVisibility(View.GONE);
+                break;
+            case 8:
+                star5.setVisibility(View.GONE);
+                break;
+            case 9:
+                star5.setBackgroundResource(R.drawable.ic_star_half);
+                break;
+        }
     }
 
     @Override

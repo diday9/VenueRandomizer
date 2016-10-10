@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -40,7 +41,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     public static final int COFFEE = 2;
     private static final String VERTICAL_TRANSLATION_PROPERTY = "translationY";
     private static final int VERTICAL_OFFSET = 200;
-    private static final int ANIMATION_DURATION = 1000;
+    private static final int ANIMATION_DURATION = 700;
     private static final String TYPE = "type";
 
     private boolean mIsButtonGroupAnimated;

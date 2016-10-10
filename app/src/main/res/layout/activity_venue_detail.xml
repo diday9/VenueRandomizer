@@ -1,64 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/toolbar"
+        android:transitionName="venue_name" />
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@color/colorPrimary">
+        android:layout_height="200dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/launcher_icon"
-            android:contentDescription="@string/default_content_description" />
-
-        <LinearLayout
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:background="@color/colorPrimary" />
 
-            <ImageView
-                android:id="@+id/image1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:contentDescription="@string/default_content_description"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:id="@+id/image2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:contentDescription="@string/default_content_description"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:id="@+id/image3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:contentDescription="@string/default_content_description"
-                android:scaleType="centerCrop" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/venue_name"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
             android:layout_margin="@dimen/card_inner_margin"
-            android:layout_marginTop="@dimen/card_inner_margin"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/light_text"
-            android:transitionName="venue_name" />
+            android:orientation="horizontal">
 
-        <include layout="@layout/toolbar" />
+            <ImageView
+                android:id="@+id/star1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_star"
+                android:contentDescription="@string/default_content_description" />
+
+            <ImageView
+                android:id="@+id/star2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_star"
+                android:contentDescription="@string/default_content_description" />
+
+            <ImageView
+                android:id="@+id/star3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_star"
+                android:contentDescription="@string/default_content_description" />
+
+            <ImageView
+                android:id="@+id/star4"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_star"
+                android:contentDescription="@string/default_content_description" />
+
+            <ImageView
+                android:id="@+id/star5"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_star"
+                android:contentDescription="@string/default_content_description" />
+        </LinearLayout>
+
     </FrameLayout>
 
     <ScrollView
@@ -192,28 +195,6 @@
                     android:id="@+id/status"
                     style="@style/ListTextStyle"
                     android:textColor="@color/status_color" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/rating_group"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
-                android:background="@drawable/selector_list_bottom_border_background"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/card_inner_margin"
-                android:paddingRight="@dimen/card_inner_margin">
-
-                <ImageView
-                    android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension"
-                    android:background="@drawable/ic_star_black"
-                    android:contentDescription="@string/default_content_description" />
-
-                <TextView
-                    android:id="@+id/rating"
-                    style="@style/ListTextStyle" />
             </LinearLayout>
 
             <LinearLayout
