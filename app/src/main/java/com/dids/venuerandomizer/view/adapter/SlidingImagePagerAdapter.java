@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.dids.venuerandomizer.view.fragment.ImageViewFragment;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -14,6 +15,11 @@ public class SlidingImagePagerAdapter extends FragmentPagerAdapter {
     public SlidingImagePagerAdapter(FragmentManager fm, List<String> urlList) {
         super(fm);
         mUrlList = urlList;
+        /** Pre-cache all images */
+        ImageLoader loader = ImageLoader.getInstance();
+        for (String url : mUrlList) {
+            loader.loadImage(url, null);
+        }
     }
 
     @Override

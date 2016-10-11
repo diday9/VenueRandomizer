@@ -13,6 +13,8 @@
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerItemDropDownStyle</item>
     </style>
 
+    <style name="VenueDetailTheme" parent="AppTheme" />
+
     <!-- Branded Launch Theme -->
     <style name="AppTheme.BrandedLaunch">
         <item name="android:windowBackground">@drawable/launcher_bg</item>

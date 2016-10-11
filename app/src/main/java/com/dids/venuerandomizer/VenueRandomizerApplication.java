@@ -3,14 +3,19 @@ package com.dids.venuerandomizer;
 import android.app.Application;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.view.View;
 
 import com.dids.venuerandomizer.controller.location.LocationManager;
 import com.dids.venuerandomizer.controller.network.VolleyRequestQueue;
+import com.dids.venuerandomizer.model.Assets;
 import com.dids.venuerandomizer.model.Venue;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.Locale;
 import java.util.Random;
@@ -30,9 +35,9 @@ public class VenueRandomizerApplication extends Application {
     private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
 
     private Venue mVenue;
-    private int mFoodArrayId;
-    private int mCoffeeArrayId;
-    private int mDrinkArrayId;
+    private Assets mFoodAsset;
+    private Assets mCoffeeAsset;
+    private Assets mDrinkAsset;
 
     @Override
     public void onCreate() {
@@ -50,26 +55,31 @@ public class VenueRandomizerApplication extends Application {
 
         Resources res = getResources();
         /** Get Food array ID and pre load image */
-        mFoodArrayId = preloadResource(res, loader, FOOD_RESOURCE_ID, MAX_FOOD);
+        mFoodAsset = preloadResource(res, loader, FOOD_RESOURCE_ID, MAX_FOOD);
 
         /** Get Drinks array ID and pre load image */
-        mDrinkArrayId = preloadResource(res, loader, DRINKS_RESOURCE_ID, MAX_DRINKS);
+        mDrinkAsset = preloadResource(res, loader, DRINKS_RESOURCE_ID, MAX_DRINKS);
 
         /** Get Coffee array ID and pre load image */
-        mCoffeeArrayId = preloadResource(res, loader, COFFEE_RESOURCE_ID, MAX_COFFEE);
+        mCoffeeAsset = preloadResource(res, loader, COFFEE_RESOURCE_ID, MAX_COFFEE);
     }
 
-    private int preloadResource(Resources res, ImageLoader loader, String resourceFormat,
-                                int maxResourceCount) {
+    private Assets preloadResource(Resources res, ImageLoader loader, String resourceFormat,
+                                   int maxResourceCount) {
         Random random = new Random();
         String resourceString = String.format(Locale.getDefault(), resourceFormat,
                 random.nextInt(maxResourceCount) + 1);
         int arrayId = res.getIdentifier(resourceString, "array", getPackageName());
         TypedArray array = res.obtainTypedArray(arrayId);
         //noinspection ResourceType
-        loader.loadImageSync(array.getString(2));
+        String copyright = array.getString(0);
+        //noinspection ResourceType
+        String link = array.getString(1);
+        //noinspection ResourceType
+        String url = array.getString(2);
+        loader.loadImage(url, null);
         array.recycle();
-        return arrayId;
+        return new Assets(copyright, link, url);
     }
 
     public Venue getVenue() {
@@ -80,15 +90,15 @@ public class VenueRandomizerApplication extends Application {
         mVenue = venue;
     }
 
-    public int getFoodArrrayId() {
-        return mFoodArrayId;
+    public Assets getFoodAsset() {
+        return mFoodAsset;
     }
 
-    public int getCoffeeArrrayId() {
-        return mCoffeeArrayId;
+    public Assets getCoffeeAsset() {
+        return mCoffeeAsset;
     }
 
-    public int getDrinksArrrayId() {
-        return mDrinkArrayId;
+    public Assets getDrinksAsset() {
+        return mDrinkAsset;
     }
 }

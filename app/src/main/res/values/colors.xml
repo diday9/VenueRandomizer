@@ -17,4 +17,7 @@
     <color name="status_color">#32CD32</color>
     <color name="fb_color">#3b5998</color>
 
+    <color name="shape_active">#FFFFFF</color>
+    <color name="shape_inactive">#8D8D8D</color>
+
 </resources>

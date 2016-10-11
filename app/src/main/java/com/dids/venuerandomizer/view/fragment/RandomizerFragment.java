@@ -5,8 +5,6 @@ import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,7 +14,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,6 +24,7 @@ import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.task.GetVenueListTask;
+import com.dids.venuerandomizer.model.Assets;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.VenueDetailActivity;
@@ -87,31 +85,26 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mTelephone = (TextView) view.findViewById(R.id.telephone);
         TextView copyright = (TextView) view.findViewById(R.id.copyright);
         TextView link = (TextView) view.findViewById(R.id.link);
-        VenueRandomizerApplication app = ((VenueRandomizerApplication)getActivity().getApplication());
+        VenueRandomizerApplication app = ((VenueRandomizerApplication) getActivity().getApplication());
         switch (getArguments().getInt(TYPE, FOOD)) {
             case DRINKS:
-                setResources(app.getDrinksArrrayId(), copyright, link, background);
+                setResources(app.getDrinksAsset(), copyright, link, background);
                 break;
             case COFFEE:
-                setResources(app.getCoffeeArrrayId(), copyright, link, background);
+                setResources(app.getCoffeeAsset(), copyright, link, background);
                 break;
             default:
-                setResources(app.getFoodArrrayId(), copyright, link, background);
+                setResources(app.getFoodAsset(), copyright, link, background);
                 break;
         }
         return view;
     }
 
-    private void setResources(int resId, TextView copyright, TextView link, ImageView background) {
-        Resources res = getContext().getResources();
-        TypedArray attributions = res.obtainTypedArray(resId);
-        copyright.setText(attributions.getString(0));
-        //noinspection ResourceType
-        link.setText(attributions.getString(1));
+    private void setResources(Assets asset, TextView copyright, TextView link, ImageView background) {
+        copyright.setText(asset.getCopyright());
+        link.setText(asset.getLink());
         ImageLoader loader = ImageLoader.getInstance();
-        //noinspection ResourceType
-        loader.displayImage(attributions.getString(2), background);
-        attributions.recycle();
+        loader.displayImage(asset.getUrl(), background);
     }
 
     @Override
@@ -119,11 +112,12 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         if (v.equals(mResultView)) {
             Intent intent = new Intent(getContext(), VenueDetailActivity.class);
             Pair<View, String> name = Pair.create((View) mVenueName, "venue_name");
+            Pair<View, String> card = Pair.create(mResultView, "card");
             Pair<View, String> category = Pair.create((View) mCategoryName, "category");
             Pair<View, String> address = Pair.create((View) mAddress, "address");
             Pair<View, String> telephone = Pair.create((View) mTelephone, "telephone");
             ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(getActivity(), name, category,
+                    makeSceneTransitionAnimation(getActivity(), name, card, category,
                             address, telephone);
             startActivity(intent, options.toBundle());
             return;
@@ -196,7 +190,13 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         } else {
             mCategoryName.setVisibility(View.GONE);
         }
-        mAddress.setText(venue.getCity() + ", " + venue.getState());
+        StringBuilder address = new StringBuilder();
+        if (venue.getCity() != null && !venue.getCity().isEmpty()) {
+            address.append(venue.getCity());
+            address.append(", ");
+        }
+        address.append(venue.getState());
+        mAddress.setText(address.toString());
         if (venue.getFormattedPhone() != null && !venue.getFormattedPhone().isEmpty()) {
             mTelephone.setText(venue.getFormattedPhone());
         } else {

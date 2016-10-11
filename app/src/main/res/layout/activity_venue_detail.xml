@@ -1,248 +1,264 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/colorPrimaryDark">
 
-    <include
-        layout="@layout/toolbar"
-        android:transitionName="venue_name" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:layout_margin="@dimen/card_inner_margin"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/star1"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_star"
-                android:contentDescription="@string/default_content_description" />
-
-            <ImageView
-                android:id="@+id/star2"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_star"
-                android:contentDescription="@string/default_content_description" />
-
-            <ImageView
-                android:id="@+id/star3"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_star"
-                android:contentDescription="@string/default_content_description" />
-
-            <ImageView
-                android:id="@+id/star4"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_star"
-                android:contentDescription="@string/default_content_description" />
-
-            <ImageView
-                android:id="@+id/star5"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_star"
-                android:contentDescription="@string/default_content_description" />
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <ScrollView
-        android:id="@+id/scroll_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            card_view:cardCornerRadius="0dp"
+            card_view:cardElevation="5dp">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary" />
+
+            <RadioGroup
+                android:id="@+id/radiogroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="@dimen/card_inner_margin"
+                android:gravity="center"
+                android:orientation="horizontal" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical">
+            android:layout_margin="@dimen/card_inner_margin"
+            android:transitionName="card"
+            card_view:cardBackgroundColor="@color/colorPrimary"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
-                android:background="@drawable/selector_list_bottom_border_background"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/card_inner_margin"
-                android:paddingRight="@dimen/card_inner_margin">
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/card_inner_margin"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/category_icon"
-                    android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension"
-                    android:contentDescription="@string/default_content_description" />
+                <TextView
+                    android:id="@+id/venue_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="4dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/light_text"
+                    android:transitionName="venue_name" />
 
                 <TextView
                     android:id="@+id/category_name"
-                    style="@style/ListTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="start"
+                    android:textAppearance="?android:attr/textAppearanceListItem"
+                    android:textColor="@color/light_text"
                     android:transitionName="category" />
+
+                <LinearLayout
+                    android:id="@+id/rating_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:orientation="horizontal" />
+
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/address_group"
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/card_inner_margin"
+            android:layout_marginLeft="@dimen/card_inner_margin"
+            android:layout_marginRight="@dimen/card_inner_margin"
+            card_view:cardCornerRadius="5dp"
+            card_view:cardElevation="5dp">
+
+            <ScrollView
+                android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
-                android:background="@drawable/selector_list_bottom_border_background"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/card_inner_margin"
-                android:paddingRight="@dimen/card_inner_margin">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
-                <ImageView
-                    android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension"
-                    android:background="@drawable/ic_home_black"
-                    android:contentDescription="@string/default_content_description" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/address_name"
-                    style="@style/ListTextStyle"
-                    android:transitionName="address" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/address_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_height"
+                        android:background="@drawable/selector_list_bottom_border_background"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/card_inner_margin"
+                        android:paddingRight="@dimen/card_inner_margin">
 
-            <com.dids.venuerandomizer.view.custom.CustomMapView
-                android:id="@+id/mapview"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_margin="@dimen/card_inner_margin"
-                android:visibility="gone" />
+                        <ImageView
+                            android:layout_width="@dimen/list_icon_dimension"
+                            android:layout_height="@dimen/list_icon_dimension"
+                            android:background="@drawable/ic_home_black"
+                            android:contentDescription="@string/default_content_description" />
 
-            <LinearLayout
-                android:id="@+id/telephone_group"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
-                android:background="@drawable/selector_list_bottom_border_background"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/card_inner_margin"
-                android:paddingRight="@dimen/card_inner_margin">
+                        <TextView
+                            android:id="@+id/address_name"
+                            style="@style/ListTextStyle"
+                            android:transitionName="address" />
+                    </LinearLayout>
 
-                <ImageView
-                    android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension"
-                    android:background="@drawable/ic_phone_black"
-                    android:contentDescription="@string/default_content_description" />
+                    <com.dids.venuerandomizer.view.custom.CustomMapView
+                        android:id="@+id/mapview"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_margin="@dimen/card_inner_margin"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/telephone"
-                    style="@style/ListTextStyle"
-                    android:transitionName="telephone" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/telephone_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_height"
+                        android:background="@drawable/selector_list_bottom_border_background"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/card_inner_margin"
+                        android:paddingRight="@dimen/card_inner_margin">
 
-            <LinearLayout
-                android:id="@+id/url_group"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
-                android:background="@drawable/selector_list_bottom_border_background"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/card_inner_margin"
-                android:paddingRight="@dimen/card_inner_margin">
+                        <ImageView
+                            android:layout_width="@dimen/list_icon_dimension"
+                            android:layout_height="@dimen/list_icon_dimension"
+                            android:background="@drawable/ic_phone_black"
+                            android:contentDescription="@string/default_content_description" />
 
-                <ImageView
-                    android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension"
-                    android:background="@drawable/ic_language_black"
-                    android:contentDescription="@string/default_content_description" />
+                        <TextView
+                            android:id="@+id/telephone"
+                            style="@style/ListTextStyle"
+                            android:transitionName="telephone" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/url"
-                    style="@style/ListTextStyle"
-                    android:textColor="@color/hyperlink_color" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/url_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_height"
+                        android:background="@drawable/selector_list_bottom_border_background"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/card_inner_margin"
+                        android:paddingRight="@dimen/card_inner_margin">
 
-            <LinearLayout
-                android:id="@+id/status_group"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
-                android:background="@drawable/selector_list_bottom_border_background"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/card_inner_margin"
-                android:paddingRight="@dimen/card_inner_margin">
+                        <ImageView
+                            android:layout_width="@dimen/list_icon_dimension"
+                            android:layout_height="@dimen/list_icon_dimension"
+                            android:background="@drawable/ic_language_black"
+                            android:contentDescription="@string/default_content_description" />
 
-                <ImageView
-                    android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension"
-                    android:background="@drawable/ic_access_time_black"
-                    android:contentDescription="@string/default_content_description" />
+                        <TextView
+                            android:id="@+id/url"
+                            style="@style/ListTextStyle"
+                            android:textColor="@color/hyperlink_color" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/status"
-                    style="@style/ListTextStyle"
-                    android:textColor="@color/status_color" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/status_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_height"
+                        android:background="@drawable/selector_list_bottom_border_background"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/card_inner_margin"
+                        android:paddingRight="@dimen/card_inner_margin">
 
-            <LinearLayout
-                android:id="@+id/fb_group"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
-                android:background="@drawable/selector_list_bottom_border_background"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/card_inner_margin"
-                android:paddingRight="@dimen/card_inner_margin">
+                        <ImageView
+                            android:layout_width="@dimen/list_icon_dimension"
+                            android:layout_height="@dimen/list_icon_dimension"
+                            android:background="@drawable/ic_access_time_black"
+                            android:contentDescription="@string/default_content_description" />
 
-                <ImageView
-                    android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension"
-                    android:background="@drawable/ic_fb"
-                    android:contentDescription="@string/default_content_description" />
+                        <TextView
+                            android:id="@+id/status"
+                            style="@style/ListTextStyle"
+                            android:textColor="@color/status_color" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/fb"
-                    style="@style/ListTextStyle"
-                    android:textColor="@color/fb_color" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/fb_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_height"
+                        android:background="@drawable/selector_list_bottom_border_background"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/card_inner_margin"
+                        android:paddingRight="@dimen/card_inner_margin">
 
-            <LinearLayout
-                android:id="@+id/twitter_group"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_height"
-                android:background="@drawable/selector_list_bottom_border_background"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/card_inner_margin"
-                android:paddingRight="@dimen/card_inner_margin">
+                        <ImageView
+                            android:layout_width="@dimen/list_icon_dimension"
+                            android:layout_height="@dimen/list_icon_dimension"
+                            android:background="@drawable/ic_fb"
+                            android:contentDescription="@string/default_content_description" />
 
-                <ImageView
-                    android:layout_width="@dimen/list_icon_dimension"
-                    android:layout_height="@dimen/list_icon_dimension"
-                    android:background="@drawable/ic_twitter"
-                    android:contentDescription="@string/default_content_description" />
+                        <TextView
+                            android:id="@+id/fb"
+                            style="@style/ListTextStyle"
+                            android:textColor="@color/fb_color" />
+                    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/twitter"
-                    style="@style/ListTextStyle" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/twitter_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_height"
+                        android:background="@drawable/selector_list_bottom_border_background"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/card_inner_margin"
+                        android:paddingRight="@dimen/card_inner_margin">
 
-        </LinearLayout>
-    </ScrollView>
+                        <ImageView
+                            android:layout_width="@dimen/list_icon_dimension"
+                            android:layout_height="@dimen/list_icon_dimension"
+                            android:background="@drawable/ic_twitter"
+                            android:contentDescription="@string/default_content_description" />
 
-</LinearLayout>
+                        <TextView
+                            android:id="@+id/twitter"
+                            style="@style/ListTextStyle" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <include layout="@layout/toolbar" />
+
+    </FrameLayout>
+
+</FrameLayout>

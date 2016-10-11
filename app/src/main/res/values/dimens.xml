@@ -24,4 +24,8 @@
     <!-- About dimension -->
     <dimen name="about_image_dimension">60dp</dimen>
     <dimen name="about_view_separator">8dp</dimen>
+
+    <!-- Radio group dimension -->
+    <dimen name="radio_size">5dp</dimen>
+    <dimen name="radio_margin">3dp</dimen>
 </resources>

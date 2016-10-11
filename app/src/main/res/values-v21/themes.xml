@@ -15,4 +15,9 @@
         <item name="android:windowExitTransition">@transition/fade</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerItemDropDownStyle</item>
     </style>
+
+    <!-- Application Theme -->
+    <style name="VenueDetailTheme" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 </resources>
