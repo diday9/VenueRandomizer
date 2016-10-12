@@ -4,8 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.view.fragment.ImageViewFragment;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -16,10 +17,10 @@ public class SlidingImagePagerAdapter extends FragmentPagerAdapter {
         super(fm);
         mUrlList = urlList;
         /** Pre-cache all images */
-        ImageLoader loader = ImageLoader.getInstance();
-        for (String url : mUrlList) {
-            loader.loadImage(url, null);
-        }
+//        ImageLoader loader = VolleySingleton.getInstance().getInstance();
+//        for (String url : mUrlList) {
+//            loader.loadImage(url, null);
+//        }
     }
 
     @Override

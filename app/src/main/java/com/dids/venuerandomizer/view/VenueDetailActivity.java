@@ -51,7 +51,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_detail);
         setToolbar(R.id.toolbar, true);
-        mVenue = ((VenueRandomizerApplication) getApplication()).getVenue();
+        mVenue = VenueRandomizerApplication.getInstance().getVenue();
         ImageView toolbarBg = (ImageView) findViewById(R.id.toolbar_bg);
         toolbarBg.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 

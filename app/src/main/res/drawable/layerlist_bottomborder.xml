@@ -8,7 +8,7 @@
             <stroke
                 android:width="@dimen/list_border_width"
                 android:color="@color/divider_color" />
-            <solid android:color="@color/background" />
+            <solid android:color="@color/colorPrimary" />
         </shape>
     </item>
 

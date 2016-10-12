@@ -16,21 +16,24 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
+import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.controller.task.GetVenueListTask;
 import com.dids.venuerandomizer.model.Assets;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.VenueDetailActivity;
 import com.dids.venuerandomizer.view.base.BaseActivity;
+import com.dids.venuerandomizer.view.custom.EventNetworkImageView;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RandomizerFragment extends Fragment implements View.OnClickListener,
         GetVenueListTask.GetVenueListListener, Animator.AnimatorListener {
@@ -54,6 +57,10 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private TextView mAddress;
     private TextView mTelephone;
 
+    private TextView mCopyrightTextView;
+    private TextView mLinkTextView;
+    private EventNetworkImageView mImageView;
+
     public static RandomizerFragment newInstance(int type) {
         RandomizerFragment fragment = new RandomizerFragment();
         Bundle bundle = new Bundle();
@@ -69,7 +76,26 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mSearchButton = (FloatingActionButton) view.findViewById(R.id.search_button);
         mSearchButton.setOnClickListener(this);
 
-        ImageView background = (ImageView) view.findViewById(R.id.background);
+        /** Populate background image */
+        final ViewSwitcher switcher = (ViewSwitcher) view.findViewById(R.id.image_switcher);
+        mImageView = (EventNetworkImageView) view.findViewById(R.id.background);
+        mImageView.setImageLoaderListener(new EventNetworkImageView.ImageLoaderListener() {
+            @Override
+            public void onImageLoaded() {
+                switcher.showNext();
+            }
+        });
+        mImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                setResources();
+            }
+        });
+        mCopyrightTextView = (TextView) view.findViewById(R.id.copyright);
+        mLinkTextView = (TextView) view.findViewById(R.id.link);
+
+        /** Populate other views */
         mProgress = (ProgressBar) view.findViewById(R.id.progress_indicator);
         mSearchButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.
                 getColor(getContext(), R.color.colorPrimaryAlpha)));
@@ -83,28 +109,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mCategoryName = (TextView) view.findViewById(R.id.category_name);
         mAddress = (TextView) view.findViewById(R.id.address);
         mTelephone = (TextView) view.findViewById(R.id.telephone);
-        TextView copyright = (TextView) view.findViewById(R.id.copyright);
-        TextView link = (TextView) view.findViewById(R.id.link);
-        VenueRandomizerApplication app = ((VenueRandomizerApplication) getActivity().getApplication());
-        switch (getArguments().getInt(TYPE, FOOD)) {
-            case DRINKS:
-                setResources(app.getDrinksAsset(), copyright, link, background);
-                break;
-            case COFFEE:
-                setResources(app.getCoffeeAsset(), copyright, link, background);
-                break;
-            default:
-                setResources(app.getFoodAsset(), copyright, link, background);
-                break;
-        }
         return view;
-    }
-
-    private void setResources(Assets asset, TextView copyright, TextView link, ImageView background) {
-        copyright.setText(asset.getCopyright());
-        link.setText(asset.getLink());
-        ImageLoader loader = ImageLoader.getInstance();
-        loader.displayImage(asset.getUrl(), background);
     }
 
     @Override
@@ -169,7 +174,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mSearchButton.setEnabled(true);
         mGetVenueListTask = null;
         if (venue != null) {
-            ((VenueRandomizerApplication) getActivity().getApplication()).setVenue(venue);
+            VenueRandomizerApplication.getInstance().setVenue(venue);
             setVenue(venue);
             animateButtonGroup();
         } else {
@@ -244,6 +249,30 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             resetView();
         }
     }
+
+    private void setResources() {
+        VenueRandomizerApplication app = VenueRandomizerApplication.getInstance();
+        Assets asset;
+        switch (getArguments().getInt(TYPE, FOOD)) {
+            case DRINKS:
+                asset = app.getDrinksAsset();
+                break;
+            case COFFEE:
+                asset = app.getCoffeeAsset();
+                break;
+            default:
+                asset = app.getFoodAsset();
+                break;
+        }
+
+        if (mCopyrightTextView != null) {
+            mCopyrightTextView.setText(asset.getCopyright());
+            mLinkTextView.setText(asset.getLink());
+            ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
+            mImageView.setImageUrl(asset.getUrl(), loader);
+        }
+    }
+
 
     private void resetView() {
         if (mResultView != null) {

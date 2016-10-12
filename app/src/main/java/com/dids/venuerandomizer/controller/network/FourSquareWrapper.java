@@ -103,7 +103,7 @@ public class FourSquareWrapper {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, builder.toString(),
                 null, future, future);
-        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsonRequest);
+        VolleySingleton.getInstance(mContext).addToRequestQueue(jsonRequest);
         try {
             JSONObject response = future.get();
             JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
@@ -142,7 +142,7 @@ public class FourSquareWrapper {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, builder.toString(),
                 null, future, future);
-        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsonRequest);
+        VolleySingleton.getInstance(mContext).addToRequestQueue(jsonRequest);
         try {
             JSONObject response = future.get();
             JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
@@ -186,7 +186,7 @@ public class FourSquareWrapper {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, builder.toString(),
                 null, future, future);
-        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsonRequest);
+        VolleySingleton.getInstance(mContext).addToRequestQueue(jsonRequest);
         try {
             List<Venue> venueList = new ArrayList<>();
             JSONObject response = future.get();
@@ -368,7 +368,7 @@ public class FourSquareWrapper {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, builder.toString(),
                 null, future, future);
-        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsonRequest);
+        VolleySingleton.getInstance(mContext).addToRequestQueue(jsonRequest);
         try {
             JSONObject response = future.get();
             JSONArray itemArray = response.getJSONObject(TAG_RESPONSE).

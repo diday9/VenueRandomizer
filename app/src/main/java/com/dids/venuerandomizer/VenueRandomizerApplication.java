@@ -3,19 +3,11 @@ package com.dids.venuerandomizer;
 import android.app.Application;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.view.View;
 
 import com.dids.venuerandomizer.controller.location.LocationManager;
-import com.dids.venuerandomizer.controller.network.VolleyRequestQueue;
+import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.model.Assets;
 import com.dids.venuerandomizer.model.Venue;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.Locale;
 import java.util.Random;
@@ -33,38 +25,35 @@ public class VenueRandomizerApplication extends Application {
     /* Coffee constants */
     private static final int MAX_COFFEE = 2;
     private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
-
+    private static VenueRandomizerApplication mInstance;
     private Venue mVenue;
     private Assets mFoodAsset;
     private Assets mCoffeeAsset;
     private Assets mDrinkAsset;
 
+    public static VenueRandomizerApplication getInstance() {
+        return mInstance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        VolleyRequestQueue.getInstance(getApplicationContext());
+        mInstance = this;
+        VolleySingleton.getInstance(this);
         LocationManager.getInstance(this);
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().
-                cacheInMemory(true).
-                cacheOnDisk(true).build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).
-                defaultDisplayImageOptions(defaultOptions).
-                memoryCache(new LruMemoryCache(MEM_CACHE_SIZE)).build();
-        ImageLoader loader = ImageLoader.getInstance();
-        loader.init(config);
 
         Resources res = getResources();
-        /** Get Food array ID and pre load image */
-        mFoodAsset = preloadResource(res, loader, FOOD_RESOURCE_ID, MAX_FOOD);
+        /** Get Food array ID */
+        mFoodAsset = preloadResource(res, FOOD_RESOURCE_ID, MAX_FOOD);
 
-        /** Get Drinks array ID and pre load image */
-        mDrinkAsset = preloadResource(res, loader, DRINKS_RESOURCE_ID, MAX_DRINKS);
+        /** Get Drinks array ID */
+        mDrinkAsset = preloadResource(res, DRINKS_RESOURCE_ID, MAX_DRINKS);
 
-        /** Get Coffee array ID and pre load image */
-        mCoffeeAsset = preloadResource(res, loader, COFFEE_RESOURCE_ID, MAX_COFFEE);
+        /** Get Coffee array ID */
+        mCoffeeAsset = preloadResource(res, COFFEE_RESOURCE_ID, MAX_COFFEE);
     }
 
-    private Assets preloadResource(Resources res, ImageLoader loader, String resourceFormat,
+    private Assets preloadResource(Resources res, String resourceFormat,
                                    int maxResourceCount) {
         Random random = new Random();
         String resourceString = String.format(Locale.getDefault(), resourceFormat,
@@ -77,7 +66,6 @@ public class VenueRandomizerApplication extends Application {
         String link = array.getString(1);
         //noinspection ResourceType
         String url = array.getString(2);
-        loader.loadImage(url, null);
         array.recycle();
         return new Assets(copyright, link, url);
     }

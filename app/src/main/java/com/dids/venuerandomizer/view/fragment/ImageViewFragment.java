@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.dids.venuerandomizer.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ImageViewFragment extends Fragment {
     private static final String URL = "url";
@@ -28,8 +27,8 @@ public class ImageViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_view, container, false);
         ImageView imageView = (ImageView) view.findViewById(R.id.image);
-        ImageLoader loader = ImageLoader.getInstance();
-        loader.displayImage(getArguments().getString(URL), imageView);
+//        ImageLoader loader = ImageLoader.getInstance();
+//        loader.displayImage(getArguments().getString(URL), imageView);
 
         ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress_indicator);
         progress.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(getContext(),
