@@ -65,10 +65,12 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
             mViewPager = (ViewPager) findViewById(R.id.view_pager);
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setAdapter(new SlidingImagePagerAdapter(getSupportFragmentManager(), photoUrls));
+            mViewPager.setOffscreenPageLimit(mViewPager.getAdapter().getCount());
         }
 
         /** Create radio group */
         createRadioButtonPages();
+        updateRadioGroup();
 
         /** Initialize map */
         initializeMap(savedInstanceState);
@@ -118,12 +120,11 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         }
 
         /** Set status */
-        View statusGroup = findViewById(R.id.status_group);
+        TextView status = (TextView) findViewById(R.id.status);
         if (mVenue.getStatus() != null && !mVenue.getStatus().isEmpty()) {
-            TextView status = (TextView) findViewById(R.id.status);
             status.setText(mVenue.getStatus());
         } else {
-            statusGroup.setVisibility(View.GONE);
+            status.setVisibility(View.GONE);
         }
 
         /** Set rating */
@@ -303,6 +304,12 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    private void updateRadioGroup() {
+        int id = mRadioGroup.getChildAt(mViewPager.getCurrentItem()).getId();
+        RadioButton radioButton = (RadioButton) mRadioGroup.findViewById(id);
+        radioButton.setChecked(true);
+    }
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -310,9 +317,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onPageSelected(int position) {
-        int id = mRadioGroup.getChildAt(mViewPager.getCurrentItem()).getId();
-        RadioButton radioButton = (RadioButton) mRadioGroup.findViewById(id);
-        radioButton.setChecked(true);
+        updateRadioGroup();
     }
 
     @Override

@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.BounceInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -41,7 +42,9 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     public static final int DRINKS = 1;
     public static final int COFFEE = 2;
     private static final String VERTICAL_TRANSLATION_PROPERTY = "translationY";
+    private static final String VERTICAL_POSITION_PROPERTY = "Y";
     private static final int VERTICAL_OFFSET = 200;
+    private static final int VERTICAL_POSITION_BOUNCE = 300;
     private static final int ANIMATION_DURATION = 700;
     private static final String TYPE = "type";
 
@@ -56,6 +59,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private TextView mCategoryName;
     private TextView mAddress;
     private TextView mTelephone;
+    private FloatingActionButton mCheckout;
 
     private TextView mCopyrightTextView;
     private TextView mLinkTextView;
@@ -104,7 +108,10 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mButtonGroup = view.findViewById(R.id.button_group);
         mIsButtonGroupAnimated = false;
         mResultView = view.findViewById(R.id.result);
-        mResultView.setOnClickListener(this);
+        mCheckout = (FloatingActionButton) view.findViewById(R.id.checkout);
+        mCheckout.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.
+                getColor(getContext(), R.color.colorAccent)));
+        mCheckout.setOnClickListener(this);
         mVenueName = (TextView) view.findViewById(R.id.venue_name);
         mCategoryName = (TextView) view.findViewById(R.id.category_name);
         mAddress = (TextView) view.findViewById(R.id.address);
@@ -114,16 +121,12 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (v.equals(mResultView)) {
+        if (v.equals(mCheckout)) {
             Intent intent = new Intent(getContext(), VenueDetailActivity.class);
             Pair<View, String> name = Pair.create((View) mVenueName, "venue_name");
-            Pair<View, String> card = Pair.create(mResultView, "card");
             Pair<View, String> category = Pair.create((View) mCategoryName, "category");
-            Pair<View, String> address = Pair.create((View) mAddress, "address");
-            Pair<View, String> telephone = Pair.create((View) mTelephone, "telephone");
             ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(getActivity(), name, card, category,
-                            address, telephone);
+                    makeSceneTransitionAnimation(getActivity(), name, category);
             startActivity(intent, options.toBundle());
             return;
         }
@@ -204,6 +207,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mAddress.setText(address.toString());
         if (venue.getFormattedPhone() != null && !venue.getFormattedPhone().isEmpty()) {
             mTelephone.setText(venue.getFormattedPhone());
+            mTelephone.setVisibility(View.VISIBLE);
         } else {
             mTelephone.setVisibility(View.GONE);
         }
@@ -265,18 +269,24 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
                 break;
         }
 
-        if (mCopyrightTextView != null) {
-            mCopyrightTextView.setText(asset.getCopyright());
-            mLinkTextView.setText(asset.getLink());
-            ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
-            mImageView.setImageUrl(asset.getUrl(), loader);
-        }
+        mCopyrightTextView.setText(asset.getCopyright());
+        mLinkTextView.setText(asset.getLink());
+        ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
+        mImageView.setImageUrl(asset.getUrl(), loader);
     }
-
 
     private void resetView() {
         if (mResultView != null) {
             mResultView.setVisibility(View.GONE);
+        }
+        if (mCheckout != null) {
+            mCheckout.setVisibility(View.INVISIBLE);
+        }
+        if (mCheckout != null && mIsButtonGroupAnimated) {
+            ObjectAnimator anim = ObjectAnimator.ofFloat(mCheckout,
+                    VERTICAL_POSITION_PROPERTY, -VERTICAL_POSITION_BOUNCE);
+            anim.setDuration(0);
+            anim.start();
         }
         if (mButtonGroup != null && mIsButtonGroupAnimated) {
             mIsButtonGroupAnimated = false;
@@ -294,6 +304,12 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     @Override
     public void onAnimationEnd(Animator animation) {
         ((BaseActivity) getActivity()).interceptTouchEvents(false);
+        mCheckout.setVisibility(View.VISIBLE);
+        ObjectAnimator moveAnim = ObjectAnimator.ofFloat(mCheckout, VERTICAL_POSITION_PROPERTY,
+                VERTICAL_POSITION_BOUNCE);
+        moveAnim.setDuration(ANIMATION_DURATION);
+        moveAnim.setInterpolator(new BounceInterpolator());
+        moveAnim.start();
     }
 
     @Override

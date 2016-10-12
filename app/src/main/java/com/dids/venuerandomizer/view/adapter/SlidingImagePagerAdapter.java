@@ -16,11 +16,6 @@ public class SlidingImagePagerAdapter extends FragmentPagerAdapter {
     public SlidingImagePagerAdapter(FragmentManager fm, List<String> urlList) {
         super(fm);
         mUrlList = urlList;
-        /** Pre-cache all images */
-//        ImageLoader loader = VolleySingleton.getInstance().getInstance();
-//        for (String url : mUrlList) {
-//            loader.loadImage(url, null);
-//        }
     }
 
     @Override
