@@ -1,14 +1,17 @@
 package com.dids.venuerandomizer.view;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -23,7 +26,6 @@ import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.adapter.SlidingImagePagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
-import com.dids.venuerandomizer.view.fragment.DetailActionFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,6 +34,11 @@ import java.util.List;
 
 public class VenueDetailActivity extends BaseActivity implements View.OnClickListener,
         OnMapReadyCallback, ViewPager.OnPageChangeListener {
+    private static final String VERTICAL_POSITION_PROPERTY = "Y";
+    private static final int VERTICAL_POSITION_BOUNCE = 280;
+    private static final int ANIMATION_DURATION = 700;
+    private static final int ANIMATION_DURATION_OFFSET = 300;
+
     private Venue mVenue;
     private boolean mIsMapInitialized;
     private RadioGroup mRadioGroup;
@@ -64,9 +71,6 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         createRadioButtonPages();
         updateRadioGroup();
 
-        /** Initialize map */
-        initializeMap(savedInstanceState);
-
         /** Set category */
         if (mVenue.getCategories() != null && !mVenue.getCategories().isEmpty()) {
             for (Category category : mVenue.getCategories()) {
@@ -89,69 +93,8 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         /** Set rating */
         setRating();
 
-        /** Set action fragment */
-        setActionFragment();
-
-//        mIsMapDisplayed = false;
-//        View addressGroup = findViewById(R.id.address_group);
-//        addressGroup.setOnClickListener(this);
-//        TextView address = (TextView) findViewById(R.id.address_name);
-//        StringBuilder addressBuilder = new StringBuilder();
-//        if (mVenue.getCity() != null && !mVenue.getCity().isEmpty()) {
-//            addressBuilder.append(mVenue.getCity());
-//            addressBuilder.append(", ");
-//        }
-//        addressBuilder.append(mVenue.getState());
-//        address.setText(addressBuilder.toString());
-//
-//        /** Set telephone */
-//        View telephoneGroup = findViewById(R.id.telephone_group);
-//        if (mVenue.getFormattedPhone() != null && !mVenue.getFormattedPhone().isEmpty()) {
-//            TextView telephone = (TextView) findViewById(R.id.telephone);
-//            telephone.setText(mVenue.getFormattedPhone());
-//            telephoneGroup.setOnClickListener(this);
-//        } else {
-//            telephoneGroup.setVisibility(View.GONE);
-//        }
-//
-//        /** Set URL */
-//        View urlGroup = findViewById(R.id.url_group);
-//        if (mVenue.getUrl() != null && !mVenue.getUrl().isEmpty()) {
-//            TextView url = (TextView) findViewById(R.id.url);
-//            url.setText(mVenue.getUrl());
-//            urlGroup.setOnClickListener(this);
-//        } else {
-//            urlGroup.setVisibility(View.GONE);
-//        }
-//
-//        /** Set Facebook */
-//        View fbGroup = findViewById(R.id.fb_group);
-//        if (mVenue.getFacebookUsername() != null && !mVenue.getFacebookUsername().isEmpty()) {
-//            TextView fb = (TextView) findViewById(R.id.fb);
-//            fb.setText(String.format(getString(R.string.venue_detail_facebook),
-//                    mVenue.getFacebookUsername()));
-//            fbGroup.setOnClickListener(this);
-//        } else {
-//            fbGroup.setVisibility(View.GONE);
-//        }
-//
-//        /** Set Twitter */
-//        View twitterGroup = findViewById(R.id.twitter_group);
-//        if (mVenue.getTwitter() != null && !mVenue.getTwitter().isEmpty()) {
-//            TextView twitter = (TextView) findViewById(R.id.twitter);
-//            twitter.setText(String.format(getString(R.string.venue_detail_twitter),
-//                    mVenue.getTwitter()));
-//            twitterGroup.setOnClickListener(this);
-//        } else {
-//            twitterGroup.setVisibility(View.GONE);
-//        }
-    }
-
-    private void setActionFragment() {
-        DetailActionFragment actionFragment = DetailActionFragment.newInstance(mVenue.getAddress());
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, actionFragment).commit();
-        fragmentManager.executePendingTransactions();
+        /** Set action buttons*/
+        setupActionButtons();
     }
 
     @Override
@@ -170,56 +113,6 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.address_group:
-//                if (mIsMapDisplayed) {
-//                    mMapView.setVisibility(View.GONE);
-//                } else {
-//                    mMapView.setVisibility(View.VISIBLE);
-//                }
-//                mIsMapDisplayed = !mIsMapDisplayed;
-//                break;
-//            case R.id.telephone_group:
-//                Intent callIntent = new Intent(Intent.ACTION_DIAL,
-//                        Uri.parse("tel:" + mVenue.getPhone()));
-//                startActivity(callIntent);
-//                break;
-//            case R.id.url_group:
-//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mVenue.getUrl()));
-//                startActivity(browserIntent);
-//                break;
-//            case R.id.twitter_group:
-//                Intent twitterIntent;
-//                try {
-//                    getPackageManager().getPackageInfo("com.twitter.android", 0);
-//                    twitterIntent = new Intent(Intent.ACTION_VIEW,
-//                            Uri.parse("twitter://user?screen_name=" + mVenue.getTwitter()));
-//                    twitterIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                } catch (Exception e) {
-//                    twitterIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/"
-//                            + mVenue.getTwitter()));
-//                }
-//                startActivity(twitterIntent);
-//                break;
-//            case R.id.fb_group:
-//                Intent fbIntent;
-//                try {
-//                    PackageManager packageManager = getPackageManager();
-//                    ApplicationInfo applicationInfo = packageManager.
-//                            getApplicationInfo("com.facebook.katana", 0);
-//                    if (applicationInfo.enabled) {
-//                        fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://facewebmodal/f?href=" +
-//                                "http://www.facebook.com/" + mVenue.getFacebookUsername()));
-//                    } else {
-//                        fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/"
-//                                + mVenue.getFacebookUsername()));
-//                    }
-//                } catch (PackageManager.NameNotFoundException e) {
-//                    fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/"
-//                            + mVenue.getFacebookUsername()));
-//                }
-//                startActivity(fbIntent);
-        }
     }
 
     private void initializeMap(Bundle savedInstanceState) {
@@ -287,7 +180,6 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
@@ -297,6 +189,56 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
+
+    private void setupActionButtons() {
+        /** Location */
+        FloatingActionButton actionButton = (FloatingActionButton) findViewById(R.id.location);
+        int animationOffset = animateView(actionButton, 0);
+
+        /** Telephone */
+        actionButton = (FloatingActionButton) findViewById(R.id.telephone);
+        animationOffset = animateView(actionButton, animationOffset);
+
+        /** Web */
+        actionButton = (FloatingActionButton) findViewById(R.id.url);
+        animationOffset = animateView(actionButton, animationOffset);
+
+        /** Facebook */
+        actionButton = (FloatingActionButton) findViewById(R.id.facebook);
+        animationOffset = animateView(actionButton, animationOffset);
+
+        /** Twitter */
+        actionButton = (FloatingActionButton) findViewById(R.id.twitter);
+        animateView(actionButton, animationOffset);
+    }
+
+    private int animateView(final View view, int offset) {
+        ObjectAnimator moveAnim = ObjectAnimator.ofFloat(view, VERTICAL_POSITION_PROPERTY,
+                VERTICAL_POSITION_BOUNCE);
+        moveAnim.setDuration(ANIMATION_DURATION);
+        moveAnim.setStartDelay(1000 + offset);
+        moveAnim.setInterpolator(new BounceInterpolator());
+        moveAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        moveAnim.start();
+        return offset + ANIMATION_DURATION_OFFSET;
+    }
+
 }

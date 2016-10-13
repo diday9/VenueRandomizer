@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,32 +26,40 @@
                 android:id="@+id/radiogroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
+                android:layout_gravity="end|bottom"
                 android:layout_marginBottom="@dimen/card_inner_margin"
+                android:layout_marginRight="@dimen/card_inner_margin"
                 android:gravity="center"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:id="@+id/rating_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|bottom"
+                android:layout_margin="@dimen/card_inner_margin"
                 android:orientation="horizontal" />
 
         </android.support.v7.widget.CardView>
 
-        <FrameLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="80dp" />
-
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/card_inner_margin"
-            android:transitionName="card"
-            card_view:cardBackgroundColor="#8D6E63"
-            card_view:cardCornerRadius="5dp"
+            android:layout_height="match_parent"
+            card_view:cardCornerRadius="0dp"
+            card_view:cardBackgroundColor="#373632"
             card_view:cardElevation="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/card_inner_margin"
-                android:orientation="vertical">
+                android:background="@color/colorAccent"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/card_inner_margin"
+                android:paddingLeft="@dimen/card_inner_margin"
+                android:paddingRight="@dimen/card_inner_margin"
+                android:paddingBottom="24dp"
+                app:elevation="5dp"
+                android:transitionName="card">
 
                 <TextView
                     android:id="@+id/venue_name"
@@ -62,8 +71,15 @@
                     android:gravity="start"
                     android:maxLines="1"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/light_text"
+                    android:textColor="@color/dark_text"
                     android:transitionName="venue_name" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/dark_text" />
 
                 <TextView
                     android:id="@+id/category_name"
@@ -71,8 +87,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:gravity="start"
-                    android:textAppearance="?android:attr/textAppearanceListItem"
-                    android:textColor="@color/light_text" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/dark_text" />
 
                 <TextView
                     android:id="@+id/status"
@@ -80,17 +96,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:gravity="start"
-                    android:textAppearance="?android:attr/textAppearanceListItem"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/status_color" />
 
-                <LinearLayout
-                    android:id="@+id/rating_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:orientation="horizontal" />
-
             </LinearLayout>
+
+            <include layout="@layout/action_buttons" />
 
         </android.support.v7.widget.CardView>
 

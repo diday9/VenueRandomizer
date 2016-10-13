@@ -125,8 +125,9 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             Intent intent = new Intent(getContext(), VenueDetailActivity.class);
             Pair<View, String> name = Pair.create((View) mVenueName, "venue_name");
             Pair<View, String> category = Pair.create((View) mCategoryName, "category");
+            Pair<View, String> card = Pair.create((View) mCheckout, "card");
             ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(getActivity(), name, category);
+                    makeSceneTransitionAnimation(getActivity(), card, name, category);
             startActivity(intent, options.toBundle());
             return;
         }

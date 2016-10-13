@@ -105,7 +105,7 @@
         android:layout_gravity="top|end"
         android:layout_marginRight="32dp"
         android:clickable="true"
-        android:src="@drawable/ic_checkout_white"
+        android:src="@drawable/ic_checkout"
         android:visibility="invisible"
         app:elevation="10dp" />
 
