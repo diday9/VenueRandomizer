@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#373535">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,6 +31,11 @@
                 android:orientation="horizontal" />
 
         </android.support.v7.widget.CardView>
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -88,149 +92,6 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/card_inner_margin"
-            android:layout_marginLeft="@dimen/card_inner_margin"
-            android:layout_marginRight="@dimen/card_inner_margin"
-            card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="5dp">
-
-            <ScrollView
-                android:id="@+id/scroll_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/address_group"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/list_height"
-                        android:background="@drawable/selector_list_bottom_border_background"
-                        android:clickable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/card_inner_margin"
-                        android:paddingRight="@dimen/card_inner_margin">
-
-                        <ImageView
-                            android:layout_width="@dimen/list_icon_dimension"
-                            android:layout_height="@dimen/list_icon_dimension"
-                            android:background="@drawable/ic_home_black"
-                            android:contentDescription="@string/default_content_description" />
-
-                        <TextView
-                            android:id="@+id/address_name"
-                            style="@style/ListTextStyle" />
-                    </LinearLayout>
-
-                    <com.dids.venuerandomizer.view.custom.CustomMapView
-                        android:id="@+id/mapview"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_margin="@dimen/card_inner_margin"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-                        android:id="@+id/telephone_group"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/list_height"
-                        android:background="@drawable/selector_list_bottom_border_background"
-                        android:clickable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/card_inner_margin"
-                        android:paddingRight="@dimen/card_inner_margin">
-
-                        <ImageView
-                            android:layout_width="@dimen/list_icon_dimension"
-                            android:layout_height="@dimen/list_icon_dimension"
-                            android:background="@drawable/ic_phone_black"
-                            android:contentDescription="@string/default_content_description" />
-
-                        <TextView
-                            android:id="@+id/telephone"
-                            style="@style/ListTextStyle" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/url_group"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/list_height"
-                        android:background="@drawable/selector_list_bottom_border_background"
-                        android:clickable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/card_inner_margin"
-                        android:paddingRight="@dimen/card_inner_margin">
-
-                        <ImageView
-                            android:layout_width="@dimen/list_icon_dimension"
-                            android:layout_height="@dimen/list_icon_dimension"
-                            android:background="@drawable/ic_language_black"
-                            android:contentDescription="@string/default_content_description" />
-
-                        <TextView
-                            android:id="@+id/url"
-                            style="@style/ListTextStyle"
-                            android:textColor="@color/hyperlink_color" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/fb_group"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/list_height"
-                        android:background="@drawable/selector_list_bottom_border_background"
-                        android:clickable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/card_inner_margin"
-                        android:paddingRight="@dimen/card_inner_margin">
-
-                        <ImageView
-                            android:layout_width="@dimen/list_icon_dimension"
-                            android:layout_height="@dimen/list_icon_dimension"
-                            android:background="@drawable/ic_fb"
-                            android:contentDescription="@string/default_content_description" />
-
-                        <TextView
-                            android:id="@+id/fb"
-                            style="@style/ListTextStyle"
-                            android:textColor="@color/fb_color" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/twitter_group"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/list_height"
-                        android:background="@drawable/selector_list_bottom_border_background"
-                        android:clickable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/card_inner_margin"
-                        android:paddingRight="@dimen/card_inner_margin">
-
-                        <ImageView
-                            android:layout_width="@dimen/list_icon_dimension"
-                            android:layout_height="@dimen/list_icon_dimension"
-                            android:background="@drawable/ic_twitter"
-                            android:contentDescription="@string/default_content_description" />
-
-                        <TextView
-                            android:id="@+id/twitter"
-                            style="@style/ListTextStyle" />
-                    </LinearLayout>
-                </LinearLayout>
-            </ScrollView>
         </android.support.v7.widget.CardView>
 
     </LinearLayout>

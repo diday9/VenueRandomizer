@@ -13,9 +13,14 @@
     <color name="dark_text_disable">#32212121</color>
     <color name="dark_secondary_text">#BDBDBD</color>
     <color name="background">#FFFFFF</color>
-    <color name="hyperlink_color">#0000EE</color>
     <color name="status_color">#32CD32</color>
-    <color name="fb_color">#3b5998</color>
+
+    <!-- Action colors -->
+    <color name="location_color">#D32F2F</color>
+    <color name="telephone_color">#388E3C</color>
+    <color name="web_color">#7B1FA2</color>
+    <color name="fb_color">#3B5998</color>
+    <color name="twitter_color">#1DA1f2</color>
 
     <color name="shape_active">#FFFFFF</color>
     <color name="shape_inactive">#8D8D8D</color>

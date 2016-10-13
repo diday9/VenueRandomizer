@@ -2,19 +2,16 @@ package com.dids.venuerandomizer.view.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
-import com.dids.venuerandomizer.model.Assets;
 import com.dids.venuerandomizer.view.custom.EventNetworkImageView;
 
 public class ImageViewFragment extends Fragment {
@@ -43,7 +40,6 @@ public class ImageViewFragment extends Fragment {
         mImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                Log.d("hello", "hello");
                 mImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 setResources(getArguments().getString(URL));
             }
