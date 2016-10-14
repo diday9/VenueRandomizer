@@ -66,7 +66,7 @@ public class BaseActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean isFullLayoutSupported() {
+    private boolean isFullLayoutSupported() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -93,9 +93,6 @@ public class BaseActivity extends FragmentActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (mIsTouchIntercepted) {
-            return true;
-        }
-        return super.dispatchTouchEvent(ev);
+        return mIsTouchIntercepted || super.dispatchTouchEvent(ev);
     }
 }

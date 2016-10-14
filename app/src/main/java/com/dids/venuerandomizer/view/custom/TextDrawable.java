@@ -13,10 +13,10 @@ import android.util.TypedValue;
 public class TextDrawable extends Drawable {
     private static final int DEFAULT_COLOR = Color.WHITE;
     private static final int DEFAULT_TEXTSIZE = 18;
-    private Paint mPaint;
-    private CharSequence mText;
-    private int mIntrinsicWidth;
-    private int mIntrinsicHeight;
+    private final Paint mPaint;
+    private final CharSequence mText;
+    private final int mIntrinsicWidth;
+    private final int mIntrinsicHeight;
 
     public TextDrawable(Resources res, CharSequence text, boolean isBold) {
         mText = text;

@@ -80,7 +80,7 @@ public class FourSquareWrapper {
     private static final String TAG_IS_OPEN = "isOpen";
     private static final String TAG_PHOTOS = "photos";
 
-    private Context mContext;
+    private final Context mContext;
 
     public FourSquareWrapper(Context context) {
         mContext = context;
@@ -107,15 +107,13 @@ public class FourSquareWrapper {
         try {
             JSONObject response = future.get();
             JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
-            for (int i = 0; i < groupArray.length(); i++) {
-                JSONArray itemArray = groupArray.getJSONObject(i).getJSONArray(TAG_ITEMS);
-                Random random = new Random();
-                JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
-                        length())).getJSONObject(TAG_VENUE);
-                Venue venue = new Venue();
-                getVenueDetails(venueObject, venue);
-                return venue;
-            }
+            JSONArray itemArray = groupArray.getJSONObject(0).getJSONArray(TAG_ITEMS);
+            Random random = new Random();
+            JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
+                    length())).getJSONObject(TAG_VENUE);
+            Venue venue = new Venue();
+            getVenueDetails(venueObject, venue);
+            return venue;
         } catch (InterruptedException | ExecutionException | JSONException e) {
             Log.e(TAG, "Error in get venue list request: " + e.getMessage());
             if (e.getCause() instanceof NoConnectionError) {
@@ -146,20 +144,18 @@ public class FourSquareWrapper {
         try {
             JSONObject response = future.get();
             JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
-            for (int i = 0; i < groupArray.length(); i++) {
-                JSONArray itemArray = groupArray.getJSONObject(i).getJSONArray(TAG_ITEMS);
-                Venue venue = new Venue();
-                Random random = new Random();
-                for (int retryCount = 0; retryCount < MAX_UNIQUE_RETRY; retryCount++) {
-                    JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
-                            length())).getJSONObject(TAG_VENUE);
-                    getVenueDetails(venueObject, venue);
-                    if (!venue.getId().equals(id)) {
-                        break;
-                    }
+            JSONArray itemArray = groupArray.getJSONObject(0).getJSONArray(TAG_ITEMS);
+            Venue venue = new Venue();
+            Random random = new Random();
+            for (int retryCount = 0; retryCount < MAX_UNIQUE_RETRY; retryCount++) {
+                JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
+                        length())).getJSONObject(TAG_VENUE);
+                getVenueDetails(venueObject, venue);
+                if (!venue.getId().equals(id)) {
+                    break;
                 }
-                return venue;
             }
+            return venue;
         } catch (InterruptedException | ExecutionException | JSONException e) {
             Log.e(TAG, "Error in get venue list request: " + e.getMessage());
             if (e.getCause() instanceof NoConnectionError) {

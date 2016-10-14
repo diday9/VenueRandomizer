@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Update count in VenueRandomizerApplication when modifying this file -->
+    <array name="default_food">
+        <item>&#169; by Mark Ryan Tan</item>
+        <item>markryantan on Facebook</item>
+    </array>
     <array name="bg_food1">
         <item>&#169; by Jeng Garcia</item>
         <item>erikadiaz000 on Facebook</item>
@@ -20,5 +24,10 @@
         <item>&#169; by Blanca Marie</item>
         <item>eliot.blanca on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food4.jpg</item>
+    </array>
+    <array name="bg_food5">
+        <item>&#169; by Mark Ryan Tan</item>
+        <item>markryantan on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_food5.jpg</item>
     </array>
 </resources>

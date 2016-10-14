@@ -9,8 +9,8 @@ import com.dids.venuerandomizer.view.base.BaseActivity;
 
 public class HelpActivity extends BaseActivity {
     public static final String TAG_MODE = "mode";
-    public static int ABOUT = 0;
-    public static int LICENSE = 1;
+    public static final int ABOUT = 0;
+    public static final int LICENSE = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

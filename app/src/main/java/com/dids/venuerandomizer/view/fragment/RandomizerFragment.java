@@ -5,7 +5,9 @@ import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.BounceInterpolator;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -35,6 +38,9 @@ import com.dids.venuerandomizer.view.VenueDetailActivity;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.custom.EventNetworkImageView;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class RandomizerFragment extends Fragment implements View.OnClickListener,
         GetVenueListTask.GetVenueListListener, Animator.AnimatorListener {
@@ -62,8 +68,6 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private TextView mTelephone;
     private FloatingActionButton mCheckout;
 
-    private TextView mCopyrightTextView;
-    private TextView mLinkTextView;
     private EventNetworkImageView mImageView;
 
     public static RandomizerFragment newInstance(int type) {
@@ -77,28 +81,28 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_randomizer, container, false);
+        final View view = inflater.inflate(R.layout.fragment_randomizer, container, false);
         mSearchButton = (FloatingActionButton) view.findViewById(R.id.search_button);
         mSearchButton.setOnClickListener(this);
 
         /** Populate background image */
+        loadDefaultAssets(view);
         final ViewSwitcher switcher = (ViewSwitcher) view.findViewById(R.id.image_switcher);
         mImageView = (EventNetworkImageView) view.findViewById(R.id.background);
         mImageView.setImageLoaderListener(new EventNetworkImageView.ImageLoaderListener() {
             @Override
             public void onImageLoaded() {
                 switcher.showNext();
+                setAttributions(view);
             }
         });
         mImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 mImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                setResources();
+                loadImage();
             }
         });
-        mCopyrightTextView = (TextView) view.findViewById(R.id.copyright);
-        mLinkTextView = (TextView) view.findViewById(R.id.link);
 
         /** Populate other views */
         mProgress = (ProgressBar) view.findViewById(R.id.progress_indicator);
@@ -127,6 +131,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             Pair<View, String> name = Pair.create((View) mVenueName, "venue_name");
             Pair<View, String> category = Pair.create((View) mCategoryName, "category");
             Pair<View, String> card = Pair.create((View) mCheckout, "card");
+            //noinspection unchecked
             ActivityOptionsCompat options = ActivityOptionsCompat.
                     makeSceneTransitionAnimation(getActivity(), card, name, category);
             startActivity(intent, options.toBundle());
@@ -256,7 +261,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void setResources() {
+    private void loadImage() {
         VenueRandomizerApplication app = VenueRandomizerApplication.getInstance();
         Assets asset;
         switch (getArguments().getInt(TYPE, FOOD)) {
@@ -270,11 +275,28 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
                 asset = app.getFoodAsset();
                 break;
         }
-
-        mCopyrightTextView.setText(asset.getCopyright());
-        mLinkTextView.setText(asset.getLink());
         ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
         mImageView.setImageUrl(asset.getUrl(), loader);
+    }
+
+    private void setAttributions(View view) {
+        VenueRandomizerApplication app = VenueRandomizerApplication.getInstance();
+        Assets asset;
+        switch (getArguments().getInt(TYPE, FOOD)) {
+            case DRINKS:
+                asset = app.getDrinksAsset();
+                break;
+            case COFFEE:
+                asset = app.getCoffeeAsset();
+                break;
+            default:
+                asset = app.getFoodAsset();
+                break;
+        }
+        TextView textView = (TextView) view.findViewById(R.id.copyright);
+        textView.setText(asset.getCopyright());
+        textView = (TextView) view.findViewById(R.id.link);
+        textView.setText(asset.getLink());
     }
 
     private void resetView() {
@@ -322,4 +344,39 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     @Override
     public void onAnimationRepeat(Animator animation) {
     }
+
+    private void loadDefaultAssets(View view) {
+        String type;
+        switch (getArguments().getInt(TYPE, FOOD)) {
+//            case DRINKS: TODO enable when default image is available
+//                type = FourSquareWrapper.SECTION_DRINKS;
+//                break;
+            case COFFEE:
+                type = FourSquareWrapper.SECTION_COFFEE;
+                break;
+            default:
+                type = FourSquareWrapper.SECTION_FOOD;
+        }
+
+        int arrayId = getContext().getResources().getIdentifier("default_" + type, "array",
+                getContext().getPackageName());
+        TypedArray array = getContext().getResources().obtainTypedArray(arrayId);
+        TextView textView = (TextView) view.findViewById(R.id.copyright);
+        //noinspection ResourceType
+        textView.setText(array.getString(0));
+        textView = (TextView) view.findViewById(R.id.link);
+        //noinspection ResourceType
+        textView.setText(array.getString(1));
+        array.recycle();
+
+        try {
+            InputStream ims = getContext().getAssets().open(String.format("default_%s.jpg", type));
+            Drawable d = Drawable.createFromStream(ims, null);
+            ImageView imageView = (ImageView) view.findViewById(R.id.default_image);
+            imageView.setImageDrawable(d);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

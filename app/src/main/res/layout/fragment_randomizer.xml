@@ -15,6 +15,7 @@
         android:outAnimation="@anim/fade_out">
 
         <ImageView
+            android:id="@+id/default_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/default_content_description"

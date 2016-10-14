@@ -2,25 +2,15 @@
     <string name="app_name">Find Me A Place</string>
     <string name="default_content_description">Content Description</string>
 
-    <!-- Main activity strings -->
-    <string name="tab_name_randomizer">Random</string>
-
     <!-- Random Fragment strings -->
-    <string name="random_select_venue_type">[Select Venue Type&#8230;]</string>
     <string name="random_venue_food">Food</string>
     <string name="random_venue_drinks">Drinks</string>
     <string name="random_venue_coffee">Coffee</string>
-    <string name="random_venue_all">All types</string>
-    <string name="random_search_button_text">Search now!</string>
     <string name="random_gps_disabled">Location is disabled</string>
     <string name="random_gps_disabled_msg">Do you want to enable Location in Settings?</string>
     <string name="random_no_internet">Internet required</string>
     <string name="random_no_internet_msg">Internet connection is required to use this feature.</string>
     <string name="random_find_now">Find now</string>
-
-    <!-- Venue detail strings -->
-    <string name="venue_detail_facebook">facebook.com/%1$s</string>
-    <string name="venue_detail_twitter">twitter.com/%1$s</string>
 
     <!-- Control strings -->
     <string name="control_ok">OK</string>
@@ -35,5 +25,10 @@
     <string name="copyright">Copyright 2016, Tompee. All rights reserved.</string>
     <string name="title_about">About</string>
     <string name="version">Version %1$s</string>
+
+    <!-- Share -->
+    <string name="share">Share</string>
+    <string name="share_fb">Facebook</string>
+    <string name="share_twitter">Twitter</string>
 
 </resources>

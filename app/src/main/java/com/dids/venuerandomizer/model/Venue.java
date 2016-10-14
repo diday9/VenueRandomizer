@@ -27,7 +27,7 @@ public class Venue {
     private String mCountry;
 
     /* Categories */
-    List<Category> mCategories;
+    private List<Category> mCategories;
 
     private String mUrl;
     private String mStatus;

@@ -4,8 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.view.fragment.ImageViewFragment;
 
 import java.util.List;

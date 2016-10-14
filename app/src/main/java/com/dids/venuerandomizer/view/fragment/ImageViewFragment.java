@@ -48,7 +48,6 @@ public class ImageViewFragment extends Fragment {
     }
 
     private void setResources(String url) {
-        VenueRandomizerApplication app = VenueRandomizerApplication.getInstance();
         ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
         mImageView.setImageUrl(url, loader);
     }

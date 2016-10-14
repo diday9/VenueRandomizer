@@ -44,25 +44,9 @@ public class EventNetworkImageView extends ImageView {
         loadImageIfNecessary(false);
     }
 
-    /**
-     * Sets the default image resource ID to be used for this view until the attempt to load it
-     * completes.
-     */
-    public void setDefaultImageResId(int defaultImage) {
-        mDefaultImageId = defaultImage;
-    }
-
-    /**
-     * Sets the error image resource ID to be used for this view in the event that the image
-     * requested fails to load.
-     */
-    public void setErrorImageResId(int errorImage) {
-        mErrorImageId = errorImage;
-    }
-
-    void loadImageIfNecessary(final boolean isInLayoutPass) {
-        int width = ((View)getParent()).getWidth();
-        int height = ((View)getParent()).getHeight();
+    private void loadImageIfNecessary(final boolean isInLayoutPass) {
+        int width = ((View) getParent()).getWidth();
+        int height = ((View) getParent()).getHeight();
         ScaleType scaleType = getScaleType();
 
         boolean wrapWidth = false, wrapHeight = false;

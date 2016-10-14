@@ -13,9 +13,8 @@ import java.util.Locale;
 import java.util.Random;
 
 public class VenueRandomizerApplication extends Application {
-    private static final int MEM_CACHE_SIZE = 2 * 1024 * 1024;
     /* Food constants */
-    private static final int MAX_FOOD = 4;
+    private static final int MAX_FOOD = 5;
     private static final String FOOD_RESOURCE_ID = "bg_food%d";
 
     /* Drinks constants */
@@ -23,7 +22,7 @@ public class VenueRandomizerApplication extends Application {
     private static final String DRINKS_RESOURCE_ID = "bg_drinks%d";
 
     /* Coffee constants */
-    private static final int MAX_COFFEE = 2;
+    private static final int MAX_COFFEE = 3;
     private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
     private static VenueRandomizerApplication mInstance;
     private Venue mVenue;

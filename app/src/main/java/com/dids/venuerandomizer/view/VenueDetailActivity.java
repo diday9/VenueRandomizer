@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +105,13 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         setupMapFragment();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
     private void setupMapFragment() {
         mMapFragment = MapViewFragment.getInstance(mVenue.getName(),
                 mVenue.getLatitude(), mVenue.getLongitude());
@@ -120,6 +129,13 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 } else {
                     finishAfterTransition();
                 }
+                return true;
+            case R.id.menu_item_facebook:
+                String message = "Text I want to share.";
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, message);
+                startActivity(Intent.createChooser(share, "Title of the dialog the system will open"));
                 return true;
         }
         return super.onOptionsItemSelected(item);
