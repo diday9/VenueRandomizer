@@ -2,9 +2,12 @@ package com.dids.venuerandomizer.view;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -26,23 +29,23 @@ import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.adapter.SlidingImagePagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
+import com.dids.venuerandomizer.view.custom.TextDrawable;
+import com.dids.venuerandomizer.view.fragment.MapViewFragment;
 
 import java.util.List;
 
 public class VenueDetailActivity extends BaseActivity implements View.OnClickListener,
-        OnMapReadyCallback, ViewPager.OnPageChangeListener {
+        ViewPager.OnPageChangeListener {
     private static final String VERTICAL_POSITION_PROPERTY = "Y";
-    private static final int VERTICAL_POSITION_BOUNCE = 280;
+    private static final int VERTICAL_POSITION_BOUNCE_NORMAL = 270;
+    private static final int VERTICAL_POSITION_BOUNCE_SHORT = 200;
     private static final int ANIMATION_DURATION = 700;
     private static final int ANIMATION_DURATION_OFFSET = 300;
 
     private Venue mVenue;
-    private boolean mIsMapInitialized;
     private RadioGroup mRadioGroup;
     private ViewPager mViewPager;
+    private MapViewFragment mMapFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,17 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
         /** Set action buttons*/
         setupActionButtons();
+
+        /** Setup map fragment */
+        setupMapFragment();
+    }
+
+    private void setupMapFragment() {
+        mMapFragment = MapViewFragment.getInstance(mVenue.getName(),
+                mVenue.getLatitude(), mVenue.getLongitude());
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container, mMapFragment);
+        ft.commit();
     }
 
     @Override
@@ -113,13 +127,36 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-    }
-
-    private void initializeMap(Bundle savedInstanceState) {
-        MapsInitializer.initialize(this);
-//        mMapView = (MapView) findViewById(R.id.mapview);
-//        mMapView.onCreate(savedInstanceState);
-//        mMapView.getMapAsync(this);
+        Intent intent;
+        switch (v.getId()) {
+            case R.id.location:
+                if (mMapFragment != null) {
+                    mMapFragment.setCameraToLocation();
+                }
+                break;
+            case R.id.telephone:
+                intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + mVenue.getPhone()));
+                startActivity(intent);
+                break;
+            case R.id.url:
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(mVenue.getUrl()));
+                startActivity(intent);
+                break;
+            case R.id.twitter:
+                try {
+                    this.getPackageManager().getPackageInfo("com.twitter.android", 0);
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" +
+                            mVenue.getTwitter()));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                } catch (Exception e) {
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/" +
+                            mVenue.getTwitter()));
+                }
+                startActivity(intent);
+                break;
+        }
     }
 
     private void setRating() {
@@ -135,18 +172,6 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
             }
             ratingGroup.addView(star);
         }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-//        mIsMapInitialized = true;
-//        mMapView.onResume();
-//        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-//        LatLng latLng = new LatLng(mVenue.getLongitude(), mVenue.getLatitude());
-//        googleMap.addMarker(new MarkerOptions()
-//                .position(latLng)
-//                .title(mVenue.getName()));
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
     }
 
     private void createRadioButtonPages() {
@@ -194,28 +219,52 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     private void setupActionButtons() {
         /** Location */
         FloatingActionButton actionButton = (FloatingActionButton) findViewById(R.id.location);
+        actionButton.setOnClickListener(this);
         int animationOffset = animateView(actionButton, 0);
 
         /** Telephone */
         actionButton = (FloatingActionButton) findViewById(R.id.telephone);
-        animationOffset = animateView(actionButton, animationOffset);
+        if (mVenue.getFormattedPhone() != null && !mVenue.getFormattedPhone().isEmpty()) {
+            actionButton.setOnClickListener(this);
+            animationOffset = animateView(actionButton, animationOffset);
+        } else {
+            actionButton.setVisibility(View.GONE);
+        }
 
         /** Web */
         actionButton = (FloatingActionButton) findViewById(R.id.url);
-        animationOffset = animateView(actionButton, animationOffset);
+        if (mVenue.getUrl() != null && !mVenue.getUrl().isEmpty()) {
+            actionButton.setOnClickListener(this);
+            animationOffset = animateView(actionButton, animationOffset);
+        } else {
+            actionButton.setVisibility(View.GONE);
+        }
 
         /** Facebook */
         actionButton = (FloatingActionButton) findViewById(R.id.facebook);
-        animationOffset = animateView(actionButton, animationOffset);
+        if (mVenue.getFacebook() != null && !mVenue.getFacebook().isEmpty()) {
+            actionButton.setOnClickListener(this);
+            actionButton.setImageDrawable(new TextDrawable(getResources(), "F", true));
+            animationOffset = animateView(actionButton, animationOffset);
+        } else {
+            actionButton.setVisibility(View.GONE);
+        }
 
         /** Twitter */
         actionButton = (FloatingActionButton) findViewById(R.id.twitter);
-        animateView(actionButton, animationOffset);
+        if (mVenue.getTwitter() != null && !mVenue.getTwitter().isEmpty()) {
+            actionButton.setImageDrawable(new TextDrawable(getResources(), "T", true));
+            actionButton.setOnClickListener(this);
+            animateView(actionButton, animationOffset);
+        } else {
+            actionButton.setVisibility(View.GONE);
+        }
     }
 
     private int animateView(final View view, int offset) {
+        boolean isNormal = mVenue.getStatus() != null && !mVenue.getStatus().isEmpty();
         ObjectAnimator moveAnim = ObjectAnimator.ofFloat(view, VERTICAL_POSITION_PROPERTY,
-                VERTICAL_POSITION_BOUNCE);
+                isNormal ? VERTICAL_POSITION_BOUNCE_NORMAL : VERTICAL_POSITION_BOUNCE_SHORT);
         moveAnim.setDuration(ANIMATION_DURATION);
         moveAnim.setStartDelay(1000 + offset);
         moveAnim.setInterpolator(new BounceInterpolator());
@@ -240,5 +289,4 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         moveAnim.start();
         return offset + ANIMATION_DURATION_OFFSET;
     }
-
 }

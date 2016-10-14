@@ -13,7 +13,6 @@
     <color name="dark_text_disable">#32212121</color>
     <color name="dark_secondary_text">#BDBDBD</color>
     <color name="background">#FFFFFF</color>
-    <color name="status_color">#32CD32</color>
 
     <!-- Action colors -->
     <color name="location_color">#D32F2F</color>

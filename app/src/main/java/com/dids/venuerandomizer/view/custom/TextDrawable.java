@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 
@@ -17,10 +18,13 @@ public class TextDrawable extends Drawable {
     private int mIntrinsicWidth;
     private int mIntrinsicHeight;
 
-    public TextDrawable(Resources res, CharSequence text) {
+    public TextDrawable(Resources res, CharSequence text, boolean isBold) {
         mText = text;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(DEFAULT_COLOR);
+        if (isBold) {
+            mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        }
         mPaint.setTextAlign(Paint.Align.CENTER);
         float textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                 DEFAULT_TEXTSIZE, res.getDisplayMetrics());
@@ -32,8 +36,8 @@ public class TextDrawable extends Drawable {
     @Override
     public void draw(Canvas canvas) {
         Rect bounds = getBounds();
-        canvas.drawText(mText, 0, mText.length(),
-                bounds.centerX(), bounds.centerY(), mPaint);
+        canvas.drawText(mText.toString(), bounds.width() / 2, bounds.height() / 2 -
+                ((mPaint.descent() + mPaint.ascent()) / 2), mPaint);
     }
 
     @Override
