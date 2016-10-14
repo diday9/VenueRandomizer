@@ -5,7 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,17 +33,13 @@ import android.widget.TextView;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.Utilities;
+import com.dids.venuerandomizer.controller.network.FacebookWrapper;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.adapter.SlidingImagePagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
 import com.dids.venuerandomizer.view.fragment.MapViewFragment;
-import com.facebook.share.model.ShareOpenGraphAction;
-import com.facebook.share.model.ShareOpenGraphContent;
-import com.facebook.share.model.ShareOpenGraphObject;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.widget.ShareDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -160,39 +156,6 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         return super.onOptionsItemSelected(item);
     }
 
-    private void shareOnFacebook(Bitmap bitmap) {
-        TextView textView = (TextView) findViewById(R.id.category_name);
-        /** Create a restaurant object */
-        ShareOpenGraphObject.Builder restoBuilder = new ShareOpenGraphObject.Builder()
-                .putString("og:type", "restaurant.restaurant")
-                .putString("og:title", mVenue.getName())
-                .putString("og:description", textView.getText().toString())
-                .putString("place:location:latitude", String.valueOf(mVenue.getLatitude()))
-                .putString("place:location:longitude", String.valueOf(mVenue.getLongitude()));
-        if (mVenue.getUrl() != null && !mVenue.getUrl().isEmpty()) {
-            restoBuilder.putString("og:url", mVenue.getUrl());
-        } else {
-            /* TODO: foursquare url? */
-        }
-        /** Create photo */
-        SharePhoto photo = new SharePhoto.Builder()
-                .setBitmap(bitmap)
-                .setUserGenerated(true)
-                .build();
-        /**  Create an action */
-        ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
-                .setActionType("restaurants.visited")
-                .putObject("restaurant", restoBuilder.build())
-                .putPhoto("image", photo)
-                .build();
-        /** Create the content */
-        ShareOpenGraphContent content = new ShareOpenGraphContent.Builder()
-                .setPreviewPropertyName("restaurant")
-                .setAction(action)
-                .build();
-        ShareDialog.show(this, content);
-    }
-
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -242,6 +205,8 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 }
                 startActivity(intent);
                 break;
+            case R.id.facebook:
+                FacebookWrapper.launch(this, mVenue.getFacebookUsername());
         }
     }
 
@@ -379,10 +344,20 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(mPhotoFile.getAbsolutePath(), options);
-            shareOnFacebook(bitmap);
+            /** Get original bitmap */
+            Bitmap bitmap = Utilities.decodeSampledBitmapFromResource(mPhotoFile.getAbsolutePath());
+
+            /** Get EXIF info */
+            ExifInterface exif;
+            try {
+                exif = new ExifInterface(mPhotoFile.getAbsolutePath());
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+                bitmap = Utilities.rotateBitmap(bitmap, orientation);
+                FacebookWrapper.share(this, mVenue, bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

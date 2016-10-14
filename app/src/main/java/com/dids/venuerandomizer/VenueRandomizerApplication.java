@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 
+import com.dids.venuerandomizer.controller.PreferencesUtility;
 import com.dids.venuerandomizer.controller.location.LocationManager;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.model.Assets;
@@ -42,18 +43,14 @@ public class VenueRandomizerApplication extends Application {
         mInstance = this;
         VolleySingleton.getInstance(this);
         LocationManager.getInstance(this);
+        PreferencesUtility.getInstance().init(this);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
         Resources res = getResources();
-        /** Get Food array ID */
         mFoodAsset = preloadResource(res, FOOD_RESOURCE_ID, MAX_FOOD);
-
-        /** Get Drinks array ID */
         mDrinkAsset = preloadResource(res, DRINKS_RESOURCE_ID, MAX_DRINKS);
-
-        /** Get Coffee array ID */
         mCoffeeAsset = preloadResource(res, COFFEE_RESOURCE_ID, MAX_COFFEE);
     }
 
@@ -68,8 +65,14 @@ public class VenueRandomizerApplication extends Application {
         String copyright = array.getString(0);
         //noinspection ResourceType
         String link = array.getString(1);
-        //noinspection ResourceType
-        String url = array.getString(2);
+        String url;
+        if (PreferencesUtility.getInstance().isDataSaverModeOn()) {
+            //noinspection ResourceType
+            url = array.getString(2);
+        } else {
+            //noinspection ResourceType
+            url = array.getString(3);
+        }
         array.recycle();
         return new Assets(copyright, link, url);
     }
