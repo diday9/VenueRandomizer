@@ -22,4 +22,12 @@
     <!-- Radio group dimension -->
     <dimen name="radio_size">5dp</dimen>
     <dimen name="radio_margin">3dp</dimen>
+
+    <!-- List dimensions -->
+    <dimen name="list_item_height">48dp</dimen>
+    <dimen name="list_border_width">1dp</dimen>
+    <dimen name="list_no_border_width">-2dp</dimen>
+    <dimen name="list_item_icon_dimension">24dp</dimen>
+    <dimen name="list_item_margin">8dp</dimen>
+
 </resources>

@@ -103,10 +103,16 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.about:
-                Intent intent = new Intent(this, HelpActivity.class);
+                intent = new Intent(this, HelpActivity.class);
                 intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.ABOUT);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                return true;
+            case R.id.settings:
+                intent = new Intent(this, SettingsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 return true;
