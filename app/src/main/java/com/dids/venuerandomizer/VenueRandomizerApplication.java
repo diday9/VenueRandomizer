@@ -8,6 +8,8 @@ import com.dids.venuerandomizer.controller.location.LocationManager;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.model.Assets;
 import com.dids.venuerandomizer.model.Venue;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import java.util.Locale;
 import java.util.Random;
@@ -40,6 +42,9 @@ public class VenueRandomizerApplication extends Application {
         mInstance = this;
         VolleySingleton.getInstance(this);
         LocationManager.getInstance(this);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
         Resources res = getResources();
         /** Get Food array ID */

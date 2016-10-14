@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".VenueRandomizerApplication"
@@ -14,9 +19,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.BrandedLaunch">
 
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1100912486695372"
+            android:exported="true" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.tompee.utilities.findmeaplace.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDK6Zk_QFcfuyRnCyb7mrwlXK5ByyTnGzk" />
+            android:value="@string/google_api_key" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".view.MainActivity"
@@ -33,5 +57,6 @@
         <activity
             android:name=".view.HelpActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".view.base.BaseActivity" />
     </application>
 </manifest>

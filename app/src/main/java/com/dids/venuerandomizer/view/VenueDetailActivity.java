@@ -2,14 +2,20 @@ package com.dids.venuerandomizer.view;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,11 +39,19 @@ import com.dids.venuerandomizer.view.adapter.SlidingImagePagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
 import com.dids.venuerandomizer.view.fragment.MapViewFragment;
+import com.facebook.share.model.ShareOpenGraphAction;
+import com.facebook.share.model.ShareOpenGraphContent;
+import com.facebook.share.model.ShareOpenGraphObject;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.widget.ShareDialog;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class VenueDetailActivity extends BaseActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener {
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String VERTICAL_POSITION_PROPERTY = "Y";
     private static final int VERTICAL_POSITION_BOUNCE_NORMAL = 270;
     private static final int VERTICAL_POSITION_BOUNCE_SHORT = 200;
@@ -48,6 +62,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     private RadioGroup mRadioGroup;
     private ViewPager mViewPager;
     private MapViewFragment mMapFragment;
+    private File mPhotoFile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +84,6 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
             mViewPager = (ViewPager) findViewById(R.id.view_pager);
             mViewPager.addOnPageChangeListener(this);
             mViewPager.setAdapter(new SlidingImagePagerAdapter(getSupportFragmentManager(), photoUrls));
-            mViewPager.setOffscreenPageLimit(mViewPager.getAdapter().getCount());
         }
 
         /** Create radio group */
@@ -131,14 +145,70 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 }
                 return true;
             case R.id.menu_item_facebook:
-                String message = "Text I want to share.";
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_TEXT, message);
-                startActivity(Intent.createChooser(share, "Title of the dialog the system will open"));
-                return true;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.share_fb_message);
+                builder.setPositiveButton(R.string.control_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dispatchTakePictureIntent();
+                    }
+                });
+                builder.setNegativeButton(R.string.control_cancel, null);
+                builder.create().show();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareOnFacebook(Bitmap bitmap) {
+        TextView textView = (TextView) findViewById(R.id.category_name);
+        /** Create a restaurant object */
+        ShareOpenGraphObject.Builder restoBuilder = new ShareOpenGraphObject.Builder()
+                .putString("og:type", "restaurant.restaurant")
+                .putString("og:title", mVenue.getName())
+                .putString("og:description", textView.getText().toString())
+                .putString("place:location:latitude", String.valueOf(mVenue.getLatitude()))
+                .putString("place:location:longitude", String.valueOf(mVenue.getLongitude()));
+        if (mVenue.getUrl() != null && !mVenue.getUrl().isEmpty()) {
+            restoBuilder.putString("og:url", mVenue.getUrl());
+        } else {
+            /* TODO: foursquare url? */
+        }
+        /** Create photo */
+        SharePhoto photo = new SharePhoto.Builder()
+                .setBitmap(bitmap)
+                .setUserGenerated(true)
+                .build();
+        /**  Create an action */
+        ShareOpenGraphAction action = new ShareOpenGraphAction.Builder()
+                .setActionType("restaurants.visited")
+                .putObject("restaurant", restoBuilder.build())
+                .putPhoto("image", photo)
+                .build();
+        /** Create the content */
+        ShareOpenGraphContent content = new ShareOpenGraphContent.Builder()
+                .setPreviewPropertyName("restaurant")
+                .setAction(action)
+                .build();
+        ShareDialog.show(this, content);
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            mPhotoFile = null;
+            try {
+                mPhotoFile = Utilities.createImageFile(this);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (mPhotoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.tompee.utilities.findmeaplace.fileprovider", mPhotoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
     }
 
     @Override
@@ -304,5 +374,15 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         });
         moveAnim.start();
         return offset + ANIMATION_DURATION_OFFSET;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(mPhotoFile.getAbsolutePath(), options);
+            shareOnFacebook(bitmap);
+        }
     }
 }

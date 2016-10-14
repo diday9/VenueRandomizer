@@ -50,8 +50,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private static final String VERTICAL_TRANSLATION_PROPERTY = "translationY";
     private static final String VERTICAL_POSITION_PROPERTY = "Y";
     private static final int VERTICAL_OFFSET = 200;
-    private static final int VERTICAL_POSITION_BOUNCE_NORMAL = 300;
-    private static final int VERTICAL_POSITION_BOUNCE_SHORT = 240;
+    private static final int VERTICAL_POSITION_BOUNCE = 300;
     private static final int ANIMATION_DURATION = 700;
     private static final String TYPE = "type";
 
@@ -216,7 +215,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             mTelephone.setText(venue.getFormattedPhone());
             mTelephone.setVisibility(View.VISIBLE);
         } else {
-            mTelephone.setVisibility(View.GONE);
+            mTelephone.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -308,7 +307,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         }
         if (mCheckout != null && mIsButtonGroupAnimated) {
             ObjectAnimator anim = ObjectAnimator.ofFloat(mCheckout,
-                    VERTICAL_POSITION_PROPERTY, -VERTICAL_POSITION_BOUNCE_NORMAL);
+                    VERTICAL_POSITION_PROPERTY, -VERTICAL_POSITION_BOUNCE);
             anim.setDuration(0);
             anim.start();
         }
@@ -330,8 +329,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         ((BaseActivity) getActivity()).interceptTouchEvents(false);
         mCheckout.setVisibility(View.VISIBLE);
         ObjectAnimator moveAnim = ObjectAnimator.ofFloat(mCheckout, VERTICAL_POSITION_PROPERTY,
-                mTelephone.getVisibility() == View.VISIBLE ? VERTICAL_POSITION_BOUNCE_NORMAL :
-                        VERTICAL_POSITION_BOUNCE_SHORT);
+                VERTICAL_POSITION_BOUNCE);
         moveAnim.setDuration(ANIMATION_DURATION);
         moveAnim.setInterpolator(new BounceInterpolator());
         moveAnim.start();

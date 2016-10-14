@@ -30,5 +30,10 @@
     <string name="share">Share</string>
     <string name="share_fb">Facebook</string>
     <string name="share_twitter">Twitter</string>
+    <string name="share_fb_message">Take a picture so you can share this moment vividly.</string>
+
+    <!-- API Keys -->
+    <string name="facebook_app_id">1100912486695372</string>
+    <string name="google_api_key">AIzaSyDK6Zk_QFcfuyRnCyb7mrwlXK5ByyTnGzk</string>
 
 </resources>

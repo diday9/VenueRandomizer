@@ -51,9 +51,12 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             Log.d(TAG, "Requesting for location runtime permission");
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(this, Manifest.permission.
+                    WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ACCESS_LOCATION);
+                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.
+                        WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_ACCESS_LOCATION);
             } else {
                 Log.v(TAG, "Location permission already granted");
             }
@@ -65,7 +68,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         switch (requestCode) {
             case PERMISSION_REQUEST_ACCESS_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2]
+                        == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "Location permission has been granted");
                 } else {
                     Log.d(TAG, "Location permission has been denied");
