@@ -3,7 +3,6 @@ package com.dids.venuerandomizer.controller.task;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.android.volley.NoConnectionError;
 import com.dids.venuerandomizer.controller.location.LocationManager;
@@ -11,30 +10,40 @@ import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.model.Venue;
 
 public class GetVenueListTask extends AsyncTask<String, Void, Venue> {
+    private static final int MAX_RETRY = 5;
+    private static final int DELAY = 1000;
     private final Context mContext;
     private final GetVenueListListener mListener;
     private boolean mIsLocationEnabled;
     private boolean mIsInternetConnected;
+    private boolean mIsLocationFound;
 
     public GetVenueListTask(Context context, GetVenueListListener listener) {
         mContext = context;
         mListener = listener;
         mIsLocationEnabled = false;
         mIsInternetConnected = true;
+        mIsLocationFound = true;
     }
 
     @Override
     protected Venue doInBackground(String... args) {
-        Log.d("Tompee", "task start");
         LocationManager manager = LocationManager.getInstance(mContext);
         mIsLocationEnabled = manager.isLocationEnabled();
         if (!mIsLocationEnabled) {
             return null;
         }
         Location location = manager.getLocation();
+        for (int count = 0; location == null && count < MAX_RETRY; count++) {
+            try {
+                Thread.sleep(DELAY);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            location = manager.getLocation();
+        }
         if (location == null) {
-            Log.d("tompee", "location is null");
-            /** TODO handle null location */
+            mIsLocationFound = false;
             return null;
         }
         FourSquareWrapper wrapper = new FourSquareWrapper(mContext);
@@ -62,6 +71,10 @@ public class GetVenueListTask extends AsyncTask<String, Void, Venue> {
             mListener.onConnectionError();
             return;
         }
+        if (!mIsLocationFound) {
+            mListener.onLocationNotFound();
+            return;
+        }
         mListener.onCompleted(venue);
     }
 
@@ -69,6 +82,8 @@ public class GetVenueListTask extends AsyncTask<String, Void, Venue> {
         void onCompleted(Venue venue);
 
         void onLocationDisabled();
+
+        void onLocationNotFound();
 
         void onConnectionError();
     }

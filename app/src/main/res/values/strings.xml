@@ -11,6 +11,7 @@
     <string name="random_no_internet">Internet required</string>
     <string name="random_no_internet_msg">Internet connection is required to use this feature.</string>
     <string name="random_find_now">Find now</string>
+    <string name="random_no_location">Cannot find location. Please try again.</string>
 
     <!-- Control strings -->
     <string name="control_ok">OK</string>
@@ -45,5 +46,6 @@
     <string name="settings_max_image_count_message">Select image count:</string>
     <string name="settings_system">System settings</string>
     <string name="settings_max_image_subtext">Show %1$d images</string>
-    <string name="settings_locale">Location locale</string>
+    <string name="settings_locale">Venue information locale</string>
+    <string name="settings_locale_message">Select locale:</string>
 </resources>

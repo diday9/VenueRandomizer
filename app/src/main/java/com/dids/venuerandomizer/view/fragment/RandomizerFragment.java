@@ -23,6 +23,7 @@ import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -249,6 +250,15 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
+    public void onLocationNotFound() {
+        mProgress.setVisibility(View.GONE);
+        mSearchButton.setEnabled(true);
+        mGetVenueListTask = null;
+        ((BaseActivity) getActivity()).interceptTouchEvents(false);
+        Toast.makeText(getContext(), getString(R.string.random_no_location), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onConnectionError() {
         mProgress.setVisibility(View.GONE);
         mSearchButton.setEnabled(true);
@@ -376,5 +386,11 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         }
         setupForDynamicView(asset);
         RefreshImageTask.getInstance().addListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefreshImageTask.getInstance().cancel(true);
     }
 }
