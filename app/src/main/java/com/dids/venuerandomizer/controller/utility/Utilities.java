@@ -1,4 +1,4 @@
-package com.dids.venuerandomizer.controller;
+package com.dids.venuerandomizer.controller.utility;
 
 import android.content.Context;
 import android.graphics.Bitmap;
