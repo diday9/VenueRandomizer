@@ -3,6 +3,7 @@ package com.dids.venuerandomizer;
 import android.app.Application;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.util.Log;
 
 import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
 import com.dids.venuerandomizer.controller.location.LocationManager;
@@ -16,6 +17,7 @@ import java.util.Locale;
 import java.util.Random;
 
 public class VenueRandomizerApplication extends Application {
+    private static final String TAG = "VenueRandomizerApp";
     /* Food constants */
     private static final int MAX_FOOD = 5;
     private static final String FOOD_RESOURCE_ID = "bg_food%d";
@@ -66,10 +68,12 @@ public class VenueRandomizerApplication extends Application {
         //noinspection ResourceType
         String link = array.getString(1);
         String url;
-        if (PreferencesUtility.getInstance().isDataSaverModeOn()) {
+        if (PreferencesUtility.getInstance().isHiResImageSupported()) {
+            Log.d(TAG, "hi-res enabled");
             //noinspection ResourceType
             url = array.getString(2);
         } else {
+            Log.d(TAG, "hi-res disabled");
             //noinspection ResourceType
             url = array.getString(3);
         }

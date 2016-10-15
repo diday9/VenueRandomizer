@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.dids.venuerandomizer.R;
+import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 
@@ -28,7 +29,6 @@ public class FourSquareWrapper {
     public static final String SECTION_COFFEE = "coffee";
 
     private static final String TAG = "FourSquareWrapper";
-    private static final int MAX_PHOTO_COUNT = 10;
     private static final int MAX_UNIQUE_RETRY = 5;
 
     /* Foursquare API Constants */
@@ -369,7 +369,9 @@ public class FourSquareWrapper {
             JSONObject response = future.get();
             JSONArray itemArray = response.getJSONObject(TAG_RESPONSE).
                     getJSONObject(TAG_PHOTOS).getJSONArray(TAG_ITEMS);
-            for (int index = 0; index < itemArray.length() && index < MAX_PHOTO_COUNT; index++) {
+
+            for (int index = 0; index < itemArray.length() && index < PreferencesUtility.
+                    getInstance().getMaxImageCount(); index++) {
                 venue.addPhotoUrl(itemArray.getJSONObject(index).getString(TAG_PREFIX) +
                         "original" + itemArray.getJSONObject(index).getString(TAG_SUFFIX));
             }

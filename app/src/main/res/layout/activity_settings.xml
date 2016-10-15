@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".view.SettingsActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -17,10 +19,11 @@
         style="@style/ListViewStyle"
         android:background="@drawable/selector_list_full_background"
         android:clickable="true"
-        android:descendantFocusability="blocksDescendants">
+        android:descendantFocusability="blocksDescendants"
+        android:onClick="onClick">
 
         <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/offline_mode_cb"
+            android:id="@+id/hi_res_cb"
             style="@style/ListViewIconStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,8 +38,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/offline_mode_cb"
-            android:layout_toStartOf="@id/offline_mode_cb"
+            android:layout_toLeftOf="@id/hi_res_cb"
+            android:layout_toStartOf="@id/hi_res_cb"
             android:orientation="vertical">
 
             <TextView
@@ -50,7 +53,8 @@
         style="@style/ListViewStyle"
         android:background="@drawable/selector_list_bottom_background"
         android:clickable="true"
-        android:descendantFocusability="blocksDescendants">
+        android:descendantFocusability="blocksDescendants"
+        android:onClick="onClick">
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/dynamic_images_cb"
@@ -80,21 +84,12 @@
 
 
     <RelativeLayout
-        android:id="@+id/spl_support"
+        android:id="@+id/max_image_count"
         style="@style/ListViewStyle"
         android:background="@drawable/selector_list_bottom_background"
         android:clickable="true"
+        android:onClick="onClick"
         android:descendantFocusability="blocksDescendants">
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/spl_support_cb"
-            style="@style/ListViewIconStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:buttonTint="@color/colorPrimary" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -102,13 +97,17 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/spl_support_cb"
-            android:layout_toStartOf="@id/spl_support_cb"
             android:orientation="vertical">
 
             <TextView
                 style="@style/ListViewSingleTextStyle"
                 android:text="@string/settings_max_image_count" />
+
+            <TextView
+                android:id="@+id/tv_max_image_count"
+                style="@style/ListViewDualTextStyle"
+                android:text="@string/settings_max_image_count" />
+
         </LinearLayout>
     </RelativeLayout>
 

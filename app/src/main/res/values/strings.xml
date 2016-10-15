@@ -40,8 +40,10 @@
     <string name="settings">Settings</string>
     <string name="settings_image">Image settings</string>
     <string name="settings_hi_res">High resolution images</string>
-    <string name="settings_dynamic_images">Enable dynamic contents</string>
+    <string name="settings_dynamic_images">Enable dynamic background</string>
     <string name="settings_max_image_count">Max venue image count</string>
+    <string name="settings_max_image_count_message">Select image count:</string>
     <string name="settings_system">System settings</string>
+    <string name="settings_max_image_subtext">Show %1$d images</string>
     <string name="settings_locale">Location locale</string>
 </resources>

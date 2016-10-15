@@ -8,7 +8,7 @@
                 android:width="@dimen/list_border_width"
                 android:color="@color/colorPrimary" />
             <solid
-                android:color="@color/colorPrimaryAlpha"/>
+                android:color="@color/list_background"/>
         </shape>
     </item>
 
