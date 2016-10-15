@@ -1,7 +1,6 @@
 package com.dids.venuerandomizer.view;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,8 +31,9 @@ import android.widget.TextView;
 
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
-import com.dids.venuerandomizer.controller.Utilities;
 import com.dids.venuerandomizer.controller.network.FacebookWrapper;
+import com.dids.venuerandomizer.controller.utility.AnimationUtility;
+import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.adapter.SlidingImagePagerAdapter;
@@ -48,11 +48,10 @@ import java.util.List;
 public class VenueDetailActivity extends BaseActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final String VERTICAL_POSITION_PROPERTY = "Y";
-    private static final int VERTICAL_POSITION_BOUNCE_NORMAL = 270;
-    private static final int VERTICAL_POSITION_BOUNCE_SHORT = 200;
+    private static final int VERTICAL_POSITION_BOUNCE = 88;
     private static final int ANIMATION_DURATION = 700;
-    private static final int ANIMATION_DURATION_OFFSET = 300;
+    private static final int ANIMATION_DURATION_DELAY = 1000;
+    private static final int ANIMATION_DURATION_DELAY_OFFSET = 300;
 
     private Venue mVenue;
     private RadioGroup mRadioGroup;
@@ -102,7 +101,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         if (mVenue.getStatus() != null && !mVenue.getStatus().isEmpty()) {
             status.setText(mVenue.getStatus());
         } else {
-            status.setVisibility(View.GONE);
+            status.setVisibility(View.INVISIBLE);
         }
 
         /** Set rating */
@@ -313,32 +312,32 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     private int animateView(final View view, int offset) {
-        boolean isNormal = mVenue.getStatus() != null && !mVenue.getStatus().isEmpty();
-        ObjectAnimator moveAnim = ObjectAnimator.ofFloat(view, VERTICAL_POSITION_PROPERTY,
-                isNormal ? VERTICAL_POSITION_BOUNCE_NORMAL : VERTICAL_POSITION_BOUNCE_SHORT);
-        moveAnim.setDuration(ANIMATION_DURATION);
-        moveAnim.setStartDelay(1000 + offset);
-        moveAnim.setInterpolator(new BounceInterpolator());
-        moveAnim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                view.setVisibility(View.VISIBLE);
-            }
+        AnimationUtility.animateVerticalPosition(view, Utilities.convertDPtoPixel(this,
+                VERTICAL_POSITION_BOUNCE), ANIMATION_DURATION, new BounceInterpolator(),
+                ANIMATION_DURATION_DELAY + offset,
+                new Animator.AnimatorListener() {
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-            }
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        view.setVisibility(View.VISIBLE);
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-        });
-        moveAnim.start();
-        return offset + ANIMATION_DURATION_OFFSET;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                });
+        return offset + ANIMATION_DURATION_DELAY_OFFSET;
     }
 
     @Override

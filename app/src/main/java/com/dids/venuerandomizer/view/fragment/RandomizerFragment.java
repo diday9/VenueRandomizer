@@ -1,7 +1,6 @@
 package com.dids.venuerandomizer.view.fragment;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -31,6 +30,8 @@ import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.controller.task.GetVenueListTask;
+import com.dids.venuerandomizer.controller.utility.AnimationUtility;
+import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.model.Assets;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
@@ -47,10 +48,8 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     public static final int FOOD = 0;
     public static final int DRINKS = 1;
     public static final int COFFEE = 2;
-    private static final String VERTICAL_TRANSLATION_PROPERTY = "translationY";
-    private static final String VERTICAL_POSITION_PROPERTY = "Y";
-    private static final int VERTICAL_OFFSET = 200;
-    private static final int VERTICAL_POSITION_BOUNCE = 300;
+    private static final int VERTICAL_OFFSET = 70;
+    private static final int VERTICAL_POSITION_BOUNCE = 95;
     private static final int ANIMATION_DURATION = 700;
     private static final String TYPE = "type";
 
@@ -166,11 +165,8 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private void animateButtonGroup() {
         if (!mIsButtonGroupAnimated) {
             mIsButtonGroupAnimated = true;
-            ObjectAnimator anim = ObjectAnimator.ofFloat(mButtonGroup, VERTICAL_TRANSLATION_PROPERTY,
-                    VERTICAL_OFFSET);
-            anim.setDuration(ANIMATION_DURATION);
-            anim.addListener(this);
-            anim.start();
+            AnimationUtility.animateVerticalTranslation(mButtonGroup, Utilities.
+                    convertDPtoPixel(getContext(), VERTICAL_OFFSET), ANIMATION_DURATION, this);
         } else {
             ((BaseActivity) getActivity()).interceptTouchEvents(false);
         }
@@ -306,17 +302,12 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             mCheckout.setVisibility(View.INVISIBLE);
         }
         if (mCheckout != null && mIsButtonGroupAnimated) {
-            ObjectAnimator anim = ObjectAnimator.ofFloat(mCheckout,
-                    VERTICAL_POSITION_PROPERTY, -VERTICAL_POSITION_BOUNCE);
-            anim.setDuration(0);
-            anim.start();
+            AnimationUtility.animateVerticalPosition(mCheckout, -Utilities.
+                    convertDPtoPixel(getContext(), VERTICAL_POSITION_BOUNCE), 0);
         }
         if (mButtonGroup != null && mIsButtonGroupAnimated) {
             mIsButtonGroupAnimated = false;
-            ObjectAnimator anim = ObjectAnimator.ofFloat(mButtonGroup,
-                    VERTICAL_TRANSLATION_PROPERTY, 0);
-            anim.setDuration(0);
-            anim.start();
+            AnimationUtility.animateVerticalTranslation(mButtonGroup, 0, 0);
         }
     }
 
@@ -328,11 +319,9 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     public void onAnimationEnd(Animator animation) {
         ((BaseActivity) getActivity()).interceptTouchEvents(false);
         mCheckout.setVisibility(View.VISIBLE);
-        ObjectAnimator moveAnim = ObjectAnimator.ofFloat(mCheckout, VERTICAL_POSITION_PROPERTY,
-                VERTICAL_POSITION_BOUNCE);
-        moveAnim.setDuration(ANIMATION_DURATION);
-        moveAnim.setInterpolator(new BounceInterpolator());
-        moveAnim.start();
+        AnimationUtility.animateVerticalPosition(mCheckout, Utilities.
+                        convertDPtoPixel(getContext(), VERTICAL_POSITION_BOUNCE),
+                ANIMATION_DURATION, new BounceInterpolator());
     }
 
     @Override

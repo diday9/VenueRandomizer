@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 
-import com.dids.venuerandomizer.controller.PreferencesUtility;
+import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
 import com.dids.venuerandomizer.controller.location.LocationManager;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.model.Assets;
