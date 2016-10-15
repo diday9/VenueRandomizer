@@ -25,6 +25,7 @@ public class GetVenueListTask extends AsyncTask<String, Void, Venue> {
 
     @Override
     protected Venue doInBackground(String... args) {
+        Log.d("Tompee", "task start");
         LocationManager manager = LocationManager.getInstance(mContext);
         mIsLocationEnabled = manager.isLocationEnabled();
         if (!mIsLocationEnabled) {

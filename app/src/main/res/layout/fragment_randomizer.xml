@@ -14,15 +14,16 @@
         android:inAnimation="@anim/fade_in"
         android:outAnimation="@anim/fade_out">
 
-        <ImageView
-            android:id="@+id/default_image"
+        <com.dids.venuerandomizer.view.custom.NetworkImageView
+            android:id="@+id/image1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/default_content_description"
             android:scaleType="centerCrop" />
 
-        <com.dids.venuerandomizer.view.custom.EventNetworkImageView
-            android:id="@+id/background"
+        <com.dids.venuerandomizer.view.custom.NetworkImageView
+            android:id="@+id/image2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"

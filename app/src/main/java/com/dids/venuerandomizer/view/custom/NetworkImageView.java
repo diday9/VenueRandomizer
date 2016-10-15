@@ -11,13 +11,9 @@ import android.widget.ImageView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
-public class EventNetworkImageView extends ImageView {
+public class NetworkImageView extends ImageView {
     private static final String TAG = "EventNetworkImageView";
     private String mUrl;
-
-    private int mDefaultImageId;
-
-    private int mErrorImageId;
 
     private ImageLoader mImageLoader;
 
@@ -25,15 +21,15 @@ public class EventNetworkImageView extends ImageView {
 
     private ImageLoaderListener mListener;
 
-    public EventNetworkImageView(Context context) {
+    public NetworkImageView(Context context) {
         this(context, null);
     }
 
-    public EventNetworkImageView(Context context, AttributeSet attrs) {
+    public NetworkImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public EventNetworkImageView(Context context, AttributeSet attrs, int defStyle) {
+    public NetworkImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -70,7 +66,6 @@ public class EventNetworkImageView extends ImageView {
                 mImageContainer.cancelRequest();
                 mImageContainer = null;
             }
-            setDefaultImageOrNull();
             return;
         }
 
@@ -82,7 +77,6 @@ public class EventNetworkImageView extends ImageView {
             } else {
                 // if there is a pre-existing request, cancel it if it's fetching a different URL.
                 mImageContainer.cancelRequest();
-                setDefaultImageOrNull();
             }
         }
 
@@ -96,9 +90,6 @@ public class EventNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (mErrorImageId != 0) {
-                            setImageResource(mErrorImageId);
-                        }
                     }
 
                     @Override
@@ -122,22 +113,12 @@ public class EventNetworkImageView extends ImageView {
                             if (mListener != null) {
                                 mListener.onImageLoaded();
                             }
-                        } else if (mDefaultImageId != 0) {
-                            setImageResource(mDefaultImageId);
                         }
                     }
                 }, maxWidth, maxHeight, scaleType);
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
-    }
-
-    private void setDefaultImageOrNull() {
-        if (mDefaultImageId != 0) {
-            setImageResource(mDefaultImageId);
-        } else {
-            setImageBitmap(null);
-        }
     }
 
     @Override

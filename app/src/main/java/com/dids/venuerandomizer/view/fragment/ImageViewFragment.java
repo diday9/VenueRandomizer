@@ -10,13 +10,12 @@ import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.dids.venuerandomizer.R;
-import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
-import com.dids.venuerandomizer.view.custom.EventNetworkImageView;
+import com.dids.venuerandomizer.view.custom.NetworkImageView;
 
 public class ImageViewFragment extends Fragment {
     private static final String URL = "url";
-    private EventNetworkImageView mImageView;
+    private NetworkImageView mImageView;
 
     public static ImageViewFragment getInstance(String url) {
         ImageViewFragment fragment = new ImageViewFragment();
@@ -30,8 +29,8 @@ public class ImageViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewSwitcher view = (ViewSwitcher) inflater.inflate(R.layout.fragment_image_view,
                 container, false);
-        mImageView = (EventNetworkImageView) view.findViewById(R.id.image);
-        mImageView.setImageLoaderListener(new EventNetworkImageView.ImageLoaderListener() {
+        mImageView = (NetworkImageView) view.findViewById(R.id.image);
+        mImageView.setImageLoaderListener(new NetworkImageView.ImageLoaderListener() {
             @Override
             public void onImageLoaded() {
                 view.showNext();

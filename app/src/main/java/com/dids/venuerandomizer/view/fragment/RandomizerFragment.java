@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -30,21 +31,24 @@ import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.controller.task.GetVenueListTask;
+import com.dids.venuerandomizer.controller.task.RefreshImageTask;
 import com.dids.venuerandomizer.controller.utility.AnimationUtility;
+import com.dids.venuerandomizer.controller.utility.AssetUtility;
 import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.model.Assets;
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.VenueDetailActivity;
 import com.dids.venuerandomizer.view.base.BaseActivity;
-import com.dids.venuerandomizer.view.custom.EventNetworkImageView;
+import com.dids.venuerandomizer.view.custom.NetworkImageView;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class RandomizerFragment extends Fragment implements View.OnClickListener,
-        GetVenueListTask.GetVenueListListener, Animator.AnimatorListener {
+        GetVenueListTask.GetVenueListListener, Animator.AnimatorListener,
+        RefreshImageTask.RefreshImageListener, ViewTreeObserver.OnGlobalLayoutListener {
     public static final int FOOD = 0;
     public static final int DRINKS = 1;
     public static final int COFFEE = 2;
@@ -55,18 +59,13 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
 
     private boolean mIsButtonGroupAnimated;
     private String mVenueId;
+    private View mRootView;
     private ProgressBar mProgress;
     private FloatingActionButton mSearchButton;
     private GetVenueListTask mGetVenueListTask;
     private View mButtonGroup;
     private View mResultView;
-    private TextView mVenueName;
-    private TextView mCategoryName;
-    private TextView mAddress;
-    private TextView mTelephone;
     private FloatingActionButton mCheckout;
-
-    private EventNetworkImageView mImageView;
 
     public static RandomizerFragment newInstance(int type) {
         RandomizerFragment fragment = new RandomizerFragment();
@@ -79,55 +78,66 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_randomizer, container, false);
-        mSearchButton = (FloatingActionButton) view.findViewById(R.id.search_button);
+        mRootView = inflater.inflate(R.layout.fragment_randomizer, container, false);
+        mRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+
+        mSearchButton = (FloatingActionButton) mRootView.findViewById(R.id.search_button);
         mSearchButton.setOnClickListener(this);
 
         /** Populate background image */
-        loadDefaultAssets(view);
-        final ViewSwitcher switcher = (ViewSwitcher) view.findViewById(R.id.image_switcher);
-        mImageView = (EventNetworkImageView) view.findViewById(R.id.background);
-        mImageView.setImageLoaderListener(new EventNetworkImageView.ImageLoaderListener() {
-            @Override
-            public void onImageLoaded() {
-                switcher.showNext();
-                setAttributions(view);
-            }
-        });
-        mImageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mImageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                loadImage();
-            }
-        });
+        loadDefaultAssets(mRootView);
 
         /** Populate other views */
-        mProgress = (ProgressBar) view.findViewById(R.id.progress_indicator);
+        mProgress = (ProgressBar) mRootView.findViewById(R.id.progress_indicator);
         mSearchButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.
                 getColor(getContext(), R.color.colorPrimaryAlpha)));
         mSearchButton.setImageDrawable(new TextDrawable(getContext().getResources(),
                 getString(R.string.random_find_now), false));
-        mButtonGroup = view.findViewById(R.id.button_group);
+        mButtonGroup = mRootView.findViewById(R.id.button_group);
         mIsButtonGroupAnimated = false;
-        mResultView = view.findViewById(R.id.result);
-        mCheckout = (FloatingActionButton) view.findViewById(R.id.checkout);
+        mResultView = mRootView.findViewById(R.id.result);
+        mCheckout = (FloatingActionButton) mRootView.findViewById(R.id.checkout);
         mCheckout.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.
                 getColor(getContext(), R.color.colorAccent)));
         mCheckout.setOnClickListener(this);
-        mVenueName = (TextView) view.findViewById(R.id.venue_name);
-        mCategoryName = (TextView) view.findViewById(R.id.category_name);
-        mAddress = (TextView) view.findViewById(R.id.address);
-        mTelephone = (TextView) view.findViewById(R.id.telephone);
-        return view;
+        return mRootView;
+    }
+
+    private void setupForDynamicView(final Assets asset) {
+        final ViewSwitcher switcher = (ViewSwitcher) mRootView.findViewById(R.id.image_switcher);
+        NetworkImageView.ImageLoaderListener listener = new NetworkImageView.ImageLoaderListener() {
+            @Override
+            public void onImageLoaded() {
+                if (switcher.getDisplayedChild() == 0) {
+                    switcher.showNext();
+                } else {
+                    switcher.showPrevious();
+                }
+                TextView textView = (TextView) mRootView.findViewById(R.id.copyright);
+                textView.setText(asset.getCopyright());
+                textView = (TextView) mRootView.findViewById(R.id.link);
+                textView.setText(asset.getLink());
+            }
+        };
+        NetworkImageView imageView;
+        if (switcher.getDisplayedChild() == 0) {
+            imageView = (NetworkImageView) mRootView.findViewById(R.id.image2);
+
+        } else {
+            imageView = (NetworkImageView) mRootView.findViewById(R.id.image1);
+            imageView.setImageLoaderListener(listener);
+        }
+        imageView.setImageLoaderListener(listener);
+        ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
+        imageView.setImageUrl(asset.getUrl(), loader);
     }
 
     @Override
     public void onClick(View v) {
         if (v.equals(mCheckout)) {
             Intent intent = new Intent(getContext(), VenueDetailActivity.class);
-            Pair<View, String> name = Pair.create((View) mVenueName, "venue_name");
-            Pair<View, String> category = Pair.create((View) mCategoryName, "category");
+            Pair<View, String> name = Pair.create((mRootView.findViewById(R.id.venue_name)), "venue_name");
+            Pair<View, String> category = Pair.create(mRootView.findViewById(R.id.category_name), "category");
             Pair<View, String> card = Pair.create((View) mCheckout, "card");
             //noinspection unchecked
             ActivityOptionsCompat options = ActivityOptionsCompat.
@@ -155,9 +165,9 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             }
             mGetVenueListTask = new GetVenueListTask(getContext(), this);
             if (mVenueId != null) {
-                mGetVenueListTask.execute(section, mVenueId);
+                mGetVenueListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, section, mVenueId);
             } else {
-                mGetVenueListTask.execute(section);
+                mGetVenueListTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, section);
             }
         }
     }
@@ -188,17 +198,19 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     }
 
     private void setVenue(Venue venue) {
-        mVenueName.setText(venue.getName());
+        TextView textView = (TextView) mRootView.findViewById(R.id.venue_name);
+        textView.setText(venue.getName());
         mVenueId = venue.getId();
+        textView = (TextView) mRootView.findViewById(R.id.category_name);
         if (venue.getCategories() != null && !venue.getCategories().isEmpty()) {
             for (Category category : venue.getCategories()) {
                 if (category.isPrimary()) {
-                    mCategoryName.setText(category.getName());
+                    textView.setText(category.getName());
                     break;
                 }
             }
         } else {
-            mCategoryName.setVisibility(View.GONE);
+            textView.setVisibility(View.GONE);
         }
         StringBuilder address = new StringBuilder();
         if (venue.getCity() != null && !venue.getCity().isEmpty()) {
@@ -206,12 +218,14 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             address.append(", ");
         }
         address.append(venue.getState());
-        mAddress.setText(address.toString());
+        textView = (TextView) mRootView.findViewById(R.id.address);
+        textView.setText(address.toString());
+        textView = (TextView) mRootView.findViewById(R.id.telephone);
         if (venue.getFormattedPhone() != null && !venue.getFormattedPhone().isEmpty()) {
-            mTelephone.setText(venue.getFormattedPhone());
-            mTelephone.setVisibility(View.VISIBLE);
+            textView.setText(venue.getFormattedPhone());
+            textView.setVisibility(View.VISIBLE);
         } else {
-            mTelephone.setVisibility(View.INVISIBLE);
+            textView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -254,44 +268,6 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         if (!isVisibleToUser) {
             resetView();
         }
-    }
-
-    private void loadImage() {
-        VenueRandomizerApplication app = VenueRandomizerApplication.getInstance();
-        Assets asset;
-        switch (getArguments().getInt(TYPE, FOOD)) {
-            case DRINKS:
-                asset = app.getDrinksAsset();
-                break;
-            case COFFEE:
-                asset = app.getCoffeeAsset();
-                break;
-            default:
-                asset = app.getFoodAsset();
-                break;
-        }
-        ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
-        mImageView.setImageUrl(asset.getUrl(), loader);
-    }
-
-    private void setAttributions(View view) {
-        VenueRandomizerApplication app = VenueRandomizerApplication.getInstance();
-        Assets asset;
-        switch (getArguments().getInt(TYPE, FOOD)) {
-            case DRINKS:
-                asset = app.getDrinksAsset();
-                break;
-            case COFFEE:
-                asset = app.getCoffeeAsset();
-                break;
-            default:
-                asset = app.getFoodAsset();
-                break;
-        }
-        TextView textView = (TextView) view.findViewById(R.id.copyright);
-        textView.setText(asset.getCopyright());
-        textView = (TextView) view.findViewById(R.id.link);
-        textView.setText(asset.getLink());
     }
 
     private void resetView() {
@@ -359,11 +335,46 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         try {
             InputStream ims = getContext().getAssets().open(String.format("default_%s.jpg", type));
             Drawable d = Drawable.createFromStream(ims, null);
-            ImageView imageView = (ImageView) view.findViewById(R.id.default_image);
+            ImageView imageView = (ImageView) view.findViewById(R.id.image1);
             imageView.setImageDrawable(d);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void onNewImageSelected(Assets food, Assets drinks, Assets coffee) {
+        Assets asset;
+        switch (getArguments().getInt(TYPE, FOOD)) {
+            case DRINKS:
+                asset = drinks;
+                break;
+            case COFFEE:
+                asset = coffee;
+                break;
+            default:
+                asset = food;
+                break;
+        }
+        setupForDynamicView(asset);
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        mRootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        Assets asset;
+        switch (getArguments().getInt(TYPE, FOOD)) {
+            case DRINKS:
+                asset = AssetUtility.getInstance().getDrinksAsset();
+                break;
+            case COFFEE:
+                asset = AssetUtility.getInstance().getCoffeeAsset();
+                break;
+            default:
+                asset = AssetUtility.getInstance().getFoodAsset();
+                break;
+        }
+        setupForDynamicView(asset);
+        RefreshImageTask.getInstance().addListener(this);
+    }
 }
