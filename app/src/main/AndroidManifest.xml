@@ -36,11 +36,11 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_api_key" />
+            android:value="AIzaSyDK6Zk_QFcfuyRnCyb7mrwlXK5ByyTnGzk" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="1100912486695372" />
 
         <activity
             android:name=".view.MainActivity"

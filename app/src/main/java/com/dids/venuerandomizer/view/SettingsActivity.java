@@ -9,14 +9,12 @@ import android.widget.TextView;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
 import com.dids.venuerandomizer.view.base.BaseActivity;
-import com.dids.venuerandomizer.view.dialog.LocaleDialog;
 import com.dids.venuerandomizer.view.dialog.MaxCountDialog;
 
 public class SettingsActivity extends BaseActivity implements View.OnClickListener {
     private AppCompatCheckBox mHiResCheckBox;
     private AppCompatCheckBox mDynamicCheckBox;
     private TextView mCountView;
-    private TextView mLocaleView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,11 +33,8 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
         mDynamicCheckBox.setChecked(prefUtil.isDynamicImagesSupported());
 
         mCountView = (TextView) findViewById(R.id.tv_max_image_count);
-        mCountView.setText(String.format(getString(R.string.settings_max_image_subtext),
-                prefUtil.getMaxImageCount()));
-
-        mLocaleView = (TextView) findViewById(R.id.locale_text);
-        mLocaleView.setText(PreferencesUtility.getInstance().getLocale());
+        mCountView.setText(String.format(getResources().getQuantityString(R.plurals.
+                settings_max_image_subtext, prefUtil.getMaxImageCount()), prefUtil.getMaxImageCount()));
     }
 
     @Override
@@ -59,17 +54,12 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 dialog = MaxCountDialog.getInstance();
                 dialog.show(getSupportFragmentManager(), "max_count");
                 break;
-            case R.id.locale:
-                dialog = LocaleDialog.getInstance();
-                dialog.show(getSupportFragmentManager(), "locale");
-                break;
         }
     }
 
     public void onDismiss() {
         PreferencesUtility prefUtil = PreferencesUtility.getInstance();
-        mCountView.setText(String.format(getString(R.string.settings_max_image_subtext),
-                prefUtil.getMaxImageCount()));
-        mLocaleView.setText(prefUtil.getLocale());
+        mCountView.setText(String.format(getResources().getQuantityString(R.plurals.
+                settings_max_image_subtext, prefUtil.getMaxImageCount()), prefUtil.getMaxImageCount()));
     }
 }

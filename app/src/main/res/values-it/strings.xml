@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Find Me A Place</string>
+    <string name="default_content_description">Content Description</string>
+
+    <!-- Random Fragment strings -->
+    <string name="random_venue_food">Cibo</string>
+    <string name="random_venue_drinks">Bar</string>
+    <string name="random_venue_coffee">Caffè</string>
+    <string name="random_gps_disabled">Posizione è disattivato</string>
+    <string name="random_gps_disabled_msg">Si desidera attivare Posizione nelle Impostazioni?</string>
+    <string name="random_no_internet">Necessaria una connessione Internet</string>
+    <string name="random_no_internet_msg">Per utilizzare questa funzionalità è necessaria la connessione Internet.</string>
+    <string name="random_find_now">Trovare</string>
+    <string name="random_no_location">Impossibile trovare il percorso. Si prega di riprovare.</string>
+
+    <!-- Control strings -->
+    <string name="control_ok">OK</string>
+    <string name="control_cancel">Annulla</string>
+
+    <!-- Foursquare strings-->
+    <string name="client_id">UF4GJRFLPUIANVKRCSZBZFGXEYS20ZK0FFPSMH2WI2WPCIIB</string>
+    <string name="client_secret">JHF3FXD0P0TWST2BQHZ0PQ5XQNQLXCYD2QSW03E2DDB1P0HX</string>
+    <string name="api_version">20160929</string>
+
+    <!-- About -->
+    <string name="copyright">Copyright 2016, Tompee. All rights reserved.</string>
+    <string name="title_about">Circa</string>
+    <string name="version">Version %1$s</string>
+
+    <!-- Share -->
+    <string name="share">Share</string>
+    <string name="share_fb">Facebook</string>
+    <string name="share_twitter">Twitter</string>
+    <string name="share_fb_message">Scattare una foto in modo da poter condividere questo momento vividamente.</string>
+
+    <!-- Settings -->
+    <string name="settings">Impostazioni</string>
+    <string name="settings_image">Impostazioni immagine</string>
+    <string name="settings_hi_res">Immagini ad alta risoluzione</string>
+    <string name="settings_dynamic_images">Abilitare sfondo dinamico</string>
+    <string name="settings_max_image_count">Numero di immagine massima sede</string>
+    <string name="settings_max_image_count_message">Selezionare il numero di immagine:</string>
+
+    <plurals name="settings_max_image_subtext">
+        <item quantity="one">Visualizza %1$d immagine</item>
+        <item quantity="other">Visualizza %1$d immagini</item>
+    </plurals>
+</resources>

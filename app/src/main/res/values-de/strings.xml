@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Find Me A Place</string>
+    <string name="default_content_description">Content Description</string>
+
+    <!-- Random Fragment strings -->
+    <string name="random_venue_food">Essen</string>
+    <string name="random_venue_drinks">Getränke</string>
+    <string name="random_venue_coffee">Kaffee</string>
+    <string name="random_gps_disabled">Standort ist deaktiviert</string>
+    <string name="random_gps_disabled_msg">Möchten Sie den Standort in den Einstellungen aktivieren?</string>
+    <string name="random_no_internet">Internet erforderlich</string>
+    <string name="random_no_internet_msg">Internet-Verbindung ist erforderlich, um diese Funktion zu nutzen.</string>
+    <string name="random_find_now">Finden</string>
+    <string name="random_no_location">Standort wurde nicht gefunden. Bitte versuchen Sie es erneut.</string>
+
+    <!-- Control strings -->
+    <string name="control_ok">OK</string>
+    <string name="control_cancel">Abbrechen</string>
+
+    <!-- Foursquare strings-->
+    <string name="client_id">UF4GJRFLPUIANVKRCSZBZFGXEYS20ZK0FFPSMH2WI2WPCIIB</string>
+    <string name="client_secret">JHF3FXD0P0TWST2BQHZ0PQ5XQNQLXCYD2QSW03E2DDB1P0HX</string>
+    <string name="api_version">20160929</string>
+
+    <!-- About -->
+    <string name="copyright">Copyright 2016, Tompee. All rights reserved.</string>
+    <string name="title_about">Über</string>
+    <string name="version">Version %1$s</string>
+
+    <!-- Share -->
+    <string name="share">Share</string>
+    <string name="share_fb">Facebook</string>
+    <string name="share_twitter">Twitter</string>
+    <string name="share_fb_message">Nehmen Sie ein Bild, so können Sie diesen Moment lebhaft teilen.</string>
+
+    <!-- Settings -->
+    <string name="settings">Einstellungen</string>
+    <string name="settings_image">Bildeinstellungen</string>
+    <string name="settings_hi_res">Bilder mit hoher Auflösung</string>
+    <string name="settings_dynamic_images">Aktivieren dynamischen Hintergrund</string>
+    <string name="settings_max_image_count">Maximale Veranstaltungsort Bildanzahl</string>
+    <string name="settings_max_image_count_message">Wählen Sie Bild-Nummer:</string>
+
+    <plurals name="settings_max_image_subtext">
+        <item quantity="one">%1$d Bild anzeigen</item>
+        <item quantity="other">%1$d Bilder anzeigen</item>
+    </plurals>
+</resources>

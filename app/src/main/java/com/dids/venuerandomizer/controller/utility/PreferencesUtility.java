@@ -8,9 +8,7 @@ public class PreferencesUtility {
     private static final String HI_RES = "hires";
     private static final String DYNAMIC_IMAGES = "dynamic_images";
     private static final String MAX_IMAGE_COUNT = "max_image_count";
-    private static final String LOCALE = "locale";
     private static final int DEFAULT_IMAGE_COUNT = 5;
-    private static final String DEFAULT_LOCALE = "English";
     private static PreferencesUtility mSingleTon;
     private SharedPreferences mSharedPreferences;
 
@@ -52,16 +50,6 @@ public class PreferencesUtility {
     public void setMaxImageCount(int count) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putInt(MAX_IMAGE_COUNT, count);
-        editor.apply();
-    }
-
-    public String getLocale() {
-        return mSharedPreferences.getString(LOCALE, DEFAULT_LOCALE);
-    }
-
-    public void setLocale(String locale) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(LOCALE, locale);
         editor.apply();
     }
 }

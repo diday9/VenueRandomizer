@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Find Me A Place</string>
     <string name="default_content_description">Content Description</string>
@@ -33,10 +34,6 @@
     <string name="share_twitter">Twitter</string>
     <string name="share_fb_message">Take a picture so you can share this moment vividly.</string>
 
-    <!-- API Keys -->
-    <string name="facebook_app_id">1100912486695372</string>
-    <string name="google_api_key">AIzaSyDK6Zk_QFcfuyRnCyb7mrwlXK5ByyTnGzk</string>
-
     <!-- Settings -->
     <string name="settings">Settings</string>
     <string name="settings_image">Image settings</string>
@@ -44,8 +41,9 @@
     <string name="settings_dynamic_images">Enable dynamic background</string>
     <string name="settings_max_image_count">Max venue image count</string>
     <string name="settings_max_image_count_message">Select image count:</string>
-    <string name="settings_system">System settings</string>
-    <string name="settings_max_image_subtext">Show %1$d images</string>
-    <string name="settings_locale">Venue information locale</string>
-    <string name="settings_locale_message">Select locale:</string>
+
+    <plurals name="settings_max_image_subtext">
+        <item quantity="one">Show %1$d image</item>
+        <item quantity="other">Show %1$d images</item>
+    </plurals>
 </resources>

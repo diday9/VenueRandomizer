@@ -19,9 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -88,22 +87,6 @@ public class FourSquareWrapper {
         mContext = context;
     }
 
-    public static Map<String, String> getLocaleMap() {
-        Map<String, String> localeMap = new LinkedHashMap<>();
-        localeMap.put("en", "English");
-        localeMap.put("fr", "French");
-        localeMap.put("de", "German");
-        localeMap.put("id", "Indonesian");
-        localeMap.put("it", "Italian");
-        localeMap.put("ja", "Japanese");
-        localeMap.put("ko", "Korean");
-        localeMap.put("pt", "Portuguese");
-        localeMap.put("ru", "Russian");
-        localeMap.put("th", "Thai");
-        localeMap.put("tr", "Turkish");
-        return localeMap;
-    }
-
     public Venue getRandomVenue(Location location, String section) throws NoConnectionError {
         StringBuilder builder = new StringBuilder();
         builder.append(FOURSQUARE_SEARCH_URL);
@@ -115,8 +98,7 @@ public class FourSquareWrapper {
         builder.append(SEARCH_SORT_BY_DISTANCE);
         builder.append(SEARCH_OPEN_NOW);
         builder.append(String.format(SEARCH_SECTION, section));
-        builder.append(String.format(SEARCH_LOCALE, convertToIsoCode(PreferencesUtility.
-                getInstance().getLocale())));
+        builder.append(String.format(SEARCH_LOCALE, getCurrentLocale()));
         Log.d(TAG, builder.toString());
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -153,8 +135,7 @@ public class FourSquareWrapper {
         builder.append(SEARCH_SORT_BY_DISTANCE);
         builder.append(SEARCH_OPEN_NOW);
         builder.append(String.format(SEARCH_SECTION, section));
-        builder.append(String.format(SEARCH_LOCALE, convertToIsoCode(PreferencesUtility.
-                getInstance().getLocale())));
+        builder.append(String.format(SEARCH_LOCALE, getCurrentLocale()));
         Log.d(TAG, builder.toString());
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -196,8 +177,7 @@ public class FourSquareWrapper {
         builder.append(SEARCH_SORT_BY_DISTANCE);
         builder.append(SEARCH_OPEN_NOW);
         builder.append(String.format(SEARCH_SECTION, section));
-        builder.append(String.format(SEARCH_LOCALE, convertToIsoCode(PreferencesUtility.
-                getInstance().getLocale())));
+        builder.append(String.format(SEARCH_LOCALE, getCurrentLocale()));
         Log.d(TAG, builder.toString());
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -379,8 +359,7 @@ public class FourSquareWrapper {
         builder.append(String.format(SEARCH_CLIENT_INFO, mContext.getString(R.string.client_id),
                 mContext.getString(R.string.client_secret)));
         builder.append(String.format(SEARCH_VERSION, mContext.getString(R.string.api_version)));
-        builder.append(String.format(SEARCH_LOCALE, convertToIsoCode(PreferencesUtility.
-                getInstance().getLocale())));
+        builder.append(String.format(SEARCH_LOCALE, getCurrentLocale()));
         Log.d(TAG, builder.toString());
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -405,30 +384,8 @@ public class FourSquareWrapper {
         }
     }
 
-    private String convertToIsoCode(String locale) {
-        switch (locale) {
-            case "French":
-                return "fr";
-            case "German":
-                return "de";
-            case "Indonesian":
-                return "id";
-            case "Italian":
-                return "it";
-            case "Japanese":
-                return "ja";
-            case "Korean":
-                return "ko";
-            case "Portuguese":
-                return "pt";
-            case "Russian":
-                return "ru";
-            case "Thai":
-                return "th";
-            case "Turkish":
-                return "tr";
-            default:
-                return "en";
-        }
+    private String getCurrentLocale() {
+        Log.d(TAG, Locale.getDefault().getLanguage());
+        return Locale.getDefault().getLanguage();
     }
 }
