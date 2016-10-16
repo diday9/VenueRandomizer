@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
@@ -148,7 +149,8 @@
             android:layout_margin="8dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/light_text"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
 
         <TextView
             android:id="@+id/link"
@@ -160,7 +162,8 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/light_text"
             android:textSize="10sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:ignore="SmallSp" />
 
     </LinearLayout>
 

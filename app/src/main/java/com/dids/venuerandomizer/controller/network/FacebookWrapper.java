@@ -10,6 +10,10 @@ import android.net.Uri;
 
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareOpenGraphAction;
 import com.facebook.share.model.ShareOpenGraphContent;
 import com.facebook.share.model.ShareOpenGraphObject;
@@ -33,7 +37,8 @@ public class FacebookWrapper {
         context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
-    public static void share(Activity activity, Venue venue, Bitmap bitmap) {
+    public static void share(Activity activity, Venue venue, Bitmap bitmap, CallbackManager manager,
+                             FacebookCallback<Sharer.Result> callback) {
         String categoryString = "";
         if (venue.getCategories() != null && !venue.getCategories().isEmpty()) {
             for (Category category : venue.getCategories()) {
@@ -67,7 +72,8 @@ public class FacebookWrapper {
                 .setPreviewPropertyName("restaurant")
                 .setAction(action)
                 .build();
-        ShareDialog.show(activity, content);
-        /* TODO delete all pictures */
+        ShareDialog dialog = new ShareDialog(activity);
+        dialog.registerCallback(manager, callback);
+        dialog.show(content);
     }
 }

@@ -1,5 +1,6 @@
 package com.dids.venuerandomizer.controller.utility;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 
@@ -21,6 +22,7 @@ public class AssetUtility {
     private static final int MAX_COFFEE = 3;
     private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
 
+    @SuppressLint("StaticFieldLeak")
     private static AssetUtility mSingleton;
     private Context mContext;
 

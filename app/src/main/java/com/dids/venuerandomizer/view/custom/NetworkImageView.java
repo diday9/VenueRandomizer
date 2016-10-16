@@ -86,7 +86,7 @@ public class NetworkImageView extends ImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = mImageLoader.get(mUrl,
+        mImageContainer = mImageLoader.get(mUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -116,9 +116,6 @@ public class NetworkImageView extends ImageView {
                         }
                     }
                 }, maxWidth, maxHeight, scaleType);
-
-        // update the ImageContainer to be the new bitmap container.
-        mImageContainer = newContainer;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.dids.venuerandomizer.controller.network;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.android.volley.Request;
@@ -8,9 +9,10 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 public class VolleySingleton {
+    @SuppressLint("StaticFieldLeak")
     private static VolleySingleton mSingleton;
-    private static Context mContext;
     private final ImageLoader mImageLoader;
+    private final Context mContext;
     private RequestQueue mRequestQueue;
 
     private VolleySingleton(Context context) {

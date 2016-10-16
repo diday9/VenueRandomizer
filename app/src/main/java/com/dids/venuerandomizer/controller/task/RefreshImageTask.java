@@ -12,7 +12,7 @@ import java.util.Set;
 public class RefreshImageTask extends AsyncTask<Void, Assets, Void> {
     private static final int DELAY = 20000;
     private static RefreshImageTask mSingleton;
-    private Set<RefreshImageListener> mListenerList;
+    private final Set<RefreshImageListener> mListenerList;
 
     private RefreshImageTask() {
         mListenerList = new HashSet<>();

@@ -43,9 +43,9 @@ public class AnimationUtility {
         animateVerticalTranslation(view, pxHeight, duration, null, 0, listener);
     }
 
-    public static void animateVerticalTranslation(View view, int pxHeight, int duration,
-                                                  Interpolator interpolator, int delay,
-                                                  Animator.AnimatorListener listener) {
+    private static void animateVerticalTranslation(View view, int pxHeight, int duration,
+                                                   Interpolator interpolator, int delay,
+                                                   Animator.AnimatorListener listener) {
         ObjectAnimator moveAnim = ObjectAnimator.ofFloat(view, VERTICAL_TRANSLATION_PROPERTY,
                 pxHeight);
         moveAnim.setDuration(duration);

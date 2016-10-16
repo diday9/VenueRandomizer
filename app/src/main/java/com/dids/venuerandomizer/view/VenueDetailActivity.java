@@ -15,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,13 +41,17 @@ import com.dids.venuerandomizer.view.adapter.SlidingImagePagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
 import com.dids.venuerandomizer.view.fragment.MapViewFragment;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class VenueDetailActivity extends BaseActivity implements View.OnClickListener,
-        ViewPager.OnPageChangeListener {
+        ViewPager.OnPageChangeListener, FacebookCallback<Sharer.Result> {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int VERTICAL_POSITION_BOUNCE = 88;
     private static final int ANIMATION_DURATION = 700;
@@ -60,6 +63,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     private ViewPager mViewPager;
     private MapViewFragment mMapFragment;
     private File mPhotoFile;
+    private CallbackManager mFbCallBackManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,8 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         mVenue = VenueRandomizerApplication.getInstance().getVenue();
         ImageView toolbarBg = (ImageView) findViewById(R.id.toolbar_bg);
         toolbarBg.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
+
+        mFbCallBackManager = CallbackManager.Factory.create();
 
         /** Set name */
         TextView name = (TextView) findViewById(R.id.venue_name);
@@ -358,10 +364,27 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                         ExifInterface.ORIENTATION_UNDEFINED);
                 bitmap = Utilities.rotateBitmap(bitmap, orientation);
-                FacebookWrapper.share(this, mVenue, bitmap);
+                FacebookWrapper.share(this, mVenue, bitmap, mFbCallBackManager, this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            mFbCallBackManager.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onSuccess(Sharer.Result result) {
+        mPhotoFile.delete();
+    }
+
+    @Override
+    public void onCancel() {
+        mPhotoFile.delete();
+    }
+
+    @Override
+    public void onError(FacebookException error) {
+        mPhotoFile.delete();
     }
 }

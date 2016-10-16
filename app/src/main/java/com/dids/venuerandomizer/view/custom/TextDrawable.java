@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.TypedValue;
 
 public class TextDrawable extends Drawable {
@@ -34,7 +35,7 @@ public class TextDrawable extends Drawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         Rect bounds = getBounds();
         canvas.drawText(mText.toString(), bounds.width() / 2, bounds.height() / 2 -
                 ((mPaint.descent() + mPaint.ascent()) / 2), mPaint);

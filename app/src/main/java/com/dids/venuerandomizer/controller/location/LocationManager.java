@@ -1,6 +1,7 @@
 package com.dids.venuerandomizer.controller.location;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,6 +20,7 @@ import com.google.android.gms.location.LocationServices;
 public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "LocationManager";
+    @SuppressLint("StaticFieldLeak")
     private static LocationManager mSingleton;
     private final Context mContext;
     private final GoogleApiClient mGoogleApiClient;
@@ -49,6 +51,7 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
             }
             return locationMode != Settings.Secure.LOCATION_MODE_OFF;
         } else {
+            //noinspection deprecation
             locationProviders = Settings.Secure.getString(mContext.getContentResolver(),
                     Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             return !TextUtils.isEmpty(locationProviders);
