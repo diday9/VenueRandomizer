@@ -28,6 +28,17 @@
             android:textStyle="bold" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/card_inner_margin"
+            android:layout_marginRight="@dimen/card_inner_margin"
+            android:layout_marginTop="@dimen/about_view_separator"
+            android:gravity="center"
+            android:text="@string/logo"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/dark_text" />
+
+        <TextView
             android:id="@+id/version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
