@@ -37,7 +37,6 @@ import com.dids.venuerandomizer.controller.utility.AnimationUtility;
 import com.dids.venuerandomizer.controller.utility.AssetUtility;
 import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.model.Assets;
-import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.VenueDetailActivity;
 import com.dids.venuerandomizer.view.base.BaseActivity;
@@ -204,23 +203,15 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mVenueId = venue.getId();
         textView = (TextView) mRootView.findViewById(R.id.category_name);
         if (venue.getCategories() != null && !venue.getCategories().isEmpty()) {
-            for (Category category : venue.getCategories()) {
-                if (category.isPrimary()) {
-                    textView.setText(category.getName());
-                    break;
-                }
+            String category = Utilities.getPrimaryCategory(venue);
+            if (category != null) {
+                textView.setText(category);
             }
         } else {
             textView.setVisibility(View.GONE);
         }
-        StringBuilder address = new StringBuilder();
-        if (venue.getCity() != null && !venue.getCity().isEmpty()) {
-            address.append(venue.getCity());
-            address.append(", ");
-        }
-        address.append(venue.getState());
         textView = (TextView) mRootView.findViewById(R.id.address);
-        textView.setText(address.toString());
+        textView.setText(Utilities.getAddress(venue));
         textView = (TextView) mRootView.findViewById(R.id.telephone);
         if (venue.getFormattedPhone() != null && !venue.getFormattedPhone().isEmpty()) {
             textView.setText(venue.getFormattedPhone());

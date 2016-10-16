@@ -31,11 +31,12 @@ import android.widget.TextView;
 
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
+import com.dids.venuerandomizer.controller.database.DatabaseHelper;
 import com.dids.venuerandomizer.controller.network.FacebookWrapper;
 import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.utility.AnimationUtility;
 import com.dids.venuerandomizer.controller.utility.Utilities;
-import com.dids.venuerandomizer.model.Category;
+import com.dids.venuerandomizer.model.DatabaseVenue;
 import com.dids.venuerandomizer.model.Venue;
 import com.dids.venuerandomizer.view.adapter.SlidingImagePagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
@@ -95,12 +96,10 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
         /** Set category */
         if (mVenue.getCategories() != null && !mVenue.getCategories().isEmpty()) {
-            for (Category category : mVenue.getCategories()) {
-                if (category.isPrimary()) {
-                    TextView categoryName = (TextView) findViewById(R.id.category_name);
-                    categoryName.setText(category.getName());
-                    break;
-                }
+            String category = Utilities.getPrimaryCategory(mVenue);
+            if (category != null) {
+                TextView categoryName = (TextView) findViewById(R.id.category_name);
+                categoryName.setText(category);
             }
         }
 
@@ -126,6 +125,14 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_detail, menu);
+
+        MenuItem favorite = menu.findItem(R.id.menu_favorite);
+        DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
+        if (dbHelper.exists(mVenue.getId())) {
+            favorite.setIcon(R.drawable.ic_favorite_full);
+        } else {
+            favorite.setIcon(R.drawable.ic_favorite_border);
+        }
         return true;
     }
 
@@ -162,6 +169,16 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
             case R.id.menu_foursquare:
                 FourSquareWrapper.launch(this, mVenue.getId());
                 break;
+            case R.id.menu_favorite:
+                DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
+                if (dbHelper.exists(mVenue.getId())) {
+                    dbHelper.deleteEntry(mVenue.getId());
+                } else {
+                    dbHelper.createEntry(new DatabaseVenue(mVenue.getId(), mVenue.getName(),
+                            Utilities.getPrimaryCategory(mVenue), Utilities.getAddress(mVenue)));
+                }
+                invalidateOptionsMenu();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -23,6 +23,12 @@
         <!--</menu>-->
     </item>
     <item
+        android:id="@+id/menu_favorite"
+        android:icon="@drawable/ic_favorite_border"
+        android:showAsAction="ifRoom"
+        android:title="@string/share"
+        tools:ignore="AppCompatResource" />
+    <item
         android:id="@+id/menu_foursquare"
         android:icon="@drawable/ic_foursquare"
         android:showAsAction="ifRoom"

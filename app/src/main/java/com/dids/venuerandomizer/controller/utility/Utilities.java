@@ -6,6 +6,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Environment;
+import android.widget.TextView;
+
+import com.dids.venuerandomizer.R;
+import com.dids.venuerandomizer.model.Category;
+import com.dids.venuerandomizer.model.Venue;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +34,25 @@ public class Utilities {
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
+    }
+
+    public static String getPrimaryCategory(Venue venue) {
+        for (Category category : venue.getCategories()) {
+            if (category.isPrimary()) {
+                return category.getName();
+            }
+        }
+        return null;
+    }
+
+    public static String getAddress(Venue venue) {
+        StringBuilder address = new StringBuilder();
+        if (venue.getCity() != null && !venue.getCity().isEmpty()) {
+            address.append(venue.getCity());
+            address.append(", ");
+        }
+        address.append(venue.getState());
+        return address.toString();
     }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
