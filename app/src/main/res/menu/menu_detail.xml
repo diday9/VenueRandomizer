@@ -10,16 +10,22 @@
         app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
         tools:ignore="AppCompatResource">
         <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/menu_item_facebook"-->
-                <!--android:icon="@drawable/ic_fb"-->
-                <!--android:showAsAction="never"-->
-                <!--android:title="@string/share_fb" />-->
-            <!--<item-->
-                <!--android:id="@+id/menu_item_twitter"-->
-                <!--android:icon="@drawable/ic_twitter"-->
-                <!--android:showAsAction="never"-->
-                <!--android:title="@string/share_twitter" />-->
+        <!--<item-->
+        <!--android:id="@+id/menu_item_facebook"-->
+        <!--android:icon="@drawable/ic_fb"-->
+        <!--android:showAsAction="never"-->
+        <!--android:title="@string/share_fb" />-->
+        <!--<item-->
+        <!--android:id="@+id/menu_item_twitter"-->
+        <!--android:icon="@drawable/ic_twitter"-->
+        <!--android:showAsAction="never"-->
+        <!--android:title="@string/share_twitter" />-->
         <!--</menu>-->
     </item>
+    <item
+        android:id="@+id/menu_foursquare"
+        android:icon="@drawable/ic_foursquare"
+        android:showAsAction="ifRoom"
+        android:title="@string/share"
+        tools:ignore="AppCompatResource" />
 </menu>

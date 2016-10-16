@@ -1,7 +1,9 @@
 package com.dids.venuerandomizer.controller.network;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.NoConnectionError;
@@ -33,6 +35,7 @@ public class FourSquareWrapper {
     private static final int MAX_UNIQUE_RETRY = 5;
 
     /* Foursquare API Constants */
+    private static final String FOURSQUARE_VENUE_URL = "https://foursquare.com/venue/%s?ref=%s";
     private static final String FOURSQUARE_SEARCH_URL = "https://api.foursquare.com/v2/venues/explore?";
     private static final String FOURSQUARE_PHOTO_URL = "https://api.foursquare.com/v2/venues/%s/photos?";
     private static final String SEARCH_CLIENT_INFO = "client_id=%s&client_secret=%s";
@@ -85,6 +88,12 @@ public class FourSquareWrapper {
 
     public FourSquareWrapper(Context context) {
         mContext = context;
+    }
+
+    public static void launch(Context context, String venueId) {
+        Uri uri = Uri.parse(String.format(FOURSQUARE_VENUE_URL, venueId,
+                context.getString(R.string.client_id)));
+        context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
     public Venue getRandomVenue(Location location, String section) throws NoConnectionError {

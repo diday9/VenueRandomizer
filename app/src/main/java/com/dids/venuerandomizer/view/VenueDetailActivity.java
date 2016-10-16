@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
 import com.dids.venuerandomizer.controller.network.FacebookWrapper;
+import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.utility.AnimationUtility;
 import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.model.Category;
@@ -151,6 +152,9 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 });
                 builder.setNegativeButton(R.string.control_cancel, null);
                 builder.create().show();
+                break;
+            case R.id.menu_foursquare:
+                FourSquareWrapper.launch(this, mVenue.getId());
                 break;
         }
         return super.onOptionsItemSelected(item);

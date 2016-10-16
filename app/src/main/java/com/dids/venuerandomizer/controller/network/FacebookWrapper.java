@@ -31,7 +31,6 @@ public class FacebookWrapper {
             e.printStackTrace();
         }
         context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
-
     }
 
     public static void share(Activity activity, Venue venue, Bitmap bitmap) {
