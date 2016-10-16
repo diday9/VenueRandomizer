@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -139,7 +140,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                     finishAfterTransition();
                 }
                 return true;
-            case R.id.menu_item_facebook:
+            case R.id.menu_item_share:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.share_fb_message);
                 builder.setPositiveButton(R.string.control_ok, new DialogInterface.OnClickListener() {

@@ -49,14 +49,9 @@ public class FacebookWrapper {
                 .putString("og:type", "restaurant.restaurant")
                 .putString("og:title", venue.getName())
                 .putString("og:description", categoryString)
+                .putString("al:android", "https://fb.me/1102903826496238")
                 .putString("place:location:latitude", String.valueOf(venue.getLatitude()))
                 .putString("place:location:longitude", String.valueOf(venue.getLongitude()));
-        if (venue.getUrl() != null && !venue.getUrl().isEmpty()) {
-            restoBuilder.putString("og:url", venue.getUrl());
-        } else {
-            /* TODO: foursquare url? */
-            restoBuilder.putString("og:url", "http://google.com");
-        }
         /** Create photo */
         SharePhoto photo = new SharePhoto.Builder()
                 .setBitmap(bitmap)

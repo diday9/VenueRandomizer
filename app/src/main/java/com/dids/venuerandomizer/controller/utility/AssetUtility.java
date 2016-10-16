@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class AssetUtility {
     /* Food constants */
-    private static final int MAX_FOOD = 5;
+    private static final int MAX_FOOD = 6;
     private static final String FOOD_RESOURCE_ID = "bg_food%d";
 
     /* Drinks constants */

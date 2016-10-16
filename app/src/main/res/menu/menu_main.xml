@@ -9,4 +9,8 @@
         android:id="@+id/about"
         android:title="@string/title_about"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/contribute"
+        android:title="@string/contribute"
+        app:showAsAction="never" />
 </menu>

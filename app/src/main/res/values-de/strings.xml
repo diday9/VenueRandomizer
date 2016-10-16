@@ -27,6 +27,7 @@
     <string name="copyright">Copyright 2016, Tompee. All rights reserved.</string>
     <string name="title_about">Über</string>
     <string name="version">Version %1$s</string>
+    <string name="contribute">Beitragen</string>
 
     <!-- Share -->
     <string name="share">Share</string>

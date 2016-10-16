@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,8 +20,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.dids.venuerandomizer.R;
+import com.dids.venuerandomizer.controller.network.FacebookWrapper;
 import com.dids.venuerandomizer.view.adapter.MainViewPagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
+
+import bolts.AppLinks;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
     private static final String TAG = "MainActivity";
@@ -35,6 +39,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         setToolbar(R.id.toolbar, false);
         TextView toolbar = (TextView) findViewById(R.id.toolbar_text);
         toolbar.setText(R.string.app_name);
+
+        Uri targetUrl = AppLinks.getTargetUrlFromInboundIntent(this, getIntent());
+        if (targetUrl != null) {
+            Log.i("Activity", "App Link Target URL: " + targetUrl.toString());
+        }
 
         mViewPager = (ViewPager) findViewById(R.id.pager_main);
         mViewPager.setAdapter(new MainViewPagerAdapter(this, getSupportFragmentManager()));
@@ -116,6 +125,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 return true;
+            case R.id.contribute:
+                FacebookWrapper.launch(this, "findmeaplacecommunity");
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
