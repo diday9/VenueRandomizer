@@ -49,9 +49,15 @@ public class Utilities {
         StringBuilder address = new StringBuilder();
         if (venue.getCity() != null && !venue.getCity().isEmpty()) {
             address.append(venue.getCity());
-            address.append(", ");
         }
-        address.append(venue.getState());
+        if (venue.getState() != null && !venue.getState().isEmpty()) {
+            if (address.toString().isEmpty()) {
+                address.append(venue.getState());
+            } else {
+                address.append(", ");
+                address.append(venue.getState());
+            }
+        }
         return address.toString();
     }
 
