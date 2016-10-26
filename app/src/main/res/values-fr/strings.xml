@@ -13,6 +13,7 @@
     <string name="random_no_internet_msg">Une connexion Internet est nécessaire pour utiliser cette fonctionnalité.</string>
     <string name="random_find_now">Retrouver</string>
     <string name="random_no_location">Vous ne pouvez pas trouver l\'emplacement. Veuillez réessayer.</string>
+    <string name="random_no_venue">Pas de lieu disponible au sein de la zone.</string>
 
     <!-- Control strings -->
     <string name="control_ok">OK</string>

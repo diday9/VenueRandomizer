@@ -26,4 +26,18 @@
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee31.jpg</item>
         <item>/bg_coffee3.png</item>
     </array>
+    <array name="bg_coffee4">
+        <item>&#169; by Thea Miranda</item>
+        <item>thea.miranda.9 on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee4.jpg</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee41.jpg</item>
+        <item>/bg_coffee4.png</item>
+    </array>
+    <array name="bg_coffee5">
+        <item>&#169; by Thea Miranda</item>
+        <item>thea.miranda.9 on Facebook</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee5.jpg</item>
+        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee51.jpg</item>
+        <item>/bg_coffee5.png</item>
+    </array>
 </resources>

@@ -20,7 +20,7 @@ public class AssetUtility {
     private static final String DRINKS_RESOURCE_ID = "bg_drinks%d";
 
     /* Coffee constants */
-    private static final int MAX_COFFEE = 3;
+    private static final int MAX_COFFEE = 5;
     private static final String COFFEE_RESOURCE_ID = "bg_coffee%d";
 
     @SuppressLint("StaticFieldLeak")

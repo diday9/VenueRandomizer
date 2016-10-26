@@ -118,11 +118,14 @@ public class FourSquareWrapper {
             JSONObject response = future.get();
             JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
             JSONArray itemArray = groupArray.getJSONObject(0).getJSONArray(TAG_ITEMS);
-            Random random = new Random();
-            JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
-                    length())).getJSONObject(TAG_VENUE);
-            Venue venue = new Venue();
-            getVenueDetails(venueObject, venue);
+            Venue venue = null;
+            if (itemArray.length() > 0) {
+                venue = new Venue();
+                Random random = new Random();
+                JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
+                        length())).getJSONObject(TAG_VENUE);
+                getVenueDetails(venueObject, venue);
+            }
             return venue;
         } catch (InterruptedException | ExecutionException | JSONException e) {
             Log.e(TAG, "Error in get venue list request: " + e.getMessage());
@@ -155,9 +158,10 @@ public class FourSquareWrapper {
             JSONObject response = future.get();
             JSONArray groupArray = response.getJSONObject(TAG_RESPONSE).getJSONArray(TAG_GROUPS);
             JSONArray itemArray = groupArray.getJSONObject(0).getJSONArray(TAG_ITEMS);
-            Venue venue = new Venue();
+            Venue venue = null;
             Random random = new Random();
-            for (int retryCount = 0; retryCount < MAX_UNIQUE_RETRY; retryCount++) {
+            for (int retryCount = 0; retryCount < MAX_UNIQUE_RETRY && itemArray.length() > 0; retryCount++) {
+                venue = new Venue();
                 JSONObject venueObject = itemArray.getJSONObject(random.nextInt(itemArray.
                         length())).getJSONObject(TAG_VENUE);
                 getVenueDetails(venueObject, venue);

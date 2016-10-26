@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -42,6 +43,8 @@ import com.dids.venuerandomizer.view.VenueDetailActivity;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.custom.NetworkImageView;
 import com.dids.venuerandomizer.view.custom.TextDrawable;
+import com.github.johnpersano.supertoasts.library.Style;
+import com.github.johnpersano.supertoasts.library.SuperActivityToast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -127,7 +130,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         }
         imageView.setImageLoaderListener(listener);
         ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
-        imageView.setImageUrl(asset, loader);
+        imageView.setImageUrl(asset.getUrl(), loader);
     }
 
     @Override
@@ -192,6 +195,13 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             animateButtonGroup();
         } else {
             ((BaseActivity) getActivity()).interceptTouchEvents(false);
+            SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_BUTTON)
+                    .setProgressBarColor(Color.WHITE)
+                    .setText(getString(R.string.random_no_venue))
+                    .setDuration(Style.DURATION_LONG)
+                    .setFrame(Style.FRAME_LOLLIPOP)
+                    .setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
+                    .setAnimations(Style.ANIMATIONS_POP).show();
         }
     }
 
@@ -244,7 +254,13 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mSearchButton.setEnabled(true);
         mGetVenueListTask = null;
         ((BaseActivity) getActivity()).interceptTouchEvents(false);
-        Toast.makeText(getContext(), getString(R.string.random_no_location), Toast.LENGTH_SHORT).show();
+        SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_BUTTON)
+                .setProgressBarColor(Color.WHITE)
+                .setText(getString(R.string.random_no_location))
+                .setDuration(Style.DURATION_LONG)
+                .setFrame(Style.FRAME_LOLLIPOP)
+                .setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary))
+                .setAnimations(Style.ANIMATIONS_POP).show();
     }
 
     @Override

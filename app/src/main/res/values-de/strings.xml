@@ -13,6 +13,7 @@
     <string name="random_no_internet_msg">Internet-Verbindung ist erforderlich, um diese Funktion zu nutzen.</string>
     <string name="random_find_now">Finden</string>
     <string name="random_no_location">Standort wurde nicht gefunden. Bitte versuchen Sie es erneut.</string>
+    <string name="random_no_venue">Kein Veranstaltungsort zur Verfügung im Bereich.</string>
 
     <!-- Control strings -->
     <string name="control_ok">OK</string>
