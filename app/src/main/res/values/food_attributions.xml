@@ -10,35 +10,41 @@
         <item>erikadiaz000 on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food11.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food12.jpg</item>
+        <item>/bg_food1.png</item>
     </array>
     <array name="bg_food2">
         <item>&#169; by Rogene Lacanienta</item>
         <item>rogene on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food22.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food23.jpg</item>
+        <item>/bg_food2.png</item>
     </array>
     <array name="bg_food3">
         <item>&#169; by Blanca Marie</item>
         <item>eliot.blanca on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food3.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food31.jpg</item>
+        <item>/bg_food3.png</item>
     </array>
     <array name="bg_food4">
         <item>&#169; by Blanca Marie</item>
         <item>eliot.blanca on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food4.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food41.jpg</item>
+        <item>/bg_food4.png</item>
     </array>
     <array name="bg_food5">
         <item>&#169; by Mark Ryan Tan</item>
         <item>markryantan on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food5.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food51.jpg</item>
+        <item>/bg_food5.png</item>
     </array>
     <array name="bg_food6">
         <item>&#169; Gerald Calaquian</item>
         <item>gerald.calaquian on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food61.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_food6.jpg</item>
+        <item>/bg_food6.png</item>
     </array>
 </resources>

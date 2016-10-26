@@ -1,6 +1,8 @@
 package com.dids.venuerandomizer.view.custom;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -10,6 +12,9 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.dids.venuerandomizer.controller.task.SaveBitmapTask;
+import com.dids.venuerandomizer.controller.utility.Utilities;
+import com.dids.venuerandomizer.model.Assets;
 
 public class NetworkImageView extends ImageView {
     private static final String TAG = "EventNetworkImageView";
@@ -40,7 +45,14 @@ public class NetworkImageView extends ImageView {
         loadImageIfNecessary(false);
     }
 
-    private void loadImageIfNecessary(final boolean isInLayoutPass) {
+    public void setImageUrl(Assets asset, ImageLoader imageLoader) {
+        mUrl = asset.getUrl();
+        mImageLoader = imageLoader;
+        // The URL has potentially changed. See if we need to load it.
+        loadImageIfNecessary(asset, false);
+    }
+
+    private void loadImageIfNecessary(final Assets asset, final boolean isInLayoutPass) {
         int width = ((View) getParent()).getWidth();
         int height = ((View) getParent()).getHeight();
         ScaleType scaleType = getScaleType();
@@ -84,6 +96,17 @@ public class NetworkImageView extends ImageView {
         int maxWidth = wrapWidth ? 0 : width;
         int maxHeight = wrapHeight ? 0 : height;
 
+        if (asset != null) {
+            Bitmap bitmap = Utilities.getBitmapFromFile(asset.getPath());
+            if (bitmap != null) {
+                setImageBitmap(bitmap);
+                if (mListener != null) {
+                    mListener.onImageLoaded();
+                }
+                return;
+            }
+        }
+
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
         mImageContainer = mImageLoader.get(mUrl,
@@ -109,6 +132,13 @@ public class NetworkImageView extends ImageView {
                         }
 
                         if (response.getBitmap() != null) {
+                            Log.d(TAG, "getbitmap ");
+                            if (asset != null) {
+                                Log.d(TAG, "saving " + asset.getPath());
+                                new SaveBitmapTask(asset.getPath()).
+                                        executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                                                response.getBitmap());
+                            }
                             setImageBitmap(response.getBitmap());
                             if (mListener != null) {
                                 mListener.onImageLoaded();
@@ -116,6 +146,10 @@ public class NetworkImageView extends ImageView {
                         }
                     }
                 }, maxWidth, maxHeight, scaleType);
+    }
+
+    private void loadImageIfNecessary(final boolean isInLayoutPass) {
+        loadImageIfNecessary(null, isInLayoutPass);
     }
 
     @Override

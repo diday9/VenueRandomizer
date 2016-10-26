@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Update count in VenueRandomizerApplication when modifying this file -->
+    <array name="default_drinks">
+        <!-- TODO Update when available-->
+        <item>&#169; by Mark Ryan Tan</item>
+        <item>markryantan on Facebook</item>
+    </array>
     <array name="bg_drinks1">
         <item>&#169; by Rogene Lacanienta</item>
         <item>rogene on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_drinks1.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_drinks11.jpg</item>
+        <item>/bg_drinks1.png</item>
     </array>
 </resources>

@@ -34,7 +34,7 @@ public class PreferencesUtility {
     }
 
     public boolean isDynamicImagesSupported() {
-        return mSharedPreferences.getBoolean(DYNAMIC_IMAGES, false);
+        return mSharedPreferences.getBoolean(DYNAMIC_IMAGES, true);
     }
 
     public void setDynamicImagesSupport(boolean set) {

@@ -10,17 +10,20 @@
         <item>rogene on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee1.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee11.jpg</item>
+        <item>/bg_coffee1.png</item>
     </array>
     <array name="bg_coffee2">
         <item>&#169; by Jerome Conal Sia Sin</item>
         <item>jerome.conal on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee2.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee21.jpg</item>
+        <item>/bg_coffee2.png</item>
     </array>
     <array name="bg_coffee3">
         <item>&#169; by Mark Ryan Tan</item>
         <item>markryantan on Facebook</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee3.jpg</item>
         <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee31.jpg</item>
+        <item>/bg_coffee3.png</item>
     </array>
 </resources>

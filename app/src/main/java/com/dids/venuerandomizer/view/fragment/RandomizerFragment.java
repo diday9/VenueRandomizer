@@ -122,14 +122,12 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         NetworkImageView imageView;
         if (switcher.getDisplayedChild() == 0) {
             imageView = (NetworkImageView) mRootView.findViewById(R.id.image2);
-
         } else {
             imageView = (NetworkImageView) mRootView.findViewById(R.id.image1);
-            imageView.setImageLoaderListener(listener);
         }
         imageView.setImageLoaderListener(listener);
         ImageLoader loader = VolleySingleton.getInstance(getContext()).getImageLoader();
-        imageView.setImageUrl(asset.getUrl(), loader);
+        imageView.setImageUrl(asset, loader);
     }
 
     @Override
@@ -312,9 +310,9 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private void loadDefaultAssets(View view) {
         String type;
         switch (getArguments().getInt(TYPE, FOOD)) {
-//            case DRINKS: TODO enable when default image is available
-//                type = FourSquareWrapper.SECTION_DRINKS;
-//                break;
+            case DRINKS:
+                type = FourSquareWrapper.SECTION_DRINKS;
+                break;
             case COFFEE:
                 type = FourSquareWrapper.SECTION_COFFEE;
                 break;

@@ -3,6 +3,7 @@ package com.dids.venuerandomizer.controller.utility;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.util.Log;
 
 import com.dids.venuerandomizer.model.Assets;
 
@@ -74,7 +75,9 @@ public class AssetUtility {
             //noinspection ResourceType
             url = array.getString(3);
         }
+        //noinspection ResourceType
+        String path = Utilities.getFilesDir(mContext) + array.getString(4);
         array.recycle();
-        return new Assets(copyright, link, url);
+        return new Assets(copyright, link, url, path);
     }
 }
