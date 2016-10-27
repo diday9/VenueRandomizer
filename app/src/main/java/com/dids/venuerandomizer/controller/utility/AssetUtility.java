@@ -69,8 +69,9 @@ public class AssetUtility {
         String link = array.getString(1);
         String url;
         if (PreferencesUtility.getInstance().isHiResImageSupported()) {
+//            url = array.getString(2); TODO: to reduce memory crashes
             //noinspection ResourceType
-            url = array.getString(2);
+            url = array.getString(3);
         } else {
             //noinspection ResourceType
             url = array.getString(3);
