@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">Find Me A Place</string>
     <string name="default_content_description">Content Description</string>
-    <string name="logo" translatable="false">Application logo is from Restaurant graphic by Freepik,
-        Location graphic by Roundicons, Technology graphic by Zlatko Najdenovski, all from Flaticon
-        licensed under Creative Commons BY 3.0. Made with logomkr. </string>
 
     <!-- App ID -->
     <string name="facebook_app_id" translatable="false">1100912486695372</string>
@@ -54,6 +51,8 @@
     <!-- Drawer -->
     <string name="drawer_logout">Logout</string>
     <string name="drawer_license">License</string>
+    <string name="drawer_privacy">Privacy Policy</string>
+    <string name="drawer_contact">Contact Us</string>
 
     <plurals name="settings_max_image_subtext">
         <item quantity="one">Show %1$d image</item>

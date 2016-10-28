@@ -39,6 +39,7 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -120,13 +121,25 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 withName(R.string.drawer_logout).withIcon(R.drawable.ic_logout);
         PrimaryDrawerItem license = new PrimaryDrawerItem().
                 withName(R.string.drawer_license).withIcon(R.drawable.ic_license);
+        PrimaryDrawerItem about = new PrimaryDrawerItem().
+                withName(R.string.title_about).withIcon(R.drawable.ic_about);
+        PrimaryDrawerItem privacy = new PrimaryDrawerItem().
+                withName(R.string.drawer_privacy).withIcon(R.drawable.ic_lock);
+        PrimaryDrawerItem contact = new PrimaryDrawerItem().
+                withName(R.string.drawer_contact).withIcon(R.drawable.ic_letter);
+        PrimaryDrawerItem contribute = new PrimaryDrawerItem().
+                withName(R.string.contribute).withIcon(R.drawable.ic_present);
         new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar((Toolbar) findViewById(R.id.toolbar))
                 .withActionBarDrawerToggle(true)
                 .withAccountHeader(header)
                 .addDrawerItems(
-                        license, logout
+                        contribute, contact,
+                        new DividerDrawerItem(),
+                        about, privacy, license,
+                        new DividerDrawerItem(),
+                        logout
                 )
                 .withOnDrawerItemClickListener(this)
                 .build();
@@ -200,20 +213,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.about:
-                intent = new Intent(this, HelpActivity.class);
-                intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.ABOUT);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
             case R.id.settings:
                 intent = new Intent(this, SettingsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 return true;
-            case R.id.contribute:
-                FacebookWrapper.launch(this, COMMUNITY_PAGE);
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -236,10 +240,34 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         Intent intent;
         switch (position) {
             case 1:
+                FacebookWrapper.launch(this, COMMUNITY_PAGE);
+                break;
+            case 2:
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("message/rfc822");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"tompee26@gmail.com"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Re: Find Me A Place");
+                intent.putExtra(Intent.EXTRA_TEXT, "");
+                startActivity(Intent.createChooser(intent, getString(R.string.drawer_contact)));
+                break;
+            case 4:
+                intent = new Intent(this, HelpActivity.class);
+                intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.ABOUT);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case 5:
+                intent = new Intent(this, HelpActivity.class);
+                intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.PRIVACY);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case 6:
                 intent = new Intent(this, HelpActivity.class);
                 intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.LICENSE);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
             default:
         }
         return false;

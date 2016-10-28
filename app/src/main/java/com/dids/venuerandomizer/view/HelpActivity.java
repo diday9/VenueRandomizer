@@ -15,6 +15,7 @@ public class HelpActivity extends BaseActivity {
     public static final String TAG_MODE = "mode";
     public static final int ABOUT = 0;
     public static final int LICENSE = 1;
+    public static final int PRIVACY = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,10 +31,13 @@ public class HelpActivity extends BaseActivity {
             TextView version = (TextView) findViewById(R.id.version);
             version.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
         } else if (mode == LICENSE) {
-            setContentView(R.layout.activity_license);
+            setContentView(R.layout.activity_html);
             setToolbar(R.id.toolbar, true);
             TextView title = (TextView) findViewById(R.id.toolbar_text);
             title.setText(R.string.drawer_license);
+
+            TextView textView = (TextView) findViewById(R.id.text_header);
+            textView.setText(R.string.drawer_license);
 
             TextView content = (TextView) findViewById(R.id.content);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
@@ -41,6 +45,23 @@ public class HelpActivity extends BaseActivity {
                         Html.FROM_HTML_MODE_LEGACY));
             } else {
                 content.setText(Html.fromHtml(Utilities.getStringFromAsset(this, "opensource.html")));
+            }
+            content.setMovementMethod(LinkMovementMethod.getInstance());
+        } else if (mode == PRIVACY) {
+            setContentView(R.layout.activity_html);
+            setToolbar(R.id.toolbar, true);
+            TextView title = (TextView) findViewById(R.id.toolbar_text);
+            title.setText(R.string.drawer_privacy);
+
+            TextView textView = (TextView) findViewById(R.id.text_header);
+            textView.setText(R.string.drawer_privacy);
+
+            TextView content = (TextView) findViewById(R.id.content);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                content.setText(Html.fromHtml(Utilities.getStringFromAsset(this, "privacy.html"),
+                        Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                content.setText(Html.fromHtml(Utilities.getStringFromAsset(this, "privacy.html")));
             }
             content.setMovementMethod(LinkMovementMethod.getInstance());
         }
