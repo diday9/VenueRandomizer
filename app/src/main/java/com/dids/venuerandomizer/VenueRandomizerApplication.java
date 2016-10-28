@@ -28,6 +28,11 @@ public class VenueRandomizerApplication extends Application {
         PreferencesUtility.getInstance().init(this);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         AssetUtility.getInstance().init(this);
         RefreshImageTask.getInstance();
     }

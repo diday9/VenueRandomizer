@@ -4,15 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.os.Environment;
 
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -140,33 +143,37 @@ public class Utilities {
         return BitmapFactory.decodeFile(path, options);
     }
 
-    public static void saveBitmap(String filename, Bitmap bitmap) {
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(filename);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.getFD().sync();
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public static String getFilesDir(Context context) {
         File file = new File(context.getFilesDir().getAbsolutePath() + "/assets");
         file.mkdirs();
         return file.getAbsolutePath();
     }
 
-    public static Bitmap getBitmapFromFile(String path) {
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        return BitmapFactory.decodeFile(path, bmOptions);
+    public static Drawable getDrawableFromAsset(Context context, String filename) {
+        Drawable drawable;
+        try {
+            InputStream ims = context.getAssets().open(filename);
+            drawable = Drawable.createFromStream(ims, null);
+        } catch (IOException ex) {
+            drawable = null;
+        }
+        return drawable;
+    }
+
+    public static String getStringFromAsset(Context context, String filename) {
+        StringBuilder buffer = new StringBuilder();
+        InputStream inputStream;
+        try {
+            inputStream = context.getAssets().open(filename);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            String str;
+            while ((str = bufferedReader.readLine()) != null) {
+                buffer.append(str);
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return buffer.toString();
     }
 }

@@ -1,10 +1,14 @@
 package com.dids.venuerandomizer.view;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 import com.dids.venuerandomizer.BuildConfig;
 import com.dids.venuerandomizer.R;
+import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 
 public class HelpActivity extends BaseActivity {
@@ -17,7 +21,7 @@ public class HelpActivity extends BaseActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         int mode = getIntent().getIntExtra(TAG_MODE, ABOUT);
-        if(mode == ABOUT) {
+        if (mode == ABOUT) {
             setContentView(R.layout.activity_about);
             setToolbar(R.id.toolbar, true);
             TextView title = (TextView) findViewById(R.id.toolbar_text);
@@ -26,10 +30,19 @@ public class HelpActivity extends BaseActivity {
             TextView version = (TextView) findViewById(R.id.version);
             version.setText(String.format(getString(R.string.version), BuildConfig.VERSION_NAME));
         } else if (mode == LICENSE) {
-//            setContentView(R.layout.activity_license);
-//            setToolbar(R.id.toolbar, true);
-//            TextView title = (TextView) findViewById(R.id.toolbar_text);
-//            title.setText(R.string.title_license);
+            setContentView(R.layout.activity_license);
+            setToolbar(R.id.toolbar, true);
+            TextView title = (TextView) findViewById(R.id.toolbar_text);
+            title.setText(R.string.drawer_license);
+
+            TextView content = (TextView) findViewById(R.id.content);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                content.setText(Html.fromHtml(Utilities.getStringFromAsset(this, "opensource.html"),
+                        Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                content.setText(Html.fromHtml(Utilities.getStringFromAsset(this, "opensource.html")));
+            }
+            content.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 }

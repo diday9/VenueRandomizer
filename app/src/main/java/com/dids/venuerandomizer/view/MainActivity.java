@@ -19,10 +19,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,25 +30,24 @@ import com.android.volley.toolbox.ImageRequest;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.controller.network.FacebookWrapper;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
+import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.view.adapter.MainViewPagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
-import com.facebook.AccessToken;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener,
-        FirebaseAuth.AuthStateListener {
+        FirebaseAuth.AuthStateListener, Drawer.OnDrawerItemClickListener {
+    public static final String SKIP_LOGIN = "skip_login";
     private static final String TAG = "MainActivity";
     private static final String COMMUNITY_PAGE = "findmeaplacecommunity";
     private static final int PERMISSION_REQUEST_ACCESS_LOCATION = 1;
@@ -59,7 +58,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        if (!isLoggedIn()) {
+        if (!getIntent().getBooleanExtra(SKIP_LOGIN, false)) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -67,7 +66,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             return;
         }
         mAuth = FirebaseAuth.getInstance();
-        handleFacebookAccessToken(AccessToken.getCurrentAccessToken());
 
         setContentView(R.layout.activity_main);
         setToolbar(R.id.toolbar, false);
@@ -81,7 +79,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout_main);
         tabLayout.setupWithViewPager(mViewPager);
 
-        /** Add drawer */
         createDrawer();
     }
 
@@ -110,49 +107,30 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         AccountHeader header = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeightDp(200)
-                .withHeaderBackground(R.color.colorPrimary)
+                .withHeaderBackground(Utilities.getDrawableFromAsset(this, "bg.jpg"))
+                .withHeaderBackgroundScaleType(ImageView.ScaleType.CENTER_CROP)
+                .withProfileImagesClickable(false)
                 .addProfiles(
                         new ProfileDrawerItem().withName(mAuth.getCurrentUser().getDisplayName()).
                                 withEmail(mAuth.getCurrentUser().getEmail()).
                                 withIcon(mAuth.getCurrentUser().getPhotoUrl())
                 )
                 .build();
+        PrimaryDrawerItem logout = new PrimaryDrawerItem().
+                withName(R.string.drawer_logout).withIcon(R.drawable.ic_logout);
+        PrimaryDrawerItem license = new PrimaryDrawerItem().
+                withName(R.string.drawer_license).withIcon(R.drawable.ic_license);
         new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar((Toolbar) findViewById(R.id.toolbar))
                 .withActionBarDrawerToggle(true)
                 .withAccountHeader(header)
+                .addDrawerItems(
+                        license, logout
+                )
+                .withOnDrawerItemClickListener(this)
                 .build();
     }
-
-    private boolean isLoggedIn() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if (accessToken != null && !accessToken.isExpired()) {
-            Log.d(TAG, "User is logged in");
-            return true;
-        }
-        return false;
-    }
-
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            /* TODO supertoast */
-                            Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-                });
-    }
-
 
     @Override
     protected void onStart() {
@@ -250,5 +228,20 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             // User is signed out
             Log.d(TAG, "onAuthStateChanged:signed_out");
         }
+    }
+
+    @Override
+    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+        Log.d(TAG, "position: " + position);
+        Intent intent;
+        switch (position) {
+            case 1:
+                intent = new Intent(this, HelpActivity.class);
+                intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.LICENSE);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            default:
+        }
+        return false;
     }
 }
