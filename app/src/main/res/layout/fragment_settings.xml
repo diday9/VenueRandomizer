@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".view.SettingsActivity">
-
-    <include layout="@layout/toolbar" />
+    android:orientation="vertical">
 
     <TextView
         style="@style/ListViewHeaderTextStyle"
@@ -19,8 +15,7 @@
         style="@style/ListViewStyle"
         android:background="@drawable/selector_list_full_background"
         android:clickable="true"
-        android:descendantFocusability="blocksDescendants"
-        android:onClick="onClick">
+        android:descendantFocusability="blocksDescendants">
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/hi_res_cb"
@@ -53,8 +48,7 @@
         style="@style/ListViewStyle"
         android:background="@drawable/selector_list_bottom_background"
         android:clickable="true"
-        android:descendantFocusability="blocksDescendants"
-        android:onClick="onClick">
+        android:descendantFocusability="blocksDescendants">
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/dynamic_images_cb"
@@ -82,14 +76,12 @@
         </LinearLayout>
     </RelativeLayout>
 
-
     <RelativeLayout
         android:id="@+id/max_image_count"
         style="@style/ListViewStyle"
         android:background="@drawable/selector_list_bottom_background"
         android:clickable="true"
-        android:descendantFocusability="blocksDescendants"
-        android:onClick="onClick">
+        android:descendantFocusability="blocksDescendants">
 
         <LinearLayout
             android:layout_width="wrap_content"

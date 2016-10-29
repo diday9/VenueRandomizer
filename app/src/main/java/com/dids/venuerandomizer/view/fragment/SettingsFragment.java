@@ -1,40 +1,50 @@
-package com.dids.venuerandomizer.view;
+package com.dids.venuerandomizer.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
-import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.dialog.MaxCountDialog;
 
-public class SettingsActivity extends BaseActivity implements View.OnClickListener {
+public class SettingsFragment extends Fragment implements View.OnClickListener {
     private AppCompatCheckBox mHiResCheckBox;
     private AppCompatCheckBox mDynamicCheckBox;
     private TextView mCountView;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        setToolbar(R.id.toolbar, true);
-        TextView toolbar = (TextView) findViewById(R.id.toolbar_text);
-        toolbar.setText(R.string.settings);
+    public static SettingsFragment newInstance() {
+        return new SettingsFragment();
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
         PreferencesUtility prefUtil = PreferencesUtility.getInstance();
-        mHiResCheckBox = (AppCompatCheckBox) findViewById(R.id.hi_res_cb);
+        View hiResView = view.findViewById(R.id.high_res_support);
+        hiResView.setOnClickListener(this);
+        mHiResCheckBox = (AppCompatCheckBox) view.findViewById(R.id.hi_res_cb);
         mHiResCheckBox.setChecked(prefUtil.isHiResImageSupported());
 
-        mDynamicCheckBox = (AppCompatCheckBox) findViewById(R.id.dynamic_images_cb);
+        View dynamic = view.findViewById(R.id.dynamic_images);
+        dynamic.setOnClickListener(this);
+        mDynamicCheckBox = (AppCompatCheckBox) view.findViewById(R.id.dynamic_images_cb);
         mDynamicCheckBox.setChecked(prefUtil.isDynamicImagesSupported());
 
-        mCountView = (TextView) findViewById(R.id.tv_max_image_count);
+        View maxImage = view.findViewById(R.id.max_image_count);
+        maxImage.setOnClickListener(this);
+        mCountView = (TextView) view.findViewById(R.id.tv_max_image_count);
         mCountView.setText(String.format(getResources().getQuantityString(R.plurals.
                 settings_max_image_subtext, prefUtil.getMaxImageCount()), prefUtil.getMaxImageCount()));
+        return view;
     }
 
     @Override
@@ -52,12 +62,12 @@ public class SettingsActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.max_image_count:
                 dialog = MaxCountDialog.getInstance();
-                dialog.show(getSupportFragmentManager(), "max_count");
+                dialog.show(getFragmentManager(), "max_count");
                 break;
         }
     }
 
-    public void onDismiss() {
+    public void updateData() {
         PreferencesUtility prefUtil = PreferencesUtility.getInstance();
         mCountView.setText(String.format(getResources().getQuantityString(R.plurals.
                 settings_max_image_subtext, prefUtil.getMaxImageCount()), prefUtil.getMaxImageCount()));

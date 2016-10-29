@@ -12,17 +12,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -33,6 +34,9 @@ import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.view.adapter.MainViewPagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
+import com.dids.venuerandomizer.view.fragment.AboutFragment;
+import com.dids.venuerandomizer.view.fragment.HtmlFragment;
+import com.dids.venuerandomizer.view.fragment.SettingsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -54,6 +58,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private static final int PERMISSION_REQUEST_ACCESS_LOCATION = 1;
     private ViewPager mViewPager;
     private FirebaseAuth mAuth;
+    private ViewSwitcher mViewSwitcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,8 +75,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
         setContentView(R.layout.activity_main);
         setToolbar(R.id.toolbar, false);
-        TextView toolbar = (TextView) findViewById(R.id.toolbar_text);
-        toolbar.setText(R.string.app_name);
+        setToolbarTitle(R.string.app_name);
+
+        mViewSwitcher = (ViewSwitcher) findViewById(R.id.view_switcher);
 
         mViewPager = (ViewPager) findViewById(R.id.pager_main);
         mViewPager.setAdapter(new MainViewPagerAdapter(this, getSupportFragmentManager()));
@@ -81,6 +87,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         tabLayout.setupWithViewPager(mViewPager);
 
         createDrawer();
+    }
+
+    private void setToolbarTitle(int resId) {
+        TextView toolbar = (TextView) findViewById(R.id.toolbar_text);
+        toolbar.setText(resId);
     }
 
     private void createDrawer() {
@@ -117,7 +128,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                                 withIcon(mAuth.getCurrentUser().getPhotoUrl())
                 )
                 .build();
-        PrimaryDrawerItem logout = new PrimaryDrawerItem().
+        PrimaryDrawerItem logout = new PrimaryDrawerItem().withSelectable(false).
                 withName(R.string.drawer_logout).withIcon(R.drawable.ic_logout);
         PrimaryDrawerItem license = new PrimaryDrawerItem().
                 withName(R.string.drawer_license).withIcon(R.drawable.ic_license);
@@ -125,16 +136,20 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 withName(R.string.title_about).withIcon(R.drawable.ic_about);
         PrimaryDrawerItem privacy = new PrimaryDrawerItem().
                 withName(R.string.drawer_privacy).withIcon(R.drawable.ic_lock);
-        PrimaryDrawerItem contact = new PrimaryDrawerItem().
+        PrimaryDrawerItem contact = new PrimaryDrawerItem().withSelectable(false).
                 withName(R.string.drawer_contact).withIcon(R.drawable.ic_letter);
-        PrimaryDrawerItem contribute = new PrimaryDrawerItem().
+        PrimaryDrawerItem contribute = new PrimaryDrawerItem().withSelectable(false).
                 withName(R.string.contribute).withIcon(R.drawable.ic_present);
+        PrimaryDrawerItem settings = new PrimaryDrawerItem().
+                withName(R.string.settings).withIcon(R.drawable.ic_settings);
         new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar((Toolbar) findViewById(R.id.toolbar))
                 .withActionBarDrawerToggle(true)
                 .withAccountHeader(header)
                 .addDrawerItems(
+                        settings,
+                        new DividerDrawerItem(),
                         contribute, contact,
                         new DividerDrawerItem(),
                         about, privacy, license,
@@ -203,26 +218,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.settings:
-                intent = new Intent(this, SettingsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
@@ -238,11 +233,21 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
         Log.d(TAG, "position: " + position);
         Intent intent;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         switch (position) {
             case 1:
+                setToolbarTitle(R.string.settings);
+                if (mViewSwitcher.getDisplayedChild() == 0) {
+                    mViewSwitcher.showNext();
+                }
+                transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.container, SettingsFragment.newInstance());
+                break;
+            case 3:
                 FacebookWrapper.launch(this, COMMUNITY_PAGE);
                 break;
-            case 2:
+            case 4:
                 intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
                 intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"tompee26@gmail.com"});
@@ -250,26 +255,41 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 intent.putExtra(Intent.EXTRA_TEXT, "");
                 startActivity(Intent.createChooser(intent, getString(R.string.drawer_contact)));
                 break;
-            case 4:
-                intent = new Intent(this, HelpActivity.class);
-                intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.ABOUT);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                break;
-            case 5:
-                intent = new Intent(this, HelpActivity.class);
-                intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.PRIVACY);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                break;
             case 6:
-                intent = new Intent(this, HelpActivity.class);
-                intent.putExtra(HelpActivity.TAG_MODE, HelpActivity.LICENSE);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                setToolbarTitle(R.string.title_about);
+                if (mViewSwitcher.getDisplayedChild() == 0) {
+                    mViewSwitcher.showNext();
+                }
+                transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.container, AboutFragment.newInstance());
+                break;
+            case 7:
+                setToolbarTitle(R.string.drawer_privacy);
+                if (mViewSwitcher.getDisplayedChild() == 0) {
+                    mViewSwitcher.showNext();
+                }
+                transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.container, HtmlFragment.newInstance(HtmlFragment.PRIVACY));
+                break;
+            case 8:
+                setToolbarTitle(R.string.drawer_license);
+                if (mViewSwitcher.getDisplayedChild() == 0) {
+                    mViewSwitcher.showNext();
+                }
+                transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.container, HtmlFragment.newInstance(HtmlFragment.LICENSE));
                 break;
             default:
         }
+        transaction.commit();
+        fragmentManager.executePendingTransactions();
         return false;
+    }
+
+    public void onUpdateFragmentData() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (fragment instanceof SettingsFragment) {
+            ((SettingsFragment)fragment).updateData();
+        }
     }
 }

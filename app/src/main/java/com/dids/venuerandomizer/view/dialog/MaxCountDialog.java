@@ -14,7 +14,8 @@ import android.widget.Spinner;
 
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
-import com.dids.venuerandomizer.view.SettingsActivity;
+import com.dids.venuerandomizer.view.MainActivity;
+import com.dids.venuerandomizer.view.fragment.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,6 @@ public class MaxCountDialog extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        ((SettingsActivity) getActivity()).onDismiss();
+        ((MainActivity) getActivity()).onUpdateFragmentData();
     }
 }
