@@ -39,6 +39,7 @@ import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.fragment.AboutFragment;
 import com.dids.venuerandomizer.view.fragment.HtmlFragment;
 import com.dids.venuerandomizer.view.fragment.SettingsFragment;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -312,6 +313,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 }
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.container, HtmlFragment.newInstance(HtmlFragment.LICENSE));
+                break;
+            case 12:
+                LoginManager.getInstance().logOut();
+                intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
                 break;
             default:
         }

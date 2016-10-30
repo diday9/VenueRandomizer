@@ -3,6 +3,7 @@ package com.dids.venuerandomizer.view;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
 import com.dids.venuerandomizer.R;
+import com.dids.venuerandomizer.controller.PauseableHandler;
 import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.facebook.AccessToken;
@@ -38,11 +40,14 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 public class LoginActivity extends BaseActivity implements FacebookCallback<LoginResult>,
-        GraphRequest.GraphJSONObjectCallback, FirebaseAuth.AuthStateListener {
+        GraphRequest.GraphJSONObjectCallback, FirebaseAuth.AuthStateListener,
+        PauseableHandler.PauseableHandlerCallback {
     private static final String TAG = "LoginActivity";
     private CallbackManager mCallbackManager;
     private FirebaseAuth mAuth;
     private ViewSwitcher mSwitcher;
+    private PauseableHandler mHandler;
+    private AuthCredential mCredentials;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,7 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         loginButton.registerCallback(mCallbackManager, this);
 
+        mHandler = new PauseableHandler(this);
         mAuth = FirebaseAuth.getInstance();
         mSwitcher = (ViewSwitcher) findViewById(R.id.switcher);
         if (isLoggedIn()) {
@@ -82,16 +88,32 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mHandler.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mHandler.pause();
+    }
+
+    @Override
     public void onSuccess(LoginResult loginResult) {
+        Log.d(TAG, "success");
         handleFacebookAccessToken(loginResult.getAccessToken());
     }
 
     @Override
     public void onCancel() {
+        Log.d(TAG, "cancel");
+        mSwitcher.showPrevious();
     }
 
     @Override
     public void onError(FacebookException error) {
+        Log.d(TAG, "error");
         mSwitcher.showPrevious();
         showNetworkError();
     }
@@ -137,18 +159,31 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
 
     private void handleFacebookAccessToken(final AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
+        mCredentials = FacebookAuthProvider.getCredential(token.getToken());
+        Message newMessage = Message.obtain(mHandler, 0);
+        mHandler.sendMessage(newMessage);
+    }
+
+    @Override
+    public boolean storeMessage(Message message) {
+        return true;
+    }
+
+    @Override
+    public void processMessage(Message message) {
+        mAuth.signInWithCredential(mCredentials)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            Log.d(TAG, "task failed");
                             LoginManager.getInstance().logOut();
                             mSwitcher.showPrevious();
                             showNetworkError();
                             return;
                         }
+                        Log.d(TAG, "starting main activity");
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra(MainActivity.SKIP_LOGIN, true);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -207,6 +207,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                                             Utilities.getAddress(mVenue)));
                             mIsFavorite = true;
                         } else {
+                            mIsFavorite = false;
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Log.d("venueee", snapshot.getRef().toString());
                                 snapshot.getRef().removeValue();
