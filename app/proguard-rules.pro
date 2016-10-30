@@ -29,3 +29,13 @@
 -keep public class com.unicon_ltd.konect.sdk.** { *; }
 -keep public class org.codehaus.**
 -keep public class java.nio.**
+
+# Add this global rule
+-keepattributes Signature
+
+# This rule will properly ProGuard all the model classes in
+# the package com.yourcompany.models. Modify to fit the structure
+# of your app.
+-keepclassmembers class com.dids.venuerandomizer.models.** {
+  *;
+}

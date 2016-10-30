@@ -12,7 +12,6 @@ import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareOpenGraphAction;
 import com.facebook.share.model.ShareOpenGraphContent;

@@ -42,6 +42,7 @@ public class HtmlFragment extends Fragment {
                 content.setText(Html.fromHtml(Utilities.getStringFromAsset(getContext(), "opensource.html"),
                         Html.FROM_HTML_MODE_LEGACY));
             } else {
+                //noinspection deprecation
                 content.setText(Html.fromHtml(Utilities.getStringFromAsset(getContext(), "opensource.html")));
             }
             content.setMovementMethod(LinkMovementMethod.getInstance());
@@ -54,6 +55,7 @@ public class HtmlFragment extends Fragment {
                 content.setText(Html.fromHtml(Utilities.getStringFromAsset(getContext(), "privacy.html"),
                         Html.FROM_HTML_MODE_LEGACY));
             } else {
+                //noinspection deprecation
                 content.setText(Html.fromHtml(Utilities.getStringFromAsset(getContext(), "privacy.html")));
             }
             content.setMovementMethod(LinkMovementMethod.getInstance());

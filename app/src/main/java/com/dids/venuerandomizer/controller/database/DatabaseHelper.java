@@ -1,103 +1,47 @@
 package com.dids.venuerandomizer.controller.database;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
 import com.dids.venuerandomizer.model.DatabaseVenue;
+import com.dids.venuerandomizer.model.UserData;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String TABLE = "venue";
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_NAME = "name";
-    private static final String COLUMN_CATEGORY = "category";
-    private static final String COLUMN_ADDRESS = "address";
-
-    private static final String CREATE_TABLE = "create table " + TABLE + " (" + COLUMN_ID +
-            " text not null," + COLUMN_NAME + " text not null, " + COLUMN_CATEGORY +
-            " text not null, " + COLUMN_ADDRESS + " text not null" + " )";
-
-    private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + CREATE_TABLE;
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "FindMeAPlace.db";
+public class DatabaseHelper {
+    private static final String CHILD_EMAIL = "email";
+    private static final String CHILD_ID = "id";
+    private static final String CHILD_FAVORITES = "favorites";
+    private static final String CHILD_USERS = "users";
+    private static final String DATABASE_REFERENCE = "findmeaplace";
     private static DatabaseHelper mSingleton;
 
-    private DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    private final DatabaseReference mDatabase;
+
+    private DatabaseHelper() {
+        mDatabase = FirebaseDatabase.getInstance().getReference(DATABASE_REFERENCE);
     }
 
-    public static synchronized DatabaseHelper getInstance(Context context) {
+    public static synchronized DatabaseHelper getInstance() {
         if (mSingleton == null) {
-            mSingleton = new DatabaseHelper(context);
+            mSingleton = new DatabaseHelper();
         }
         return mSingleton;
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(CREATE_TABLE);
+    public Query createUserQuery(String email) {
+        return mDatabase.child(CHILD_USERS).orderByChild(CHILD_EMAIL).equalTo(email);
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL(DROP_TABLE);
-        onCreate(sqLiteDatabase);
+    public void addUser(String uid, UserData userData) {
+        mDatabase.child(CHILD_USERS).child(uid).setValue(userData);
     }
 
-    public void createEntry(DatabaseVenue venue) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_ID, venue.getId());
-        values.put(COLUMN_NAME, venue.getName());
-        values.put(COLUMN_CATEGORY, venue.getCategory());
-        values.put(COLUMN_ADDRESS, venue.getAddress());
-        SQLiteDatabase db = getWritableDatabase();
-        db.insert(TABLE, null, values);
-        db.close();
+    public Query createFavoriteQuery(String uid, String id) {
+        return mDatabase.child(CHILD_USERS).child(uid).child(CHILD_FAVORITES).
+                orderByChild("id").equalTo(id);
     }
 
-    public List<DatabaseVenue> getAllEntries() {
-        List<DatabaseVenue> list = new ArrayList<>();
-
-        SQLiteDatabase db = getWritableDatabase();
-        String[] columns = {COLUMN_ID, COLUMN_NAME, COLUMN_CATEGORY, COLUMN_ADDRESS};
-        Cursor cursor = db.query(TABLE, columns, null, null, null, null, null);
-
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            DatabaseVenue venue = cursorToEntry(cursor, true);
-            list.add(venue);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        db.close();
-        return list;
-    }
-
-    public boolean exists(String id) {
-        SQLiteDatabase db = getWritableDatabase();
-        String query = "Select * from " + TABLE + " where " + COLUMN_ID + " =?";
-        Cursor cursor = db.rawQuery(query, new String[] {id});
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
-    }
-
-    private DatabaseVenue cursorToEntry(Cursor cursor, boolean isShort) {
-        return new DatabaseVenue(cursor.getString(0), cursor.getString(1),
-                cursor.getString(2), cursor.getString(3));
-    }
-
-    public void deleteEntry(String id) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE, COLUMN_ID + "=?", new String[]{id});
-        db.close();
+    public void addFavorite(String uid, DatabaseVenue venue) {
+        DatabaseReference ref = mDatabase.child(CHILD_USERS).child(uid).child(CHILD_FAVORITES).push();
+        ref.setValue(venue);
     }
 }

@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +47,11 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.share.Sharer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,11 +66,14 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
     private static final int ANIMATION_DURATION_DELAY_OFFSET = 300;
 
     private Venue mVenue;
+    private DatabaseHelper mDbHelper;
     private RadioGroup mRadioGroup;
     private ViewPager mViewPager;
     private MapViewFragment mMapFragment;
     private File mPhotoFile;
     private CallbackManager mFbCallBackManager;
+    private FirebaseAuth mAuth;
+    private boolean mIsFavorite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +86,8 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         toolbarBg.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
         mFbCallBackManager = CallbackManager.Factory.create();
+        mAuth = FirebaseAuth.getInstance();
+        mDbHelper = DatabaseHelper.getInstance();
 
         /** Set name */
         TextView name = (TextView) findViewById(R.id.venue_name);
@@ -119,6 +130,20 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
         /** Setup map fragment */
         setupMapFragment();
+
+        Query favoriteList = mDbHelper.createFavoriteQuery(mAuth.getCurrentUser().getUid(),
+                mVenue.getId());
+        favoriteList.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mIsFavorite = dataSnapshot.getChildrenCount() != 0;
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
@@ -127,8 +152,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         inflater.inflate(R.menu.menu_detail, menu);
 
         MenuItem favorite = menu.findItem(R.id.menu_favorite);
-        DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
-        if (dbHelper.exists(mVenue.getId())) {
+        if (mIsFavorite) {
             favorite.setIcon(R.drawable.ic_favorite_full);
         } else {
             favorite.setIcon(R.drawable.ic_favorite_border);
@@ -170,13 +194,31 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 FourSquareWrapper.launch(this, mVenue.getId());
                 break;
             case R.id.menu_favorite:
-                DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
-                if (dbHelper.exists(mVenue.getId())) {
-                    dbHelper.deleteEntry(mVenue.getId());
-                } else {
-                    dbHelper.createEntry(new DatabaseVenue(mVenue.getId(), mVenue.getName(),
-                            Utilities.getPrimaryCategory(mVenue), Utilities.getAddress(mVenue)));
-                }
+                Query favoriteQuery = mDbHelper.createFavoriteQuery(mAuth.getCurrentUser().getUid(),
+                        mVenue.getId());
+                favoriteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("venueeeeeeeee", dataSnapshot.getChildrenCount() + "");
+                        if (dataSnapshot.getChildrenCount() == 0) {
+                            mDbHelper.addFavorite(mAuth.getCurrentUser().getUid(),
+                                    new DatabaseVenue(mVenue.getId(), mVenue.getName(),
+                                            Utilities.getPrimaryCategory(mVenue),
+                                            Utilities.getAddress(mVenue)));
+                            mIsFavorite = true;
+                        } else {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Log.d("venueee", snapshot.getRef().toString());
+                                snapshot.getRef().removeValue();
+                            }
+                        }
+                        invalidateOptionsMenu();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
                 invalidateOptionsMenu();
                 return true;
         }

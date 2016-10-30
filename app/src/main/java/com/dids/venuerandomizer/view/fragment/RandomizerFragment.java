@@ -24,7 +24,6 @@ import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.ImageLoader;

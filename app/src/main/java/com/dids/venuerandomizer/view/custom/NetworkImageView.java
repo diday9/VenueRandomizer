@@ -1,7 +1,6 @@
 package com.dids.venuerandomizer.view.custom;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,8 +10,6 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.dids.venuerandomizer.controller.utility.Utilities;
-import com.dids.venuerandomizer.model.Assets;
 
 public class NetworkImageView extends ImageView {
     private static final String TAG = "EventNetworkImageView";

@@ -10,6 +10,7 @@ import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
 import com.dids.venuerandomizer.model.Venue;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class VenueRandomizerApplication extends Application {
     private static VenueRandomizerApplication mInstance;
@@ -28,6 +29,9 @@ public class VenueRandomizerApplication extends Application {
         PreferencesUtility.getInstance().init(this);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        if (!BuildConfig.DEBUG) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

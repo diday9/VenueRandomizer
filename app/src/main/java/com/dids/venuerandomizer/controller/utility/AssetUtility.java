@@ -3,7 +3,6 @@ package com.dids.venuerandomizer.controller.utility;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.util.Log;
 
 import com.dids.venuerandomizer.model.Assets;
 

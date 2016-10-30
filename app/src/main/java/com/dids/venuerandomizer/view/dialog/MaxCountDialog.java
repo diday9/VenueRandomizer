@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
 import com.dids.venuerandomizer.view.MainActivity;
-import com.dids.venuerandomizer.view.fragment.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

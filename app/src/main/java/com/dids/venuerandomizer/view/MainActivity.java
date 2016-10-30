@@ -29,9 +29,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.dids.venuerandomizer.R;
+import com.dids.venuerandomizer.controller.database.DatabaseHelper;
 import com.dids.venuerandomizer.controller.network.FacebookWrapper;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.controller.utility.Utilities;
+import com.dids.venuerandomizer.model.UserData;
 import com.dids.venuerandomizer.view.adapter.MainViewPagerAdapter;
 import com.dids.venuerandomizer.view.base.BaseActivity;
 import com.dids.venuerandomizer.view.fragment.AboutFragment;
@@ -39,6 +41,10 @@ import com.dids.venuerandomizer.view.fragment.HtmlFragment;
 import com.dids.venuerandomizer.view.fragment.SettingsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -72,6 +78,22 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             return;
         }
         mAuth = FirebaseAuth.getInstance();
+        final DatabaseHelper dbHelper = DatabaseHelper.getInstance();
+        final UserData user = new UserData(mAuth.getCurrentUser().getDisplayName(),
+                mAuth.getCurrentUser().getEmail());
+        Query userQuery = dbHelper.createUserQuery(mAuth.getCurrentUser().getEmail());
+        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    dbHelper.addUser(mAuth.getCurrentUser().getUid(), user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
         setContentView(R.layout.activity_main);
         setToolbar(R.id.toolbar, false);
@@ -142,12 +164,18 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 withName(R.string.contribute).withIcon(R.drawable.ic_present);
         PrimaryDrawerItem settings = new PrimaryDrawerItem().
                 withName(R.string.settings).withIcon(R.drawable.ic_settings);
+        PrimaryDrawerItem find = new PrimaryDrawerItem().
+                withName(R.string.drawer_find).withIcon(R.drawable.ic_find);
+        PrimaryDrawerItem favorite = new PrimaryDrawerItem().
+                withName(R.string.drawer_favorite).withIcon(R.drawable.ic_heart);
         new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar((Toolbar) findViewById(R.id.toolbar))
                 .withActionBarDrawerToggle(true)
-                .withAccountHeader(header)
+                .withAccountHeader(header, true)
                 .addDrawerItems(
+                        find, favorite,
+                        new DividerDrawerItem(),
                         settings,
                         new DividerDrawerItem(),
                         contribute, contact,
@@ -236,7 +264,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         switch (position) {
-            case 1:
+            case 0:
+                setToolbarTitle(R.string.app_name);
+                if (mViewSwitcher.getDisplayedChild() == 1) {
+                    mViewSwitcher.showPrevious();
+                }
+                break;
+            case 3:
                 setToolbarTitle(R.string.settings);
                 if (mViewSwitcher.getDisplayedChild() == 0) {
                     mViewSwitcher.showNext();
@@ -244,10 +278,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.container, SettingsFragment.newInstance());
                 break;
-            case 3:
+            case 5:
                 FacebookWrapper.launch(this, COMMUNITY_PAGE);
                 break;
-            case 4:
+            case 6:
                 intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
                 intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"tompee26@gmail.com"});
@@ -255,7 +289,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 intent.putExtra(Intent.EXTRA_TEXT, "");
                 startActivity(Intent.createChooser(intent, getString(R.string.drawer_contact)));
                 break;
-            case 6:
+            case 8:
                 setToolbarTitle(R.string.title_about);
                 if (mViewSwitcher.getDisplayedChild() == 0) {
                     mViewSwitcher.showNext();
@@ -263,7 +297,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.container, AboutFragment.newInstance());
                 break;
-            case 7:
+            case 9:
                 setToolbarTitle(R.string.drawer_privacy);
                 if (mViewSwitcher.getDisplayedChild() == 0) {
                     mViewSwitcher.showNext();
@@ -271,7 +305,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.container, HtmlFragment.newInstance(HtmlFragment.PRIVACY));
                 break;
-            case 8:
+            case 10:
                 setToolbarTitle(R.string.drawer_license);
                 if (mViewSwitcher.getDisplayedChild() == 0) {
                     mViewSwitcher.showNext();
@@ -289,7 +323,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     public void onUpdateFragmentData() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
         if (fragment instanceof SettingsFragment) {
-            ((SettingsFragment)fragment).updateData();
+            ((SettingsFragment) fragment).updateData();
         }
     }
 }
