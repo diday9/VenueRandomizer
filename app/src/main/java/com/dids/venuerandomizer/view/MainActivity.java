@@ -270,6 +270,14 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 if (mViewSwitcher.getDisplayedChild() == 1) {
                     mViewSwitcher.showPrevious();
                 }
+                mViewPager.setAdapter(null);
+                mViewPager.setAdapter(new MainViewPagerAdapter(this, getSupportFragmentManager()));
+                break;
+            case 1:
+                setToolbarTitle(R.string.drawer_favorite);
+                if (mViewSwitcher.getDisplayedChild() == 1) {
+                    mViewSwitcher.showPrevious();
+                }
                 break;
             case 3:
                 setToolbarTitle(R.string.settings);

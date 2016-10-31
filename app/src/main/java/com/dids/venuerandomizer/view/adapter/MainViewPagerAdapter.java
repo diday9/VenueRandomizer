@@ -3,24 +3,24 @@ package com.dids.venuerandomizer.view.adapter;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.dids.venuerandomizer.R;
-import com.dids.venuerandomizer.view.fragment.RandomizerFragment;
+import com.dids.venuerandomizer.view.fragment.MainFragment;
 
-public class MainViewPagerAdapter extends FragmentPagerAdapter {
+public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
     private static final int PAGE_COUNT = 3;
-    private final RandomizerFragment mFoodFragment;
-    private final RandomizerFragment mDrinksFragment;
-    private final RandomizerFragment mCoffeeFragment;
+    private final MainFragment mFoodFragment;
+    private final MainFragment mDrinksFragment;
+    private final MainFragment mCoffeeFragment;
     private final Context mContext;
 
     public MainViewPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
-        mFoodFragment = RandomizerFragment.newInstance(RandomizerFragment.FOOD);
-        mDrinksFragment = RandomizerFragment.newInstance(RandomizerFragment.DRINKS);
-        mCoffeeFragment = RandomizerFragment.newInstance(RandomizerFragment.COFFEE);
+        mFoodFragment = MainFragment.newInstance(MainFragment.FOOD);
+        mDrinksFragment = MainFragment.newInstance(MainFragment.DRINKS);
+        mCoffeeFragment = MainFragment.newInstance(MainFragment.COFFEE);
     }
 
     @Override
