@@ -270,14 +270,14 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 if (mViewSwitcher.getDisplayedChild() == 1) {
                     mViewSwitcher.showPrevious();
                 }
-                ((MainViewPagerAdapter)mViewPager.getAdapter()).switchType(true);
+                ((MainViewPagerAdapter) mViewPager.getAdapter()).switchType(true);
                 break;
             case 1:
                 setToolbarTitle(R.string.drawer_favorite);
                 if (mViewSwitcher.getDisplayedChild() == 1) {
                     mViewSwitcher.showPrevious();
                 }
-                ((MainViewPagerAdapter)mViewPager.getAdapter()).switchType(false);
+                ((MainViewPagerAdapter) mViewPager.getAdapter()).switchType(false);
                 break;
             case 3:
                 setToolbarTitle(R.string.settings);
@@ -285,7 +285,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     mViewSwitcher.showNext();
                 }
                 transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.container, SettingsFragment.newInstance());
+                transaction.replace(R.id.main_container, SettingsFragment.newInstance());
                 break;
             case 5:
                 FacebookWrapper.launch(this, COMMUNITY_PAGE);
@@ -304,7 +304,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     mViewSwitcher.showNext();
                 }
                 transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.container, AboutFragment.newInstance());
+                transaction.replace(R.id.main_container, AboutFragment.newInstance());
                 break;
             case 9:
                 setToolbarTitle(R.string.drawer_privacy);
@@ -312,7 +312,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     mViewSwitcher.showNext();
                 }
                 transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.container, HtmlFragment.newInstance(HtmlFragment.PRIVACY));
+                transaction.replace(R.id.main_container, HtmlFragment.newInstance(HtmlFragment.PRIVACY));
                 break;
             case 10:
                 setToolbarTitle(R.string.drawer_license);
@@ -320,7 +320,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     mViewSwitcher.showNext();
                 }
                 transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.container, HtmlFragment.newInstance(HtmlFragment.LICENSE));
+                transaction.replace(R.id.main_container, HtmlFragment.newInstance(HtmlFragment.LICENSE));
                 break;
             case 12:
                 LoginManager.getInstance().logOut();
@@ -337,7 +337,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     public void onUpdateFragmentData() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
         if (fragment instanceof SettingsFragment) {
             ((SettingsFragment) fragment).updateData();
         }
