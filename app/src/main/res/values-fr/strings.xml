@@ -39,6 +39,16 @@
     <string name="settings_max_image_count">nombre d\'images maximum</string>
     <string name="settings_max_image_count_message">Sélectionnez le nombre de l’image:</string>
 
+    <!-- Drawer -->
+    <string name="drawer_logout">Se déconnecter</string>
+    <string name="drawer_license">Licence</string>
+    <string name="drawer_privacy">Politique de confidentialité</string>
+    <string name="drawer_contact">Contactez nous</string>
+    <string name="drawer_find">Explorer</string>
+    <string name="drawer_favorite">Favoris</string>
+
+    <string name="details">Détails</string>
+
     <plurals name="settings_max_image_subtext">
         <item quantity="one">Afficher %1$d image</item>
         <item quantity="other">Afficher %1$d images</item>

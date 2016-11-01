@@ -120,7 +120,7 @@ public class LoginActivity extends BaseActivity implements FacebookCallback<Logi
 
     private void showNetworkError() {
         SuperActivityToast.cancelAllSuperToasts();
-        SuperActivityToast.create(this, new Style(), Style.TYPE_BUTTON)
+        SuperActivityToast.create(this, new Style(), Style.TYPE_STANDARD)
                 .setProgressBarColor(Color.WHITE)
                 .setText(getString(R.string.random_no_internet))
                 .setDuration(Style.DURATION_LONG)

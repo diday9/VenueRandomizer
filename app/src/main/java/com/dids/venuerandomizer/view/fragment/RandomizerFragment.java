@@ -132,7 +132,8 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
             animateButtonGroup();
         } else {
             ((BaseActivity) getActivity()).interceptTouchEvents(false);
-            SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_BUTTON)
+            SuperActivityToast.cancelAllSuperToasts();
+            SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_STANDARD)
                     .setProgressBarColor(Color.WHITE)
                     .setText(getString(R.string.random_no_venue))
                     .setDuration(Style.DURATION_LONG)
@@ -167,7 +168,8 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
         mSearchButton.setEnabled(true);
         mGetVenueListTask = null;
         ((BaseActivity) getActivity()).interceptTouchEvents(false);
-        SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_BUTTON)
+        SuperActivityToast.cancelAllSuperToasts();
+        SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_STANDARD)
                 .setProgressBarColor(Color.WHITE)
                 .setText(getString(R.string.random_no_location))
                 .setDuration(Style.DURATION_LONG)

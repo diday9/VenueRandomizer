@@ -39,6 +39,16 @@
     <string name="settings_max_image_count">Maximale Veranstaltungsort Bildanzahl</string>
     <string name="settings_max_image_count_message">Wählen Sie Bild-Nummer:</string>
 
+    <!-- Drawer -->
+    <string name="drawer_logout">Ausloggen</string>
+    <string name="drawer_license">Lizenz</string>
+    <string name="drawer_privacy">Datenschutz-Bestimmungen</string>
+    <string name="drawer_contact">Kontaktiere Uns</string>
+    <string name="drawer_find">Erkunden</string>
+    <string name="drawer_favorite">Favoriten</string>
+
+    <string name="details">Einzelheiten</string>
+
     <plurals name="settings_max_image_subtext">
         <item quantity="one">%1$d Bild anzeigen</item>
         <item quantity="other">%1$d Bilder anzeigen</item>
