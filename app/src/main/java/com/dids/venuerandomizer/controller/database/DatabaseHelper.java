@@ -37,11 +37,15 @@ public class DatabaseHelper {
 
     public Query createFavoriteQuery(String uid, String id) {
         return mDatabase.child(CHILD_USERS).child(uid).child(CHILD_FAVORITES).
-                orderByChild("id").equalTo(id);
+                orderByChild(CHILD_ID).equalTo(id);
     }
 
     public void addFavorite(String uid, DatabaseVenue venue) {
         DatabaseReference ref = mDatabase.child(CHILD_USERS).child(uid).child(CHILD_FAVORITES).push();
         ref.setValue(venue);
+    }
+
+    public Query createAllFavoriteQuery(String uid) {
+        return mDatabase.child(CHILD_USERS).child(uid).child(CHILD_FAVORITES);
     }
 }

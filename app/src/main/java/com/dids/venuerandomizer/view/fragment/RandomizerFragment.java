@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,6 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     private View mResultView;
 
     public static RandomizerFragment newInstance(int type) {
-        Log.d("RandomizerFragment", "im being created");
         RandomizerFragment fragment = new RandomizerFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(VARIANT, type);

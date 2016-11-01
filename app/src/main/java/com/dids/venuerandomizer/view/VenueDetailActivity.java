@@ -15,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -199,17 +198,15 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 favoriteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d("venueeeeeeeee", dataSnapshot.getChildrenCount() + "");
                         if (dataSnapshot.getChildrenCount() == 0) {
                             mDbHelper.addFavorite(mAuth.getCurrentUser().getUid(),
                                     new DatabaseVenue(mVenue.getId(), mVenue.getName(),
                                             Utilities.getPrimaryCategory(mVenue),
-                                            Utilities.getAddress(mVenue)));
+                                            Utilities.getAddress(mVenue), mVenue.getFormattedPhone()));
                             mIsFavorite = true;
                         } else {
                             mIsFavorite = false;
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Log.d("venueee", snapshot.getRef().toString());
                                 snapshot.getRef().removeValue();
                             }
                         }

@@ -8,16 +8,18 @@ public class DatabaseVenue {
     public String name;
     public String category;
     public String address;
+    public String telephone;
 
     public DatabaseVenue() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public DatabaseVenue(String id, String name, String category, String address) {
+    public DatabaseVenue(String id, String name, String category, String address, String telephone) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.address = address;
+        this.telephone = telephone;
     }
 
     public String getId() {
@@ -34,5 +36,9 @@ public class DatabaseVenue {
 
     public String getAddress() {
         return this.address;
+    }
+
+    public String getTelephone() {
+        return this.telephone;
     }
 }

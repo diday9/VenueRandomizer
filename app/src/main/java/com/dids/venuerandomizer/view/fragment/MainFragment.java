@@ -4,9 +4,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +53,7 @@ public class MainFragment extends Fragment implements RefreshImageTask.RefreshIm
         return mRootView;
     }
 
-    private void setFragment(boolean isRandomizer) {
+    public void setFragment(boolean isRandomizer) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.container, isRandomizer ? RandomizerFragment
                 .newInstance(getArguments().getInt(VARIANT)) :

@@ -83,8 +83,8 @@
         android:clickable="true"
         android:src="@drawable/ic_checkout"
         android:visibility="invisible"
-        fab:backgroundTint="@color/colorAccent"
-        app:elevation="10dp" />
+        app:elevation="10dp"
+        fab:backgroundTint="@color/colorAccent" />
 
     <FrameLayout
         android:id="@+id/button_group"

@@ -60,4 +60,10 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
         }
         return name;
     }
+
+    public void switchType(boolean isRandomizer) {
+        mFoodFragment.setFragment(isRandomizer);
+        mDrinksFragment.setFragment(isRandomizer);
+        mCoffeeFragment.setFragment(isRandomizer);
+    }
 }
