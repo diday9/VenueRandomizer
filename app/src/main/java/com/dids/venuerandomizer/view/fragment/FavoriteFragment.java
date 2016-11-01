@@ -130,4 +130,8 @@ public class FavoriteFragment extends Fragment implements AdapterView.OnItemClic
         super.onDetach();
         mQuery.removeEventListener(this);
     }
+
+    public void resetView() {
+        refresh();
+    }
 }

@@ -95,6 +95,8 @@ public class MainFragment extends Fragment implements RefreshImageTask.RefreshIm
             Fragment fragment = getChildFragmentManager().findFragmentById(R.id.container);
             if (fragment instanceof RandomizerFragment) {
                 ((RandomizerFragment) fragment).resetView();
+            } else {
+                ((FavoriteFragment) fragment).resetView();
             }
         }
     }
