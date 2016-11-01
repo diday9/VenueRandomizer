@@ -58,6 +58,7 @@ import java.util.List;
 
 public class VenueDetailActivity extends BaseActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener, FacebookCallback<Sharer.Result> {
+    public static final String VARIANT = "variant";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int VERTICAL_POSITION_BOUNCE = 88;
     private static final int ANIMATION_DURATION = 700;
@@ -202,7 +203,8 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                             mDbHelper.addFavorite(mAuth.getCurrentUser().getUid(),
                                     new DatabaseVenue(mVenue.getId(), mVenue.getName(),
                                             Utilities.getPrimaryCategory(mVenue),
-                                            Utilities.getAddress(mVenue), mVenue.getFormattedPhone()));
+                                            Utilities.getAddress(mVenue), mVenue.getFormattedPhone(),
+                                            getIntent().getIntExtra(VARIANT, 0)));
                             mIsFavorite = true;
                         } else {
                             mIsFavorite = false;

@@ -1,5 +1,6 @@
 package com.dids.venuerandomizer.model;
 
+import android.widget.Button;
 import android.widget.TextView;
 
 public class FavoriteListHolder {
@@ -8,6 +9,7 @@ public class FavoriteListHolder {
     private TextView mCategoryTextView;
     private TextView mAddressTextView;
     private TextView mTelephoneTextView;
+    private Button mCheckoutButton;
 
     public TextView getVenueNameTextView() {
         return mVenueNameTextView;
@@ -47,5 +49,13 @@ public class FavoriteListHolder {
 
     public void setTelephoneTextView(TextView telephoneTextView) {
         mTelephoneTextView = telephoneTextView;
+    }
+
+    public Button getCheckoutButton() {
+        return mCheckoutButton;
+    }
+
+    public void setCheckoutButton(Button checkoutButton) {
+        mCheckoutButton = checkoutButton;
     }
 }

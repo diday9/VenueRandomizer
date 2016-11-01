@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        card_view:cardBackgroundColor="@color/colorPrimaryAlpha"
+        card_view:cardBackgroundColor="@color/colorPrimary"
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="5dp">
 
@@ -67,6 +67,16 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/light_text" />
+
+                <Button
+                    android:id="@+id/checkout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/selector_outline"
+                    android:focusable="false"
+                    android:text="@string/details"
+                    android:textColor="@drawable/selector_accent_color" />
             </LinearLayout>
 
         </LinearLayout>

@@ -56,6 +56,8 @@
     <string name="drawer_find">Explore</string>
     <string name="drawer_favorite">Favorites</string>
 
+    <string name="details">Details</string>
+
     <plurals name="settings_max_image_subtext">
         <item quantity="one">Show %1$d image</item>
         <item quantity="other">Show %1$d images</item>

@@ -84,6 +84,7 @@ public class RandomizerFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         if (view.equals(mCheckout)) {
             Intent intent = new Intent(getContext(), VenueDetailActivity.class);
+            intent.putExtra(VenueDetailActivity.VARIANT, getArguments().getInt(VARIANT));
             Pair<View, String> name = Pair.create((mRootView.findViewById(R.id.venue_name)), "venue_name");
             Pair<View, String> category = Pair.create(mRootView.findViewById(R.id.category_name), "category");
             Pair<View, String> card = Pair.create((View) mCheckout, "card");

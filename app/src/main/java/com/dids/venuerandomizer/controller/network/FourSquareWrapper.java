@@ -36,6 +36,7 @@ public class FourSquareWrapper {
 
     /* Foursquare API Constants */
     private static final String FOURSQUARE_VENUE_URL = "https://foursquare.com/venue/%s?ref=%s";
+    private static final String FOURSQUARE_VENUE_SEARCH = "https://api.foursquare.com/v2/venues/%s?";
     private static final String FOURSQUARE_SEARCH_URL = "https://api.foursquare.com/v2/venues/explore?";
     private static final String FOURSQUARE_PHOTO_URL = "https://api.foursquare.com/v2/venues/%s/photos?";
     private static final String SEARCH_CLIENT_INFO = "client_id=%s&client_secret=%s";
@@ -94,6 +95,35 @@ public class FourSquareWrapper {
         Uri uri = Uri.parse(String.format(FOURSQUARE_VENUE_URL, venueId,
                 context.getString(R.string.client_id)));
         context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    }
+
+    public Venue getVenueById(String id) throws NoConnectionError {
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format(FOURSQUARE_VENUE_SEARCH, id));
+        builder.append(String.format(SEARCH_CLIENT_INFO, mContext.getString(R.string.client_id),
+                mContext.getString(R.string.client_secret)));
+        builder.append(String.format(SEARCH_VERSION, mContext.getString(R.string.api_version)));
+        builder.append(String.format(SEARCH_LOCALE, getCurrentLocale()));
+        Log.d(TAG, builder.toString());
+
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, builder.toString(),
+                null, future, future);
+        VolleySingleton.getInstance(mContext).addToRequestQueue(jsonRequest);
+        try {
+            JSONObject response = future.get();
+            Venue venue = new Venue();
+            Log.d(TAG, response.getJSONObject(TAG_RESPONSE).getJSONObject(TAG_VENUE).toString());
+            getVenueDetails(response.getJSONObject(TAG_RESPONSE).getJSONObject(TAG_VENUE), venue);
+            return venue;
+
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            Log.e(TAG, "Error in get venue list request: " + e.getMessage());
+            if (e.getCause() instanceof NoConnectionError) {
+                throw (NoConnectionError) e.getCause();
+            }
+        }
+        return null;
     }
 
     public Venue getRandomVenue(Location location, String section) throws NoConnectionError {

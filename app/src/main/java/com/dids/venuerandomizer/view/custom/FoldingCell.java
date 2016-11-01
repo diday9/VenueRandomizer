@@ -136,6 +136,10 @@ public class FoldingCell extends RelativeLayout {
             }
         });
 
+        if (!mIsFirstTime) {
+            contentView.setVisibility(GONE);
+        }
+
         startExpandHeightAnimation(heights, part90degreeAnimationDuration * 2);
         this.mAnimationInProgress = true;
     }
