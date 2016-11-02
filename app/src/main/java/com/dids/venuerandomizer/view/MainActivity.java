@@ -2,6 +2,7 @@ package com.dids.venuerandomizer.view;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -28,10 +30,12 @@ import android.widget.ViewSwitcher;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.dids.venuerandomizer.BuildConfig;
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.controller.database.DatabaseHelper;
 import com.dids.venuerandomizer.controller.network.FacebookWrapper;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
+import com.dids.venuerandomizer.controller.utility.PreferencesUtility;
 import com.dids.venuerandomizer.controller.utility.Utilities;
 import com.dids.venuerandomizer.model.UserData;
 import com.dids.venuerandomizer.view.adapter.MainViewPagerAdapter;
@@ -63,6 +67,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private static final String TAG = "MainActivity";
     private static final String COMMUNITY_PAGE = "findmeaplacecommunity";
     private static final int PERMISSION_REQUEST_ACCESS_LOCATION = 1;
+    private static final int MAX_LAUNCH_COUNT = 10;
     private ViewPager mViewPager;
     private FirebaseAuth mAuth;
     private ViewSwitcher mViewSwitcher;
@@ -110,6 +115,31 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         tabLayout.setupWithViewPager(mViewPager);
 
         createDrawer();
+
+        PreferencesUtility util = PreferencesUtility.getInstance();
+        if (util.getLaunchCount() == MAX_LAUNCH_COUNT) {
+            util.setLaunchCount(0);
+            showAppRater();
+        } else {
+            util.setLaunchCount(util.getLaunchCount() + 1);
+        }
+    }
+
+    private void showAppRater() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.rate_title);
+        builder.setMessage(R.string.rate_message);
+        builder.setNeutralButton(R.string.rate_cancel, null);
+        builder.setNegativeButton(R.string.rate_no, null);
+        builder.setPositiveButton(R.string.rate_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" +
+                        BuildConfig.APPLICATION_ID));
+                startActivity(intent);
+            }
+        });
+        builder.create().show();
     }
 
     private void setToolbarTitle(int resId) {

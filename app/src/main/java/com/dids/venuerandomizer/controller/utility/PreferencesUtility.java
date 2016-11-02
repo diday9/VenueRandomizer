@@ -8,6 +8,7 @@ public class PreferencesUtility {
     private static final String HI_RES = "hires";
     private static final String DYNAMIC_IMAGES = "dynamic_images";
     private static final String MAX_IMAGE_COUNT = "max_image_count";
+    private static final String LAUNCH_COUNT = "launch_count";
     private static final int DEFAULT_IMAGE_COUNT = 5;
     private static PreferencesUtility mSingleTon;
     private SharedPreferences mSharedPreferences;
@@ -50,6 +51,16 @@ public class PreferencesUtility {
     public void setMaxImageCount(int count) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putInt(MAX_IMAGE_COUNT, count);
+        editor.apply();
+    }
+
+    public int getLaunchCount() {
+        return mSharedPreferences.getInt(LAUNCH_COUNT, 0);
+    }
+
+    public void setLaunchCount(int count) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(LAUNCH_COUNT, count);
         editor.apply();
     }
 }

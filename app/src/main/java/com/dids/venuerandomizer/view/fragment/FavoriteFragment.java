@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ViewSwitcher;
 
 import com.dids.venuerandomizer.R;
 import com.dids.venuerandomizer.VenueRandomizerApplication;
@@ -35,7 +36,7 @@ public class FavoriteFragment extends Fragment implements AdapterView.OnItemClic
     private static final String VARIANT = "variant";
     private FavoriteListAdapter mAdapter;
     private ListView mListView;
-    private FirebaseAuth mAuth;
+    private ViewSwitcher mViewSwitcher;
     private SwipeRefreshLayout mSwipeRefresh;
     private Query mQuery;
 
@@ -55,12 +56,15 @@ public class FavoriteFragment extends Fragment implements AdapterView.OnItemClic
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mSwipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
-
-        mAuth = FirebaseAuth.getInstance();
-        //noinspection ConstantConditions
-        mQuery = DatabaseHelper.getInstance().createAllFavoriteQuery(mAuth.getCurrentUser().getUid());
-        mQuery.addValueEventListener(this);
         mSwipeRefresh.setOnRefreshListener(this);
+
+        mViewSwitcher = (ViewSwitcher) view.findViewById(R.id.fav_switcher);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        //noinspection ConstantConditions
+        mQuery = DatabaseHelper.getInstance().createAllFavoriteQuery(auth.getCurrentUser().getUid());
+        mQuery.addValueEventListener(this);
+        mSwipeRefresh.setRefreshing(true);
         return view;
     }
 
@@ -78,11 +82,13 @@ public class FavoriteFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onStarted() {
         ((BaseActivity) getActivity()).interceptTouchEvents(true);
+        mSwipeRefresh.setRefreshing(true);
     }
 
     @Override
     public void onCompleted(Venue venue) {
         ((BaseActivity) getActivity()).interceptTouchEvents(false);
+        mSwipeRefresh.setRefreshing(false);
         VenueRandomizerApplication.getInstance().setVenue(venue);
         Intent intent = new Intent(getContext(), VenueDetailActivity.class);
         intent.putExtra(VenueDetailActivity.VARIANT, getArguments().getInt(VARIANT));
@@ -92,6 +98,7 @@ public class FavoriteFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onConnectionError() {
         ((BaseActivity) getActivity()).interceptTouchEvents(false);
+        mSwipeRefresh.setRefreshing(false);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.random_no_internet);
         builder.setMessage(R.string.random_no_internet_msg);
@@ -114,9 +121,19 @@ public class FavoriteFragment extends Fragment implements AdapterView.OnItemClic
                 list.add(venue);
             }
         }
-        mAdapter = new FavoriteListAdapter(getContext(), R.layout.list_favorite, list,
-                FavoriteFragment.this);
-        mListView.setAdapter(mAdapter);
+        if (list.isEmpty()) {
+            if (mViewSwitcher.getDisplayedChild() == 0) {
+                mViewSwitcher.showNext();
+            }
+            mListView.setAdapter(null);
+        } else {
+            if (mViewSwitcher.getDisplayedChild() == 1) {
+                mViewSwitcher.showPrevious();
+            }
+            mAdapter = new FavoriteListAdapter(getContext(), R.layout.list_favorite, list,
+                    FavoriteFragment.this);
+            mListView.setAdapter(mAdapter);
+        }
         mSwipeRefresh.setRefreshing(false);
     }
 

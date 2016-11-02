@@ -57,6 +57,14 @@
     <string name="drawer_favorite">Favorites</string>
 
     <string name="details">Details</string>
+    <string name="empty_favorites">No favorites yet</string>
+
+    <!-- App Rater -->
+    <string name="rate_title">Rate this app</string>
+    <string name="rate_message">If you enjoy this app, would you mind taking a moment to rate it? Thanks for your support!</string>
+    <string name="rate_ok">Rate It Now</string>
+    <string name="rate_cancel">Remind Me Later</string>
+    <string name="rate_no">No, Thanks</string>
 
     <plurals name="settings_max_image_subtext">
         <item quantity="one">Show %1$d image</item>
