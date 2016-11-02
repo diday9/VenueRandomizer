@@ -46,15 +46,16 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/light_text"
             android:textSize="10sp"
+            android:textColorLink="@color/light_text"
             tools:ignore="SmallSp" />
 
         <TextView
             android:id="@+id/link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/card_inner_margin"
-            android:layout_marginLeft="@dimen/card_inner_margin"
-            android:layout_marginRight="@dimen/card_inner_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/light_text"
             android:textSize="10sp"

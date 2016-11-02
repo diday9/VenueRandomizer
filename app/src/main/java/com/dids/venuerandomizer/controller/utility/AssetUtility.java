@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class AssetUtility {
     /* Food constants */
-    private static final int MAX_FOOD = 6;
+    private static final int MAX_FOOD = 7;
     private static final String FOOD_RESOURCE_ID = "bg_food%d";
 
     /* Drinks constants */
@@ -70,7 +70,7 @@ public class AssetUtility {
         if (PreferencesUtility.getInstance().isHiResImageSupported()) {
 //            url = array.getString(2); TODO: to reduce memory crashes
             //noinspection ResourceType
-            url = array.getString(3);
+            url = array.getString(2);
         } else {
             //noinspection ResourceType
             url = array.getString(3);

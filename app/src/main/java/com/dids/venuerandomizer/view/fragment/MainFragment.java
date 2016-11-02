@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.dids.venuerandomizer.R;
+import com.dids.venuerandomizer.controller.network.FacebookWrapper;
 import com.dids.venuerandomizer.controller.network.FourSquareWrapper;
 import com.dids.venuerandomizer.controller.network.VolleySingleton;
 import com.dids.venuerandomizer.controller.task.RefreshImageTask;
@@ -72,7 +74,9 @@ public class MainFragment extends Fragment implements RefreshImageTask.RefreshIm
                     switcher.showPrevious();
                 }
                 TextView textView = (TextView) mRootView.findViewById(R.id.copyright);
-                textView.setText(asset.getCopyright());
+                textView.setText(FacebookWrapper.createHtmlCopyrightWithLink(asset.
+                        getCopyright(), asset.getLink()));
+                textView.setMovementMethod(LinkMovementMethod.getInstance());
                 textView = (TextView) mRootView.findViewById(R.id.link);
                 textView.setText(asset.getLink());
             }
@@ -119,7 +123,9 @@ public class MainFragment extends Fragment implements RefreshImageTask.RefreshIm
         TypedArray array = getContext().getResources().obtainTypedArray(arrayId);
         TextView textView = (TextView) view.findViewById(R.id.copyright);
         //noinspection ResourceType
-        textView.setText(array.getString(0));
+        textView.setText(FacebookWrapper.createHtmlCopyrightWithLink(array.getString(0), array.getString(1)));
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+
         textView = (TextView) view.findViewById(R.id.link);
         //noinspection ResourceType
         textView.setText(array.getString(1));

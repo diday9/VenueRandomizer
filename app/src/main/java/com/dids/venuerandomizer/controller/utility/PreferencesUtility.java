@@ -24,7 +24,7 @@ public class PreferencesUtility {
     }
 
     public boolean isHiResImageSupported() {
-        return mSharedPreferences.getBoolean(HI_RES, false);
+        return mSharedPreferences.getBoolean(HI_RES, true);
     }
 
     public void setHiResImageSupport(boolean set) {

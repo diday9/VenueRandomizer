@@ -3,41 +3,41 @@
     <!-- Update count in VenueRandomizerApplication when modifying this file -->
     <array name="default_coffee">
         <item>&#169; by Mark Ryan Tan</item>
-        <item>markryantan on Facebook</item>
+        <item>markryantan</item>
     </array>
     <array name="bg_coffee1">
         <item>&#169; by Rogene Lacanienta</item>
-        <item>rogene on Facebook</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee1.jpg</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee11.jpg</item>
+        <item>rogene</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee1_scaled_hi.jpg?alt=media&amp;token=68551f26-4ce9-4a82-b911-834c4738a194</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee1_scaled_low.jpg?alt=media&amp;token=8f693226-9f9a-4282-958a-bc764e469074</item>
         <item>/bg_coffee1.png</item>
     </array>
     <array name="bg_coffee2">
         <item>&#169; by Jerome Conal Sia Sin</item>
-        <item>jerome.conal on Facebook</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee2.jpg</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee21.jpg</item>
+        <item>jerome.conal</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee2_scaled_hi.jpg?alt=media&amp;token=52dff584-b9dd-4e12-825e-ed37904c4073</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee2_scaled_low.jpg?alt=media&amp;token=27eca372-1bfb-45b6-b639-c0f03e8a24d8</item>
         <item>/bg_coffee2.png</item>
     </array>
     <array name="bg_coffee3">
         <item>&#169; by Mark Ryan Tan</item>
-        <item>markryantan on Facebook</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee3.jpg</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee31.jpg</item>
+        <item>markryantan</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee3_scaled_hi.jpg?alt=media&amp;token=2d51e0f2-54b9-492d-bdcd-7aca254fa3ea</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee3_scaled_low.jpg?alt=media&amp;token=1358e57a-b158-4bf2-9390-67b88c30751f</item>
         <item>/bg_coffee3.png</item>
     </array>
     <array name="bg_coffee4">
         <item>&#169; by Thea Miranda</item>
-        <item>thea.miranda.9 on Facebook</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee4.jpg</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee41.jpg</item>
+        <item>thea.miranda.9</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee4_scaled_hi.jpg?alt=media&amp;token=dc936096-81f7-4b88-b3fa-2a18f5881e37</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee4_scaled_low.jpg?alt=media&amp;token=a31787f9-155e-4dcd-98bc-3d1958943cfd</item>
         <item>/bg_coffee4.png</item>
     </array>
     <array name="bg_coffee5">
         <item>&#169; by Thea Miranda</item>
-        <item>thea.miranda.9 on Facebook</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee5.jpg</item>
-        <item>https://blobwarez.files.wordpress.com/2016/10/bg_coffee51.jpg</item>
+        <item>thea.miranda.9</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee5_scaled_hi.jpg?alt=media&amp;token=c16b22a8-910e-4753-9906-eb743d0da535</item>
+        <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fcoffee%2Fbg_coffee5_scaled_low.jpg?alt=media&amp;token=f50f566f-9a89-423e-8645-f0fb5343132b</item>
         <item>/bg_coffee5.png</item>
     </array>
 </resources>
