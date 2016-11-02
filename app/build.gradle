@@ -8,9 +8,9 @@ android {
         applicationId "com.tompee.utilities.findmeaplace"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 1
+        versionCode 8
         multiDexEnabled true
-        versionName "1.0.0000"
+        versionName "1.2.1"
     }
     signingConfigs {
         if (project.hasProperty("release.properties") &&
