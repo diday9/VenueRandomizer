@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.os.Build;
 import android.os.Environment;
+import android.text.Html;
+import android.text.Spanned;
 
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
@@ -175,5 +178,17 @@ public class Utilities {
             e.printStackTrace();
         }
         return buffer.toString();
+    }
+
+    public static Spanned createSpannedLink(String text, String link) {
+        Spanned spanned;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            spanned = Html.fromHtml(String.format("<a href=%s>%s</a>", link, text),
+                    Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            //noinspection deprecation
+            spanned = Html.fromHtml(String.format("<a href=%s>%s</a>", link, text));
+        }
+        return spanned;
     }
 }

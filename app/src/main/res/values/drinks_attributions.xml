@@ -4,11 +4,11 @@
     <array name="default_drinks">
         <!-- TODO Update when available-->
         <item>&#169; by Mark Ryan Tan</item>
-        <item>markryantan</item>
+        <item>https://www.instagram.com/iammarkryantan/</item>
     </array>
     <array name="bg_drinks1">
         <item>&#169; by Rogene Lacanienta</item>
-        <item>rogene</item>
+        <item>https://www.instagram.com/rogenedotcom/</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fdrinks%2Fbg_drinks1_scaled_hi.jpg?alt=media&amp;token=2fb8277a-0d85-4a3d-9baa-2d1c90ddbcba</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Fdrinks%2Fbg_drinks1_scaled_low.jpg?alt=media&amp;token=26389f05-2499-412e-8feb-3f919c48be1b</item>
         <item>/bg_drinks1.png</item>
