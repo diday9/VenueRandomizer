@@ -7,9 +7,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
-import android.text.Html;
-import android.text.Spanned;
 
 import com.dids.venuerandomizer.model.Category;
 import com.dids.venuerandomizer.model.Venue;
@@ -77,18 +74,5 @@ public class FacebookWrapper {
         ShareDialog dialog = new ShareDialog(activity);
         dialog.registerCallback(manager, callback);
         dialog.show(content);
-    }
-
-    public static Spanned createHtmlCopyrightWithLink(String name, String link) {
-        Spanned spanned;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            spanned = Html.fromHtml(String.format("<a href=\"https://facebook.com/%s\">%s</a>",
-                    link, name), Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            //noinspection deprecation
-            spanned = Html.fromHtml(String.format("<a href=\"https://facebook.com/%s\">%s</a>",
-                    link, name));
-        }
-        return spanned;
     }
 }

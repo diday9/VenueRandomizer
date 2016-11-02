@@ -3,53 +3,53 @@
     <!-- Update count in VenueRandomizerApplication when modifying this file -->
     <array name="default_food">
         <item>&#169; by Mark Ryan Tan</item>
-        <item>markryantan</item>
+        <item>https://www.instagram.com/iammarkryantan/</item>
     </array>
     <array name="bg_food1">
         <item>&#169; by Jeng Diaz</item>
-        <item>erikadiaz000</item>
+        <item>https://www.instagram.com/jenggitabears/</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food1_scaled_hi.jpg?alt=media&amp;token=443cb1b2-f4ad-4195-95be-886d7e1abf4b</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food1_scaled_low.jpg?alt=media&amp;token=83056dd8-dc69-4797-8a04-0dfb3162c08a</item>
         <item>/bg_food1.png</item>
     </array>
     <array name="bg_food2">
         <item>&#169; by Rogene Lacanienta</item>
-        <item>rogene</item>
+        <item>https://www.instagram.com/rogenedotcom/</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food2_scaled_hi.jpg?alt=media&amp;token=fd678a5d-d138-4971-a79a-c0d903c4a022</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food2_scaled_low.jpg?alt=media&amp;token=6083df67-3250-489e-ac2c-b4c7c09a0888</item>
         <item>/bg_food2.png</item>
     </array>
     <array name="bg_food3">
         <item>&#169; by Blanca Marie</item>
-        <item>eliot.blanca</item>
+        <item>https://www.instagram.com/instablancs/</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food3_scaled_hi.jpg?alt=media&amp;token=44bc9096-564c-4c9d-8849-da24fe338be1</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food3_scaled_low.jpg?alt=media&amp;token=0b8ef9c4-0d82-44f1-9e72-47bddf498a6e</item>
         <item>/bg_food3.png</item>
     </array>
     <array name="bg_food4">
         <item>&#169; by Blanca Marie</item>
-        <item>eliot.blanca</item>
+        <item>https://www.instagram.com/instablancs/</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food4_scaled_hi.jpg?alt=media&amp;token=3b49daf9-8e8f-4942-831c-8404e453d7f1</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food4_scaled_low.jpg?alt=media&amp;token=77f9fbc2-665d-4c9c-af71-48a9df176abb</item>
         <item>/bg_food4.png</item>
     </array>
     <array name="bg_food5">
         <item>&#169; by Mark Ryan Tan</item>
-        <item>markryantan</item>
+        <item>https://www.instagram.com/iammarkryantan/</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food5_scaled_hi.jpg?alt=media&amp;token=21ea71c2-0037-4771-9426-cfe01db1b054</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food5_scaled_low.jpg?alt=media&amp;token=f58a2202-7e14-4877-a028-0753503db0ed</item>
         <item>/bg_food5.png</item>
     </array>
     <array name="bg_food6">
         <item>&#169; Gerald Calaquian</item>
-        <item>gerald.calaquian</item>
+        <item>https://www.instagram.com/gerald_calaquian/</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food6_scaled_hi.jpg?alt=media&amp;token=265f3e41-a419-4980-ac50-b2f4a2c58dd4</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food6_scaled_low.jpg?alt=media&amp;token=209aa452-17cd-43e7-b0e0-f6e11b4e81c7</item>
         <item>/bg_food6.png</item>
     </array>
     <array name="bg_food7">
         <item>&#169; by Rogene Lacanienta</item>
-        <item>rogene</item>
+        <item>https://www.instagram.com/rogenedotcom/</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food7_scaled_hi.jpg?alt=media&amp;token=a25d9b06-1092-47c0-bbd1-58b4e8d9b935</item>
         <item>https://firebasestorage.googleapis.com/v0/b/admob-app-id-9732472227.appspot.com/o/findmeaplace%2Fasset%2Ffood%2Fbg_food7_scaled_hi.jpg?alt=media&amp;token=a25d9b06-1092-47c0-bbd1-58b4e8d9b935</item>
         <item>/bg_food7.png</item>

@@ -29,9 +29,6 @@ public class VenueRandomizerApplication extends Application {
         PreferencesUtility.getInstance().init(this);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-        if (!BuildConfig.DEBUG) {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        }
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
