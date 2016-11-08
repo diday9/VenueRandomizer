@@ -131,6 +131,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
         /** Setup map fragment */
         setupMapFragment();
 
+        //noinspection ConstantConditions
         Query favoriteList = mDbHelper.createFavoriteQuery(mAuth.getCurrentUser().getUid(),
                 mVenue.getId());
         favoriteList.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -194,6 +195,7 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
                 FourSquareWrapper.launch(this, mVenue.getId());
                 break;
             case R.id.menu_favorite:
+                //noinspection ConstantConditions
                 Query favoriteQuery = mDbHelper.createFavoriteQuery(mAuth.getCurrentUser().getUid(),
                         mVenue.getId());
                 favoriteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -434,16 +436,19 @@ public class VenueDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onSuccess(Sharer.Result result) {
+        //noinspection ResultOfMethodCallIgnored
         mPhotoFile.delete();
     }
 
     @Override
     public void onCancel() {
+        //noinspection ResultOfMethodCallIgnored
         mPhotoFile.delete();
     }
 
     @Override
     public void onError(FacebookException error) {
+        //noinspection ResultOfMethodCallIgnored
         mPhotoFile.delete();
     }
 }

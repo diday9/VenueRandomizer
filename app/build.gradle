@@ -13,6 +13,7 @@ android {
         versionName "1.0.0000"
     }
     signingConfigs {
+        //noinspection GroovyAssignabilityCheck
         if (project.hasProperty("release.properties") &&
                 new File(project.property("release.properties")).exists()) {
             Properties props = new Properties()
@@ -28,12 +29,14 @@ android {
     }
 
     buildTypes {
+        //noinspection GroovyAssignabilityCheck
         if (project.hasProperty("release.properties") &&
                 new File(project.property("release.properties")).exists()) {
             release {
                 shrinkResources true
                 minifyEnabled true
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                //noinspection GroovyAssignabilityCheck
                 signingConfig signingConfigs.release
             }
         }

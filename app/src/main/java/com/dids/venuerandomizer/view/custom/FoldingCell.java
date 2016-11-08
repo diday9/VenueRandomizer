@@ -29,6 +29,7 @@ import java.util.List;
  * Very first implementation of Folding Cell by Ramotion for Android platform
  * TODO: Update javadoc
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class FoldingCell extends RelativeLayout {
     private final String TAG = "folding-cell";
     // default values

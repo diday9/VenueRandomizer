@@ -148,6 +148,7 @@ public class Utilities {
 
     public static String getFilesDir(Context context) {
         File file = new File(context.getFilesDir().getAbsolutePath() + "/assets");
+        //noinspection ResultOfMethodCallIgnored
         file.mkdirs();
         return file.getAbsolutePath();
     }

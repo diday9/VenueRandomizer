@@ -75,13 +75,14 @@ public class PauseableHandler extends Handler {
          *                saved and replayed when the activity resumes.
          * @return true if the message is to be stored, else false the message will be discarded
          */
-        boolean storeMessage(Message message);
+        @SuppressWarnings("SameReturnValue")
+        boolean storeMessage(@SuppressWarnings("UnusedParameters") Message message);
 
         /**
          * @param message The message to be handled
          *                Notification message to be processed. This will either be directly from handleMessage or played back from a saved
          *                message when the activity was paused.
          */
-        void processMessage(Message message);
+        void processMessage(@SuppressWarnings("UnusedParameters") Message message);
     }
 }

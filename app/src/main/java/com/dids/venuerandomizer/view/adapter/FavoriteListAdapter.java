@@ -19,7 +19,7 @@ import java.util.List;
 
 public class FavoriteListAdapter extends ArrayAdapter<DatabaseVenue> {
     private final GetVenueTask.GetVenueListener mListener;
-    private HashSet<Integer> mUnfoldedIndexes = new HashSet<>();
+    private final HashSet<Integer> mUnfoldedIndexes = new HashSet<>();
 
     public FavoriteListAdapter(Context context, int resource, List<DatabaseVenue> list,
                                GetVenueTask.GetVenueListener listener) {
@@ -75,11 +75,11 @@ public class FavoriteListAdapter extends ArrayAdapter<DatabaseVenue> {
         }
     }
 
-    public void registerFold(int position) {
+    private void registerFold(int position) {
         mUnfoldedIndexes.remove(position);
     }
 
-    public void registerUnfold(int position) {
+    private void registerUnfold(int position) {
         mUnfoldedIndexes.add(position);
     }
 }

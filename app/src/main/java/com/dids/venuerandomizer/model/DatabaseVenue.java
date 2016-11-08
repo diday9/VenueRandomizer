@@ -1,5 +1,6 @@
 package com.dids.venuerandomizer.model;
 
+@SuppressWarnings("WeakerAccess")
 public class DatabaseVenue {
     /**
      * This is used for Firebase User Data. Field conventions are not required

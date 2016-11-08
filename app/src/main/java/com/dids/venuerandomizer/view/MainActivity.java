@@ -85,6 +85,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
         mAuth = FirebaseAuth.getInstance();
         final DatabaseHelper dbHelper = DatabaseHelper.getInstance();
+        //noinspection ConstantConditions
         final UserData user = new UserData(mAuth.getCurrentUser().getDisplayName(),
                 mAuth.getCurrentUser().getEmail());
         Query userQuery = dbHelper.createUserQuery(mAuth.getCurrentUser().getEmail());
@@ -169,6 +170,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             public void cancel(ImageView imageView) {
             }
         });
+        //noinspection ConstantConditions
         AccountHeader header = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeightDp(200)

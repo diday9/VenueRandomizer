@@ -1,5 +1,6 @@
 package com.dids.venuerandomizer.model;
 
+@SuppressWarnings("unused")
 public class Category {
     private String mId;
     private String mName;
