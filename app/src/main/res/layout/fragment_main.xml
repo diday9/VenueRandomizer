@@ -12,7 +12,7 @@
         android:inAnimation="@anim/fade_in"
         android:outAnimation="@anim/fade_out">
 
-        <com.dids.venuerandomizer.view.custom.NetworkImageView
+        <com.dids.findmeaplace.view.custom.NetworkImageView
             android:id="@+id/image1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,7 +20,7 @@
             android:contentDescription="@string/default_content_description"
             android:scaleType="centerCrop" />
 
-        <com.dids.venuerandomizer.view.custom.NetworkImageView
+        <com.dids.findmeaplace.view.custom.NetworkImageView
             android:id="@+id/image2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

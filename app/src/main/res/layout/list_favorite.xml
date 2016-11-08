@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.dids.venuerandomizer.view.custom.FoldingCell xmlns:android="http://schemas.android.com/apk/res/android"
+<com.dids.findmeaplace.view.custom.FoldingCell xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:folding-cell="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -117,4 +117,4 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-</com.dids.venuerandomizer.view.custom.FoldingCell>
+</com.dids.findmeaplace.view.custom.FoldingCell>
