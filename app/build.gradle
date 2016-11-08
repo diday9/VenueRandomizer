@@ -8,9 +8,9 @@ android {
         applicationId "com.tompee.utilities.findmeaplace"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 1
+        versionCode 10
         multiDexEnabled true
-        versionName "1.0.0000"
+        versionName "1.2.3"
     }
     signingConfigs {
         //noinspection GroovyAssignabilityCheck
